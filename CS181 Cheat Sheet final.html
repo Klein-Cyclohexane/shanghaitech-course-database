@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///Users/dan/Downloads/CS181_Cheatsheet_v2_4.html -->
+<html lang="zh"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS181 Cheat Sheet</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#e8e8e8;font-family:'Source Serif 4',Georgia,serif;font-size:10px;color:#111;line-height:1.45;}
+.page{width:297mm;min-height:210mm;background:white;margin:8px auto;padding:6mm 7mm;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto 1fr;gap:0 5px;box-shadow:0 2px 12px rgba(0,0,0,0.15);}
+.ph{grid-column:1/-1;border-bottom:2px solid #111;padding-bottom:3px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:baseline;}
+.ph-title{font-size:11px;font-weight:700;letter-spacing:.5px;}
+.ph-sub{font-size:8.5px;color:#444;font-style:italic;}
+.col{display:flex;flex-direction:column;gap:0;}
+.col-div{border-left:1px solid #ccc;padding-left:5px;}
+.sec{border-top:1.5px solid #111;padding-top:3px;margin-top:4px;}
+.sec:first-child{border-top:none;margin-top:0;padding-top:0;}
+.sec-title{font-size:9.5px;font-weight:700;letter-spacing:.3px;margin-bottom:2px;text-transform:uppercase;}
+p,li{font-size:9px;line-height:1.45;margin-bottom:1px;}
+ul{list-style:none;padding:0;}
+ul li::before{content:"• ";font-weight:700;}
+ol{padding-left:12px;}
+ol li{font-size:9px;line-height:1.45;margin-bottom:1px;}
+b{font-weight:700;}
+.red{color:#c0392b;font-weight:700;}
+.blue{color:#1a5fa8;font-weight:700;}
+.grn{color:#1a7a3a;font-weight:700;}
+.f{font-family:'JetBrains Mono',monospace;font-size:8px;background:#f5f5f5;border:1px solid #ddd;border-radius:2px;padding:2px 5px;margin:2px 0;display:block;white-space:pre-wrap;}
+code{font-family:'JetBrains Mono',monospace;font-size:8px;background:#f0f0f0;padding:0 2px;border-radius:1px;}
+table{width:100%;border-collapse:collapse;font-size:8.5px;margin:2px 0;}
+th{background:#f0f0f0;font-weight:700;padding:1.5px 3px;text-align:left;border:1px solid #ccc;font-size:8px;}
+td{padding:1.5px 3px;border:1px solid #ddd;vertical-align:top;}
+.box{border:1px solid #aaa;border-radius:2px;padding:2px 5px;margin:2px 0;font-size:9px;}
+.bw{border-color:#c0392b;background:#fdf5f5;}
+.bt{border-color:#27ae60;background:#f5fdf7;}
+.bn{border-color:#2471a3;background:#f5f9fd;}
+.be{border-color:#7d3c98;background:#fdf7ff;}
+.proof{font-family:'JetBrains Mono',monospace;font-size:8px;background:#f8f8f8;border:1px solid #ddd;padding:3px 5px;margin:2px 0;line-height:1.7;border-radius:2px;}
+.sep{border-top:1px dashed #ccc;margin:3px 0;}
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:2px 0;}
+.tc3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:2px 0;}
+.sb{border:1px solid #ccc;border-radius:2px;padding:2px 4px;font-size:8.5px;background:#fafafa;}
+.sbt{font-weight:700;font-size:8.5px;border-bottom:1px solid #ddd;margin-bottom:2px;padding-bottom:1px;}
+@media print{body{background:white;}.page{width:297mm;min-height:210mm;margin:0;box-shadow:none;page-break-after:always;padding:5mm 6mm;}}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page">
+<div class="ph"><span class="ph-title">CS181 AI · Midterm Cheat Sheet · Page 1/4 · Search &amp; CSP</span><span class="ph-sub">Spring 2026 · ShanghaiTech · Closed Book + 1 A4 Sheet</span></div>
+
+<div class="col">
+<div class="sec"><div class="sec-title">1. Search — Problem Definition</div>
+<p><b>State</b>: configuration of the world. <b>Start state</b>: initial. <b>Goal state(s)</b>: desired. <b>Successor fn</b>: state→(action,next_state,cost). <b>Path cost</b>: cumulative edge costs.</p>
+<p><b>Completeness</b>: finds solution if one exists. <b>Optimality</b>: finds minimum-cost solution.</p>
+<div class="box be"><b>Ex. 8-Puzzle:</b> State = tile arrangement. Total states = 9! = 362880. Max branching = 4 (blank in center). Goal = tiles 1–8 in order top-left to bottom-right.</div></div>
+
+<div class="sec"><div class="sec-title">2. Uninformed Search</div>
+<table><tbody><tr><th>Algo</th><th>Fringe</th><th>Compl.</th><th>Opt.</th><th>Time</th><th>Space</th></tr>
+<tr><td><b>BFS</b></td><td>Queue(FIFO)</td><td>✓</td><td>✓ unit</td><td>O(b^s)</td><td>O(b^s)</td></tr>
+<tr><td><b>DFS</b></td><td>Stack(LIFO)</td><td>✗</td><td>✗</td><td>O(b^m)</td><td><b>O(bm)</b></td></tr>
+<tr><td><b>IDS</b></td><td>Stack</td><td>✓</td><td>✓ unit</td><td>O(b^s)</td><td>O(bs)</td></tr>
+<tr><td><b>UCS</b></td><td>Priority Q</td><td>✓*</td><td>✓</td><td>O(b^C)</td><td>O(b^C)</td></tr></tbody></table>
+<p style="margin-top:1px"><i>b</i>=branch, <i>s</i>=shallowest goal depth, <i>m</i>=max depth, <i>C</i>=optimal cost/min-cost</p>
+<div class="box bw">⚠ <b>UCS*</b>: complete only if min arc cost <b>ε &gt; 0</b> (not ≥0). Zero-cost edges → may loop.<br>⚠ <b>BFS optimal</b> only for unit-cost edges. Use UCS for varying costs.<br>⚠ <b>DFS</b>: space advantage O(bm) — only stores current path. Not complete on infinite/cyclic graphs.</div></div>
+
+<div class="sec"><div class="sec-title">3. Heuristic Functions</div>
+<span class="f">f(n) = g(n) + h(n)   [A* evaluation fn]
+g(n) = actual cost start→n
+h(n) = estimated cost n→goal</span>
+<div class="tc"><div class="sb"><div class="sbt red">Admissible</div><span class="f">h(n) ≤ h*(n)</span><p>Never <b>overestimates</b>. Guarantees A* <b>tree-search</b> optimality.</p></div>
+<div class="sb"><div class="sbt blue">Consistent (Monotone)</div><span class="f">h(n) ≤ c(n,n') + h(n')</span><p>Triangle inequality. Guarantees A* <b>graph-search</b> optimality.</p></div></div>
+<div class="box bw">⚠ <b>Consistent ⟹ Admissible</b>; reverse NOT true.<br>⚠ h(n)=0 always admissible; UCS = A* with h=0.<br>⚠ Admissible but NOT consistent: tree-search OK, graph-search may fail.<br>⚠ Dominant: h₂≥h₁ for all n → h₂ expands ≤ nodes than h₁.</div>
+<div class="box be"><b>8-Puzzle heuristics:</b> h₁=misplaced tiles ✓admissible ✓consistent. h₂=Manhattan distance ✓✓. h₃=inversion count <span class="red">✗ not admissible, ✗ not consistent</span> (can overestimate).</div></div>
+
+<div class="sec"><div class="sec-title">4. A* Search Algorithm</div>
+<span class="f">A*(problem):
+  fringe = PriorityQueue ordered by f(n)=g(n)+h(n)
+  closed = {} (graph search only)
+  push start node (g=0)
+  while fringe not empty:
+    n = pop (smallest f)
+    if goal(n): return solution
+    if n.state not in closed:    // graph search
+      closed.add(n.state)
+      expand n, push children with updated g,f</span>
+<div class="box bt">Tree-search + admissible h → optimal. Graph-search + consistent h → optimal + complete.</div>
+<div class="box be"><b>Ex. Admissible/Consistent check:</b> Given h: S=6,A=5,B=5,C=4,D=2,G=0. Edge S→A cost 1. Check admissible: compute true shortest paths. Check consistent: for each edge (n,n'), verify h(n)≤cost(n,n')+h(n'). If S→A costs 1: h(S)=6≤1+5=6 ✓. If A→C costs 2: h(A)=5≤2+4=6 ✓.</div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">5. CSP — Definition &amp; Backtracking</div>
+<p><b>Variables</b> X₁…Xₙ; <b>Domains</b> D₁…Dₙ; <b>Constraints</b> C. Goal: complete assignment satisfying all constraints.</p>
+<span class="f">Backtrack(assignment, csp):
+  if complete: return assignment
+  X ← SelectVar(csp, assignment)
+  for v in OrderValues(X, assignment, csp):
+    if consistent(v, assignment):
+      assignment[X] = v
+      result ← Backtrack(assignment, csp)
+      if result ≠ failure: return result
+      del assignment[X]
+  return failure</span>
+<div class="box be"><b>Ex. Course scheduling:</b> After unary constraints applied to all vars, C∈{6,10}, S∈{1,3,5,7,9}, P∈{4,6}, F∈{3,4}, G∈{2,4,6,8,10}, B∈{1,5}. Assign C=10 first (domain size 2 = MRV along with others).</div></div>
+
+<div class="sec"><div class="sec-title">6. Filtering Strategies</div>
+<div class="sb" style="margin-bottom:3px"><div class="sbt">Forward Checking (FC)</div>
+<p>After X=v, remove from each unassigned neighbor Y any value inconsistent with v. If any domain empties → backtrack.</p></div>
+<div class="sb"><div class="sbt">Arc Consistency — AC-3</div>
+<p><b>Arc (X,Y) consistent</b>: ∀ x∈D(X), ∃ y∈D(Y) compatible. AC-3 makes ALL arcs consistent.</p>
+<span class="f">AC-3:
+  Q = all arcs (Xi,Xj) in CSP
+  while Q not empty:
+    (Xi, Xj) = dequeue(Q)
+    if Revise(Xi, Xj):       // removed from D(Xi)
+      if D(Xi) empty: return FAILURE
+      for each Xk ≠ Xj neighbor of Xi:
+        enqueue (Xk, Xi)</span>
+<div class="box bw" style="margin-top:2px">⚠ Arc (X,Y): removes values from <b>X's domain</b>, not Y's.<br>⚠ After X shrinks, re-add arcs <b>(Z,X)</b> for all Z neighboring X.<br>⚠ AC-3 stronger than FC: propagates further than just direct neighbors.</div></div></div>
+
+<div class="sec"><div class="sec-title">7. Ordering Heuristics</div>
+<div class="tc"><div class="sb"><div class="sbt red">MRV (Variable Selection)</div><p><b>Minimum Remaining Values</b>: pick variable with fewest legal values left. "Most constrained first." Fail early, backtrack early.</p>
+<div class="box be" style="margin-top:2px">Ex. Domains: A:{R,G}, B:{R}, C:{R,G,B} → choose B (1 value = most constrained).</div></div>
+<div class="sb"><div class="sbt blue">LCV (Value Selection)</div><p><b>Least Constraining Value</b>: for chosen variable, pick value eliminating fewest values from neighbors. Preserve flexibility.</p>
+<div class="box be" style="margin-top:2px">Ex. X=R eliminates 3 neighbor values; X=B eliminates 1 → choose B (least constraining).</div></div></div>
+<div class="box bw">⚠ MRV picks <b>variable</b> (most constrained). LCV picks <b>value</b> (least constraining). Don't confuse!</div></div>
+
+<div class="sec"><div class="sec-title">8. Structure Methods</div>
+<div class="sb" style="margin-bottom:3px"><div class="sbt">Tree-Structured CSP — O(nd²)</div>
+<p>If constraint graph is a tree (no undirected cycles):</p>
+<ol><li>Pick root, compute topological order</li><li>Backward pass (leaf→root): Revise each arc (parent,child) — remove inconsistent parent values</li><li>Forward pass (root→leaf): assign each variable consistently with already-assigned parent</li></ol>
+<div class="box be" style="margin-top:2px">Ex. Chain A-B-C-D. Backward: make arcs (C,D),(B,C),(A,B) consistent. Forward: assign A→B→C→D.</div></div>
+<div class="sb"><div class="sbt">Cutset Conditioning</div>
+<p>Find <b>cycle cutset</b> S: removing S leaves a tree. Min cutset = smallest such S.</p>
+<ol><li>Find cutset S (size c)</li><li>Enumerate all d^c assignments of S</li><li>For each, solve remaining tree in O((n-c)d²)</li></ol>
+<p>Total: O(d^c · nd²). Efficient when c small.</p></div>
+<div class="box bw">⚠ Min cutset: fewest variables s.t. removal makes graph a tree.<br>⚠ Tree check: count edges vs nodes (tree ↔ |E|=|V|-1, connected). Or check undirected cycles.</div></div>
+
+<div class="sec"><div class="sec-title">9. Local Search for CSP</div>
+<ul><li><b>Min-Conflicts</b>: start with random assignment; repeatedly pick conflicted variable, assign value minimizing #violated constraints.</li>
+<li><b>Hill Climbing</b>: move to best neighbor. Stuck in local optima, plateaus, ridges.</li>
+<li><b>Simulated Annealing</b>: accept worse moves with prob e^(ΔE/T), T decreasing → escapes local optima.</li>
+<li><b>Genetic Algo</b>: Selection (fitness) → Crossover (combine parents) → Mutation (random change).</li></ul>
+<div class="box bw">⚠ Genetic algo order: <b>crossover first, mutation second</b>!<br>⚠ Min-conflicts: count #violated constraints for CURRENT full assignment per variable.</div>
+<div class="box be"><b>Ex. Min-conflicts count:</b> Assignment C:6,S:8,P:2,F:3,G:4,B:5. S=8 violates: (ii) S must be AM→8 is PM ✗; (viii) S before C: 8&gt;6 ✗. Count = 2 violations for S.</div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">10. Minimax Algorithm</div>
+<p><b>Zero-sum game</b>: MAX agent maximizes, MIN agent minimizes. Assumes <b>perfectly rational</b> opponent.</p>
+<span class="f">Minimax(s, player):
+  if terminal(s): return utility(s)
+  if player=MAX:
+    return max over successors c: Minimax(c, MIN)
+  if player=MIN:
+    return min over successors c: Minimax(c, MAX)</span>
+<p><b>Time</b>: O(b^m) &nbsp; <b>Space</b>: O(bm) &nbsp; (identical to DFS)</p>
+<div class="box bw">⚠ Time = O(b<b>^m</b>) NOT O(b·m) or O(b·d)!<br>⚠ Zero-sum: utilities OPPOSITE (not independent). "Independent" → <span class="red">FALSE</span>.<br>⚠ Standard minimax fails on cyclic graphs (infinite loops).<br>⚠ Minimax ≠ Expectimax. Minimax: opponent rational. Expectimax: chance/random.</div>
+<div class="box be"><b>Ex. Range of X (Fig.2a):</b> Left MIN b: children MAX c={1,7}→7, MAX d={X,5}→max(X,5). b=min(7, max(X,5)). Root MAX a=max(b, right_sub). For a to choose branch through e→f (value = max(X,5)), need max(X,5) &gt; other_branch_val=2. So max(X,5)&gt;2 always. But for X to BE root value: need X&gt;5 (so max(X,5)=X) AND X&gt;7 (beats other subtree). Range: <span class="red">7 &lt; X ≤ 10</span>.</div></div>
+
+<div class="sec"><div class="sec-title">11. Alpha-Beta Pruning</div>
+<p><b>α</b> (alpha): best (highest) value MAX can guarantee on path to root. Starts −∞, only increases.<br><b>β</b> (beta): best (lowest) value MIN can guarantee on path to root. Starts +∞, only decreases.</p>
+<div class="tc"><div class="sb"><div class="sbt red">Prune at MIN node</div><p>Current value <b>≤ α</b> → prune rest. MAX already has ≥α elsewhere, won't choose this.</p></div>
+<div class="sb"><div class="sbt blue">Prune at MAX node</div><p>Current value <b>≥ β</b> → prune rest. MIN already has ≤β elsewhere, won't choose this.</p></div></div>
+<span class="f">AlphaBeta(s, α, β):
+  if terminal: return utility(s)
+  if MAX: v=-∞
+    for c in children(s):
+      v=max(v, AB(c, α, β))
+      if v≥β: return v  // β-prune (MIN won't choose)
+      α=max(α,v)
+  if MIN: v=+∞
+    for c in children(s):
+      v=min(v, AB(c, α, β))
+      if v≤α: return v  // α-prune (MAX won't choose)
+      β=min(β,v)
+  return v</span>
+<div class="box bw">⚠ <b>Node order critically affects pruning!</b> Best case O(b^(m/2)), worst O(b^m).<br>⚠ Good order: evaluate best moves first → set tight α/β bounds early → more pruning.<br>⚠ Reversing leaf order usually <b>reduces</b> pruning count.<br>⚠ Result = same as minimax, just faster.</div>
+<div class="box be"><b>Ex. Prune l (Fig.2b):</b> Evaluate k,m,n normally. Need Y such that at the point of evaluating l, the β bound at l's parent is ≤ some value. Tracing: i subtree gives value≥some threshold. If j subtree (parent MAX h) already has a value making α≥l's MIN subtree result → l pruned. The constraint works out to: <span class="red">0 ≤ Y ≤ 2</span>.</div></div>
+
+<div class="sec"><div class="sec-title">12. Expectimax &amp; Chance Nodes</div>
+<span class="f">Expectimax(chance_node) = Σᵢ P(childᵢ) × Expectimax(childᵢ)</span>
+<div class="box bw">⚠ Expectimax assumes opponent is <b>non-rational / random</b> (not adversarial).<br>⚠ Changing probability distribution invalidates pruning — <span class="red">cannot reuse same pruning</span>!<br>⚠ Bounded values [a,b] needed for chance node pruning.</div>
+<div class="box be"><b>Ex. F23 Q3.2:</b> Left chance: 0.5×min(2,2)+0.5×min(1,2)=0.5×2+0.5×1=1.5. Right chance: 0.5×min(0,2)+0.5×min(−1,0)=0+0.5×(−1)=−0.5. Root MAX: max(1.5,−0.5)=1.5 → choose Left.</div></div>
+
+<div class="sec"><div class="sec-title">13. Multi-Agent Non-Zero-Sum</div>
+<p>Each player maximizes <b>own</b> utility (different objectives). Utilities = tuples (A-val, B-val, C-val). Each layer: that player picks child maximizing their own component.</p>
+<p><b>Coalition</b>: allied players pick child maximizing their <b>sum</b> of utilities.</p>
+<div class="box bw">⚠ Coalition does NOT always increase individual utilities — may sacrifice one member for total gain. Answer: "Does coalition always guarantee higher utility?" → <span class="red">NO</span>.</div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">14. Propositional Logic — Concepts</div>
+<table><tbody><tr><th>Concept</th><th>Definition</th><th>Example</th></tr>
+<tr><td><b>Valid</b></td><td>True in <b>ALL</b> models</td><td>P∨¬P</td></tr>
+<tr><td><b>Satisfiable</b></td><td>True in <b>SOME</b> model</td><td>P∧Q</td></tr>
+<tr><td><b>Unsatisfiable</b></td><td>True in <b>NO</b> model</td><td>P∧¬P</td></tr>
+<tr><td><b>KB⊨α</b></td><td>α true wherever KB true</td><td>Entailment</td></tr>
+<tr><td><b>Sound</b></td><td>Only proves true things</td><td>Resolution ✓</td></tr>
+<tr><td><b>Complete</b></td><td>Proves all true things</td><td>Res. complete ✓</td></tr></tbody></table>
+<div class="box bw">⚠ <b>Valid ≠ Satisfiable!</b> Valid = ALL models. Satisfiable = SOME.<br>⚠ "Satisfiable if true in all models" → <span class="red">FALSE</span> (that's valid!)<br>⚠ Prove KB⊨α: show KB∧<b>¬α</b> unsatisfiable. NOT KB∨¬α.<br>⚠ A⇒B is TRUE when A is false (vacuously true).</div>
+<p><b>Key equivalences:</b></p>
+<span class="f">A⇒B ≡ ¬A∨B
+¬(A∧B) ≡ ¬A∨¬B   (De Morgan)
+¬(A∨B) ≡ ¬A∧¬B   (De Morgan)
+A∨(B∧C) ≡ (A∨B)∧(A∨C)  (distributivity)
+∀xP(x) ≡ ¬∃x¬P(x)</span></div>
+
+<div class="sec"><div class="sec-title">15. CNF Conversion (4 Steps)</div>
+<ol><li>Eliminate <b>⟺</b>: A⟺B → (A⇒B)∧(B⇒A)</li>
+<li>Eliminate <b>⇒</b>: A⇒B → ¬A∨B</li>
+<li>Push <b>¬ inward</b>: ¬(A∧B)→¬A∨¬B; ¬(A∨B)→¬A∧¬B; ¬¬A→A</li>
+<li><b>Distribute</b> ∨ over ∧: A∨(B∧C)→(A∨B)∧(A∨C)</li></ol>
+<div class="box be"><b>Ex. (B∧C)∨(A∧B)⇒D:</b> Step2: ¬[(B∧C)∨(A∧B)]∨D. Step3: (¬B∨¬C)∧(¬A∨¬B)∨D. Step4: <span class="grn">(¬B∨¬C∨D)∧(¬A∨¬B∨D)</span>.</div>
+<div class="box be"><b>Ex. (A∧C∧D)∨C⇒B:</b> Step2: ¬[(A∧C∧D)∨C]∨B. Step3: (¬A∨¬C∨¬D)∧¬C∨B. Step4: <span class="grn">(¬A∨¬C∨¬D∨B)∧(¬C∨B)</span>. (Simplify: ¬C∨B subsumes ¬A∨¬C∨¬D∨B when ¬C true.)</div></div>
+
+<div class="sec"><div class="sec-title">16. Resolution &amp; Resolution Refutation</div>
+<span class="f">Resolution Rule:
+  (ℓ₁∨…∨P) and (¬P∨m₁∨…)
+  ──────────────────────────
+  (ℓ₁∨…∨m₁∨…)
+If result = □ (empty clause) → contradiction!</span>
+<p><b>Refutation</b>: to prove KB⊨α, add ¬α to KB, convert to CNF, resolve until □.</p>
+<div class="proof">Ex. Prove D from {A∨B, ¬A, C, ¬B∨¬C∨D, ¬A∨¬B∨D}
+Add ¬D:
+(A∨B) + (¬A)     → B
+B + (¬B∨¬C∨D)    → ¬C∨D
+(¬C∨D) + (¬D)    → ¬C
+(¬C) + C          → □  ✓ proved KB⊨D</div>
+<div class="box bw">⚠ Must add ¬(conclusion) before resolving.<br>⚠ Can resolve ANY pair with complementary literals.<br>⚠ CNF result has ONLY ∧ and ∨ and ¬ — no ⇒ or ⟺.</div></div>
+
+<div class="sec"><div class="sec-title">17. Horn Logic &amp; Chaining</div>
+<p><b>Horn clause</b>: at most <b>one positive</b> literal. Form: P₁∧…∧Pₙ⇒Q.</p>
+<div class="tc"><div class="sb"><div class="sbt">Forward Chaining</div><p><b>Data-driven</b> (bottom-up). Start from facts, fire rules, add conclusions, repeat until goal found or no new facts. Sound &amp; complete for Horn.</p></div>
+<div class="sb"><div class="sbt">Backward Chaining</div><p><b>Goal-driven</b> (top-down). From goal, find rules concluding it, recurse on premises. Stops when all premises are known. May repeat subgoals.</p></div></div>
+<div class="box bw">⚠ FC = data-driven. BC = goal-driven (BC is NOT data-driven — common MCQ trap!).<br>⚠ Modus Ponens: sound &amp; complete for Horn ONLY (not general propositional logic).<br>⚠ ¬A∨¬B∨C: one positive (C) → Horn ✓. ¬A∨B∨C: two positives → NOT Horn ✗.</div></div>
+</div>
+</div><!-- page1 end -->
+
+<!-- PAGE 2 -->
+<div class="page">
+<div class="ph"><span class="ph-title">CS181 AI · Midterm Cheat Sheet · Page 2/4 · First-Order Logic</span><span class="ph-sub">Spring 2026 · ShanghaiTech</span></div>
+
+<div class="col">
+<div class="sec"><div class="sec-title">18. FOL — Syntax Elements</div>
+<table><tbody><tr><th>Element</th><th>Examples</th><th>Role</th></tr>
+<tr><td><b>Constant</b></td><td>John, SHT, Sinthe</td><td>Specific individual object</td></tr>
+<tr><td><b>Variable</b></td><td>x, y, z</td><td>Quantified placeholder</td></tr>
+<tr><td><b>Function</b></td><td>Father(x), Age(x)</td><td>Returns individual (is a <i>term</i>!)</td></tr>
+<tr><td><b>Predicate</b></td><td>Smart(x), Loves(x,y)</td><td>Returns TRUE/FALSE (is an atomic sentence with args)</td></tr>
+<tr><td><b>Term</b></td><td>x, John, Father(x)</td><td>Constants, variables, or functions</td></tr>
+<tr><td><b>Atomic sentence</b></td><td>Loves(John,x)</td><td>Predicate(term₁,…) — no connectives inside</td></tr>
+<tr><td><b>∀ / ∃</b></td><td>∀x, ∃y</td><td>Universal / Existential quantifiers</td></tr></tbody></table>
+<div class="box bw">⚠ <b>Function ≠ Predicate!</b> Father(x) = term (returns individual). Smart(x) = predicate (returns T/F).<br>⚠ &gt;(Height(A), Height(B)): "&gt;" is a predicate, Height() are functions → this IS an atomic sentence.<br>⚠ Atomic sentence contains predicate + terms. No ¬,∧,∨,⇒ inside it.</div></div>
+
+<div class="sec"><div class="sec-title">19. Quantifiers — The Golden Rules</div>
+<div class="tc"><div class="sb"><div class="sbt red">∀ (Universal) → always use ⇒</div>
+<span class="f">∀x Student(x) ⇒ Smart(x)</span>
+<p>"For all x, if Student then Smart."</p>
+<div class="box bw" style="margin-top:2px">WRONG: ∀x Student(x)∧Smart(x)<br>→ "Everything is a student AND smart"!</div></div>
+<div class="sb"><div class="sbt blue">∃ (Existential) → always use ∧</div>
+<span class="f">∃x Student(x) ∧ Smart(x)</span>
+<p>"There exists smart student."</p>
+<div class="box bw" style="margin-top:2px">WRONG: ∃x Student(x)⇒Smart(x)<br>→ True even if no students exist!</div></div></div>
+<div class="box bw">⚠ <b>Quantifier order MATTERS — NOT commutative:</b><br>∀x∃y Loves(x,y): Every person loves someone (possibly different for each).<br>∃y∀x Loves(x,y): There is ONE person loved by everyone. <b>NOT equivalent!</b><br>⚠ Useful: ∀xP(x)≡¬∃x¬P(x); ∃xP(x)≡¬∀x¬P(x).</div></div>
+
+<div class="sec"><div class="sec-title">20. FOL Translation — Examples</div>
+<table><tbody><tr><th>English</th><th>Correct FOL</th></tr>
+<tr><td>"All SHT students are smart"</td><td>∀x Student(x)∧At(x,SHT)⇒Smart(x)</td></tr>
+<tr><td>"Everybody loves someone"</td><td>∀x∃y Loves(x,y)</td></tr>
+<tr><td>"Someone is loved by all"</td><td>∃y∀x Loves(x,y)</td></tr>
+<tr><td>"Anyone with dog isn't lonely"</td><td>∀x∀y Dog(y)∧Have(x,y)⇒¬Lonely(x)</td></tr>
+<tr><td>Equiv. to above</td><td>∀x∀y ¬Dog(y)∨¬Have(x,y)∨¬Lonely(x)</td></tr>
+<tr><td>"Some drug causes hallucinations"</td><td>∃x Drug(x)∧∀y Human(y)⇒Halluc(x,y)</td></tr>
+<tr><td>"BigWei is native in Fontaine"</td><td>Fontaine(BigWei)</td></tr>
+<tr><td>"All Fontaine people drink their attractive drinks"</td><td>∀x∀y Fontaine(x)∧Own(x,y)∧Attractive(y)⇒Drink(x,y)</td></tr>
+<tr><td>"England's best player scored more than anyone in the country"</td><td>∀x Bestplayer(B,England)∧In(x,England)∧x≠B⇒&gt;(Goal(B),Goal(x))</td></tr></tbody></table>
+<div class="box bw">⚠ "Everyone loved by someone AND hated by someone" is NOT ∀x∃y(Loves(y,x)∧Hates(y,x)) — that says same person. Correct: ∀x(∃y Loves(y,x))∧(∃z Hates(z,x)).</div></div>
+
+<div class="sec"><div class="sec-title">21. FOL — Models &amp; Semantics</div>
+<p>A <b>model</b> in FOL specifies: (1) domain of objects, (2) interpretation mapping constants→objects, functions→functions on objects, predicates→relations on objects.</p>
+<p><b>Sentence is true</b> in a model under an assignment of variables.</p>
+<p><b>KB⊨α</b>: α is true in every model where KB is true (same as propositional).</p>
+<div class="box bt">If α entailed by any <b>subset</b> of KB → α entailed by KB. Adding knowledge cannot destroy entailments.</div>
+<div class="box be"><b>Ex. Checking "is Paimon right?"</b> KB = {Fontaine(BW), Own(BW,Sinthe), Toxic(Sinthe), rule1(drink+toxic→unconscious), rule2(Fontaine+own+attractive→drink)}. Missing: <b>Attractive(Sinthe)</b>. Without it: cannot derive Drink(BW,Sinthe) → cannot derive Unconscious(BW). <span class="red">Paimon is correct — info insufficient!</span></div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">22. Instantiation Rules</div>
+<div class="sb" style="margin-bottom:3px"><div class="sbt">Universal Instantiation (UI)</div>
+<span class="f">From ∀x P(x): derive P(c) for any constant c
+Ex: ∀x Mortal(x) → Mortal(Socrates), Mortal(John), …</span></div>
+<div class="sb"><div class="sbt">Existential Instantiation (EI)</div>
+<span class="f">From ∃x P(x): derive P(K) where K is NEW Skolem constant
+Ex: ∃x Crown(x) → Crown(C₁) (new constant)</span>
+<div class="box bw" style="margin-top:2px">⚠ EI: use a BRAND NEW constant not appearing elsewhere. Cannot reuse existing constants.</div></div></div>
+
+<div class="sec"><div class="sec-title">23. Unification</div>
+<p>Find substitution σ making two expressions identical.</p>
+<span class="f">Unify(Knows(John,x), Knows(John,Jane)) = {x/Jane}
+Unify(Knows(x,Bob), Knows(y,Bob))      = {x/y} or {y/x}
+Unify(Knows(x,y), Knows(y,John))       = {x/John, y/John}
+Unify(P(x), P(f(x))) → FAIL (occur check: x in f(x))</span>
+<p><b>MGU (Most General Unifier)</b>: least committal unifier (fewest bindings).</p>
+<div class="box bw">⚠ Cannot unify different constants: John ≠ Mary (constants are fixed).<br>⚠ Occur check: don't unify x with term containing x → infinite structure.</div></div>
+
+<div class="sec"><div class="sec-title">24. FOL Forward &amp; Backward Chaining</div>
+<p>Same as propositional but with variable unification.</p>
+<div class="sb" style="margin-bottom:3px"><div class="sbt">Forward Chaining (data-driven)</div>
+<ol><li>Start with known ground facts in KB</li><li>Find rules whose body unifies with known facts</li><li>Add unified head as new fact</li><li>Repeat until goal found or no new facts added</li></ol></div>
+<div class="sb"><div class="sbt">Backward Chaining (goal-driven)</div>
+<ol><li>Start with goal query</li><li>Find rules whose head unifies with goal</li><li>Subgoals = unified body predicates</li><li>Recurse; succeed if all subgoals provable from KB</li></ol></div>
+<div class="box be"><b>Ex. FC to prove Unconscious(BigWei):</b><br>
+KB: Fontaine(BW), Own(BW,Sinthe), Toxic(Sinthe), Attractive(Sinthe),<br>
+Rule1: Fontaine(x)∧Own(x,y)∧Attractive(y)⇒Drink(x,y)<br>
+Rule2: Drink(x,y)∧Toxic(y)⇒Unconscious(x)<br>
+FC: unify Rule1 with {x/BW,y/Sinthe} → Drink(BW,Sinthe).<br>
+Unify Rule2 with {x/BW,y/Sinthe} → Unconscious(BW). ✓</div>
+<div class="box bw">⚠ FC: sound &amp; complete for FOL Horn. Data-driven.<br>⚠ BC: sound &amp; complete for FOL Horn. Goal-driven.<br>⚠ BC may revisit subgoals — use memoization (tabling) to avoid.</div></div>
+
+<div class="sec"><div class="sec-title">25. FOL Resolution</div>
+<ol><li>Negate conclusion: KB ∪ {¬α}</li><li>Convert to CNF (including Skolemization for ∃)</li><li>Resolve: pick two clauses with complementary literals, unify, produce resolvent</li><li>Repeat until □ found or no new clauses possible</li></ol>
+<div class="box be"><b>Skolemization</b>: replace ∃x with Skolem constant (if no ∀ in scope) or Skolem function of universally-quantified vars in scope.</div></div>
+
+<div class="sec"><div class="sec-title">26. FOL — Comprehensive Exam Traps</div>
+<ul><li>FC is <b>data-driven</b>. BC is <b>goal-driven</b>. "BC is data-driven" → <span class="red">FALSE</span>.</li>
+<li>∀xP(x) ≡ ¬(¬∃xP(x)) → <span class="grn">TRUE</span> (both say "all x satisfy P").</li>
+<li>∀x∃y R(x,y) ≢ ∃y∀x R(x,y) — order matters → <span class="red">NOT equivalent</span>.</li>
+<li>"Student(x)∧At(x,SHT)∧Smart(x)" with ∀ says everything is a student at SHT who's smart → <span class="red">WRONG</span>.</li>
+<li>KB⊨α proved by KB∧¬α contradiction, NOT KB∨¬α.</li>
+<li>If KB has enough chain to conclusion via FC, BC will also find it.</li>
+<li>If missing ONE premise (e.g. Attractive(Sinthe)), cannot conclude — Paimon right.</li>
+<li>Atomic sentence: predicate applied to terms. No connectives. &gt;(Height(A),Height(B)) IS atomic ✓.</li></ul></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">27. Propositional Logic — Semantic Matching Puzzle</div>
+<p>Some exams give logical formulas and ask you to match variables to semantics. Method:</p>
+<ol><li>Identify which formula has NO negations and appears alone as a clause → that's a fact (e.g. C)</li>
+<li>Identify which variable appears only negated alone → that's the negated fact (e.g. ¬B or ¬D)</li>
+<li>Work out which matches "If X then Y" patterns (⇒) vs facts</li></ol>
+<div class="box be"><b>Ex. F24 Q4.1 (Coach Leo):</b><br>
+Formulas: (¬C∨A)∧(¬C∨D), ¬B∨¬D∨A, ¬C, B∨D<br>
+¬C alone → C = "Keep practicing" (negated = not keep practicing, direct fact)<br>
+B∨D → "Be strong OR best player" = disjunction of two positives<br>
+¬B∨¬D∨A means B∧D⇒A → if best player and practicing then strong<br>
+Match: C=keep practicing, A=strong, B=best player, D=drink milk.</div></div>
+
+<div class="sec"><div class="sec-title">28. Resolution Proof — Step-by-Step Template</div>
+<ol><li>List all given CNF clauses (KB)</li><li>Add ¬(what you want to prove) as new clause(s)</li><li>Find two clauses with complementary literals (P and ¬P)</li><li>Resolve: remove P and ¬P, combine remaining literals</li><li>Add resolvent to clause list</li><li>Repeat until □ produced or no more resolutions possible</li></ol>
+<div class="box be"><b>Ex. F23 Q4.3 complete proof:</b><br>KB clauses: (A∨B), (¬A), C, (¬B∨¬C∨D), (¬A∨¬B∨D). Prove D → add ¬D.
+<div class="proof">1. (A∨B) + (¬A)          → B
+2. B + (¬B∨¬C∨D)         → ¬C∨D
+3. (¬C∨D) + (¬D)          → ¬C
+4. (¬C) + C                → □ ✓</div></div>
+<div class="box be"><b>Ex. Prove KB⊨¬C∧¬D (F24 Q4.3):</b><br>KB has ¬C as fact. Need also ¬D.<br>From clauses: ¬B∨¬D∨A. With ¬B (from ¬C via rules) and ¬A situation, resolve to get ¬D.<br>Full trace: use all available clauses systematically.</div></div>
+
+<div class="sec"><div class="sec-title">29. Key Logic Distinctions Summary</div>
+<table><tbody><tr><th>Statement</th><th>True/False</th><th>Why</th></tr>
+<tr><td>Valid ↔ true in all models</td><td><span class="grn">TRUE</span></td><td>Definition</td></tr>
+<tr><td>Satisfiable ↔ true in all models</td><td><span class="red">FALSE</span></td><td>That's valid</td></tr>
+<tr><td>Prove KB⊨α: prove KB∨¬α unsat.</td><td><span class="red">FALSE</span></td><td>Should be KB∧¬α</td></tr>
+<tr><td>FC is goal-driven</td><td><span class="red">FALSE</span></td><td>FC is data-driven</td></tr>
+<tr><td>BC is data-driven</td><td><span class="red">FALSE</span></td><td>BC is goal-driven</td></tr>
+<tr><td>∀xP(x)≡¬∃x¬P(x)</td><td><span class="grn">TRUE</span></td><td>Quantifier duality</td></tr>
+<tr><td>∀x∃y R(x,y)≡∃y∀x R(x,y)</td><td><span class="red">FALSE</span></td><td>Order matters</td></tr>
+<tr><td>Modus Ponens complete for all PL</td><td><span class="red">FALSE</span></td><td>Only for Horn</td></tr>
+<tr><td>Resolution complete for PL</td><td><span class="grn">TRUE</span></td><td>Sound &amp; complete</td></tr>
+<tr><td>KB subset⊨α → KB⊨α</td><td><span class="grn">TRUE</span></td><td>More knowledge helps</td></tr></tbody></table></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">30. FOL Inference Strategy</div>
+<p>Choose inference method based on query type:</p>
+<ul><li><b>Propositional query, small KB</b>: truth table or resolution</li>
+<li><b>Horn KB, any query</b>: FC (forward) or BC (backward)</li>
+<li><b>General FOL, complex query</b>: FOL resolution with unification</li></ul>
+<p style="margin-top:2px"><b>Completeness caveat</b>: FOL resolution is complete but may not terminate if KB is inconsistent or query undecidable. Horn FOL FC/BC always terminate for ground atoms.</p></div>
+
+<div class="sec"><div class="sec-title">31. Common FOL Translation Errors</div>
+<table><tbody><tr><th>Intended meaning</th><th>WRONG</th><th>Correct</th></tr>
+<tr><td>All students smart</td><td>∀x Student(x)∧Smart(x)</td><td>∀x Student(x)⇒Smart(x)</td></tr>
+<tr><td>Someone eats everything</td><td>∀y∃x Eat(x,y)</td><td>∃x∀y Eat(x,y)</td></tr>
+<tr><td>Everyone loves someone</td><td>∀x∀y Loves(x,y)</td><td>∀x∃y Loves(x,y)</td></tr>
+<tr><td>Fontaine+Own+Attractive→Drink</td><td>∀x Fontaine(x)∧Own(x,y)…</td><td>∀x∀y Fontaine(x)∧Own(x,y)∧Attr(y)⇒Drink(x,y)</td></tr></tbody></table>
+<div class="box bw">⚠ Missing ∀y binding in the last example is a very common error — always quantify ALL variables!</div></div>
+
+<div class="sec"><div class="sec-title">32. Propositional Logic — Semantic Reasoning Shortcuts</div>
+<ul><li>If KB has ¬A and (A∨B) → can derive B immediately</li>
+<li>If KB has C (positive fact) and ¬B∨¬C∨D → add ¬B → get ¬B∨D</li>
+<li>Check if conclusion negation leads to contradiction with shortest resolution path first</li>
+<li>Work bottom-up: start from unit clauses (single literals), resolve with larger clauses</li></ul>
+<div class="box be"><b>Ex. F24 Q4.3 Prove ¬C∧¬D:</b><br>
+KB has ¬C directly as clause → ¬C proven trivially.<br>
+For ¬D: clause B∨D; clause ¬B∨¬D∨A; clause ¬C means not-practicing, use implications.<br>
+Add ¬(¬C∧¬D)=C∨D. Resolve C∨D with ¬C → D. Then need ¬D → resolve → □. ✓</div></div>
+
+<div class="sec"><div class="sec-title">33. FOL Exam Checklist</div>
+<ul><li>Every variable must be <b>bound</b> by a quantifier (∀ or ∃) — no free variables in sentences</li>
+<li>∀ with ⇒ ; ∃ with ∧ — check every translation</li>
+<li>Check quantifier order matches intended meaning</li>
+<li>Identify: is it constant (specific), variable (quantified), function (returns individual), predicate (returns T/F)?</li>
+<li>Atomic sentence: predicate(terms) only — no logical connectives inside</li>
+<li>Resolution: add ¬goal, find □</li>
+<li>FC: start from facts, fire rules forward</li>
+<li>BC: start from goal, decompose into subgoals</li></ul></div>
+</div>
+</div><!-- page2 end -->
+
+<!-- PAGE 3 -->
+<div class="page">
+<div class="ph"><span class="ph-title">CS181 AI · Midterm Cheat Sheet · Page 3/4 · Bayesian Networks — Structure &amp; Exact Inference</span><span class="ph-sub">Spring 2026 · ShanghaiTech</span></div>
+
+<div class="col">
+<div class="sec"><div class="sec-title">34. Bayesian Network — Definition</div>
+<p><b>Bayesian Network (BN)</b>: Directed Acyclic Graph (DAG) where each node = random variable, edges = direct probabilistic dependencies, each node has CPT (Conditional Probability Table) conditioned on parents.</p>
+<p><b>Global semantics (chain rule factorization):</b></p>
+<span class="f">P(X₁,X₂,…,Xₙ) = ∏ᵢ P(Xᵢ | Parents(Xᵢ))</span>
+<p><b>Local semantics</b>: each node is conditionally independent of all its non-descendants given its parents.</p>
+<div class="box be"><b>Ex. BN: T→F, T→P, M→F, M→P, F→B, P→B (Genshin Impact BN).</b><br>
+P(+t,+m,+f,+p,+b) = P(+t)·P(+m)·P(+f|+t,+m)·P(+p|+t,+m)·P(+b|+f,+p)<br>
+= 0.6·0.1·0.4·0.8·0.9 = 0.01728</div></div>
+
+<div class="sec"><div class="sec-title">35. D-Separation — Three Canonical Patterns</div>
+<div class="tc3">
+<div class="sb"><div class="sbt">① Chain</div>
+<span class="f">A → B → C</span>
+<p>A⊥C|B: <span class="grn">YES</span> (B blocks)<br>A⊥C: <span class="red">NO</span> (info flows)</p></div>
+<div class="sb"><div class="sbt">② Fork</div>
+<span class="f">A ← B → C</span>
+<p>A⊥C|B: <span class="grn">YES</span> (B blocks)<br>A⊥C: <span class="red">NO</span> (common cause)</p></div>
+<div class="sb"><div class="sbt red">③ Collider</div>
+<span class="f">A → B ← C</span>
+<p>A⊥C|B: <span class="red">NO</span> (B activates!)<br>A⊥C: <span class="grn">YES</span> (default independent)</p></div></div>
+<div class="box bw">⚠ <b>Collider reversal!</b> Observing the collider node B (or any of its descendants) creates A-C dependence ("explaining away" / Berkson's paradox).<br>⚠ If B's descendant D is observed → also activates the A→B←C path.</div>
+<p style="margin-top:3px"><b>D-separation algorithm:</b> A⊥B|E iff ALL undirected paths from A to B are blocked.</p>
+<p><b>A path is blocked if ANY triple along it satisfies:</b></p>
+<table><tbody><tr><th>Triple type</th><th>Blocked if…</th></tr>
+<tr><td>Chain: X→Y→Z or X←Y→Z (Fork)</td><td>Middle node Y <b>∈ E</b> (observed)</td></tr>
+<tr><td>Collider: X→Y←Z</td><td>Y ∉ E AND no descendant of Y ∈ E</td></tr></tbody></table>
+<div class="box be"><b>Ex. T→F←M (Fork at T,M for F; Collider at F for T,M).</b> Is T⊥M|F?<br>
+Path T→F←M: collider at F. F∈E (observed) → <span class="red">NOT blocked → T not ⊥M|F</span>.<br>
+Is T⊥M? Path T→F←M: collider at F, F∉E → blocked. No other path. → <span class="grn">T⊥M: YES</span>.</div></div>
+
+<div class="sec"><div class="sec-title">36. Markov Blanket</div>
+<span class="f">MB(X) = Parents(X) ∪ Children(X) ∪ OtherParents(Children(X))</span>
+<p>Given MB(X), X is conditionally independent of ALL other variables in the network. Used in Gibbs sampling.</p>
+<div class="box be"><b>Ex. BN: A→B, C→B, A→D, B→D. Find MB(A).</b><br>
+Parents(A)={}. Children(A)={B,D}. OtherParents(B)={C}. OtherParents(D)={B}.<br>
+MB(A) = {} ∪ {B,D} ∪ {C,B} = <span class="grn">{B,C,D}</span>.</div>
+<div class="box bw">⚠ Don't forget "co-parents" = other parents of X's children. Very commonly missed!<br>⚠ MB of a root node (no parents) = its children + co-parents of children.</div></div>
+
+<div class="sec"><div class="sec-title">37. Conditional Independence Assertions</div>
+<p>Claim: P(A|B)=P(A|B,C) ↔ A⊥C|B. Use d-separation to verify.</p>
+<div class="box be"><b>Ex. F23 BN: T→F,T→P,M→F,M→P,F→B,P→B. Three assertions:</b><br>
+1. P(T,F,M)=P(T)P(F)P(M)? Requires T,F,M mutually independent. Path T→F←M: collider F, F not obs → blocked. Path T→P←M: collider P, not obs → blocked. No T-M path otherwise. So T⊥M ✓. But T⊥F? Path T→F: direct edge → <span class="red">NOT independent. FAILS → NO.</span><br>
+2. P(T|B)=P(T|B,M)? T⊥M|B? Paths T→F→B←P←M: B is collider-descendant here? B is obs. Path T→F→B: chain, B obs? Actually F→B←P: F→B collider at B, B obs → activates T→F→B←P←M path. → T not ⊥M|B. <span class="red">NO.</span><br>
+3. P(F|T,M)=P(F|T,M,P)? F⊥P|T,M? Path F←T→P: T∈E → blocked. Path F←M→P: M∈E → blocked. All paths blocked. → <span class="grn">YES.</span></div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">38. Polytree</div>
+<p><b>Polytree</b>: BN where the underlying <b>undirected</b> graph has no cycles (is a tree/forest). Direction ignored for cycle detection.</p>
+<div class="box bw">⚠ ALL BNs are DAGs (no directed cycles). Polytree is stronger: no undirected cycles either.<br>⚠ Polytrees allow more efficient exact inference (no need to handle loops in message passing).</div>
+<div class="box be"><b>Ex. BN T→F, T→P, M→F, M→P, F→B, P→B:</b><br>
+Undirected edges: T-F, T-P, M-F, M-P, F-B, P-B. Undirected cycle: T-F-B-P-T. → <span class="red">NOT polytree</span>.<br>
+<b>Polytree example:</b> A→B→D, A→C (simple tree structure) → polytree ✓.</div></div>
+
+<div class="sec"><div class="sec-title">39. Exact Inference — Enumeration</div>
+<span class="f">P(Q|e) = α · Σ_{hidden h} P(Q,e,h)
+         = Σ_{h} P(Q,e,h) / Σ_{Q,h} P(Q,e,h)
+Use BN factorization to compute each P(Q,e,h):
+P(Q,e,h) = ∏ᵢ P(Xᵢ|Parents(Xᵢ)) for all variables</span>
+<div class="box be"><b>Ex. P(+b|+t,−m,−p): P fixed, F is hidden.</b><br>
+= [P(+b|+f,−p)·P(+f|+t,−m) + P(+b|−f,−p)·P(−f|+t,−m)] / P(+t,−m,−p)<br>
+Since P is evidence (−p), F is hidden. Numerator only.<br>
+= 0.1×0.1 + 0.0×0.9 = <b>0.01</b></div></div>
+
+<div class="sec"><div class="sec-title">40. Variable Elimination (VE)</div>
+<p>Eliminate hidden variables one at a time. Each elimination: collect all factors containing that variable → join (pointwise multiply) → sum out the variable.</p>
+<span class="f">Algorithm to compute P(Q|e):
+1. Start with all CPTs as factors
+2. Fix evidence: restrict factors to evidence values
+3. For each hidden variable Z (in chosen order):
+   a. Collect all factors f₁,…,fₖ mentioning Z
+   b. New factor = Σ_Z (f₁ × f₂ × … × fₖ)  [join+sum]
+   c. Add new factor to factor list
+4. Multiply remaining factors, normalize</span>
+<div class="box be"><b>Ex. Factor operations:</b><br>
+P(A|B) × P(B) = P(A,B) &nbsp; [join on B]<br>
+Σ_B P(A,B) = P(A) &nbsp; [sum out B]<br>
+P(A|C) × P(B|A,C): join → P(A,B|C) [both mention A]<br>
+P(A|B) × P(C|A,B) × P(B) → join all on B → Σ_B → P(A,C)</div>
+<div class="box bw">⚠ <b>Factor size</b> = #rows = 2^(#variables in factor) for binary vars. Large factors = slow.<br>⚠ Elimination <b>order matters</b>: good order = small intermediate factors.<br>⚠ <b>Largest factor exam question</b>: simulate each ordering, track max factor size at each step.</div>
+<div class="box be"><b>Ex. F23 Q5.1.4: Find ordering with largest max factor to compute P(+b).</b><br>
+Orderings considered: P,T,F,M and F,P,M,T both create a factor involving {T,M,F,P} (4 vars = 16 rows) as intermediate. These are the worst orderings. Answer: <span class="grn">AD (P,T,F,M and F,P,M,T)</span>.</div></div>
+
+<div class="sec"><div class="sec-title">41. Computing Probabilities — Pattern</div>
+<p>For P(+a,+b,+d) in BN A→B, C→B, A→D, B→D:</p>
+<span class="f">P(+a,+b,+d) = Σ_c P(+a)·P(c)·P(+b|+a,c)·P(+d|+a,+b)
+= P(+a)·[P(+c)P(+b|+a,+c)+P(−c)P(+b|+a,−c)]·P(+d|+a,+b)
+= 0.05·[0.3·0.65+0.7·0.15]·0.60
+= 0.05·0.300·0.60 = 0.009</span>
+<div class="box bt">Always check: which vars are in numerator (query+evidence), which are marginalized (hidden). Apply chain rule via BN structure.</div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">42. Markov Networks</div>
+<p><b>Markov Network (Undirected Graphical Model)</b>: undirected graph + potential functions ϕ over cliques.</p>
+<span class="f">P(x) = (1/Z) · ∏_c ϕ_c(x_c)
+Z = Σ_x ∏_c ϕ_c(x_c)  [partition/normalization constant]</span>
+<p>Potentials ϕ: non-negative functions (NOT probabilities themselves).</p>
+<div class="box bw">⚠ Potentials don't sum to 1. Z normalizes.<br>⚠ Cannot read conditional probabilities directly from potentials (unlike BN CPTs).</div>
+<p><b>Independence in Markov Net</b>: A⊥B|S iff S <b>separates</b> A from B (removing S nodes disconnects A from B in graph).</p>
+<div class="box be"><b>Ex. Markov net: A-C-B chain.</b> A⊥B|C? Remove C: A,B disconnected → <span class="grn">YES</span>.<br>
+<b>4-node square A-B-C-D all connected:</b> A⊥C|B,D? Remove B,D: A and C disconnected → <span class="grn">YES</span>.</div></div>
+
+<div class="sec"><div class="sec-title">43. Cliques &amp; Maximal Cliques</div>
+<p><b>Clique</b>: subset where every pair of nodes is connected. <b>Maximal clique</b>: cannot add any more nodes.</p>
+<div class="box be"><b>Ex. F23 Q10: Markov net A,B,C,D; edges A-C, A-D, B-C, B-D, C-D.</b><br>
+{A,C,D}: all pairs connected (A-C✓,A-D✓,C-D✓). Can add B? B-A? No edge → can't. <b>Maximal: {A,C,D}</b>.<br>
+{B,C,D}: B-C✓, B-D✓, C-D✓. Can add A? A-B? No. <b>Maximal: {B,C,D}</b>.<br>
+A,C,D is indeed a maximal clique ✓.</div>
+<div class="box be"><b>Compute P(+a,+b,+c,+d):</b><br>
+= ϕ(+a,+c,+d)×ϕ(+b,+c,+d) / Z = 10×40/Z.<br>
+Compute Z = sum over all 16 assignments of ϕ(A,C,D)×ϕ(B,C,D).<br>
+Z = (10+20+30+40)×? Actually: Σ_{a,c,d} ϕ(a,c,d) × Σ_{b} ϕ(b,c,d) — NO, can't factor like this since C,D shared.<br>
+Must enumerate: Σ_{a,b,c,d} ϕ(a,c,d)·ϕ(b,c,d). = Σ_{c,d} [Σ_a ϕ(a,c,d)] · [Σ_b ϕ(b,c,d)].<br>
+(+c+d): [10+40]·[40+10]=50·50=2500. (+c-d): [20+30]·[30+20]=2500. (-c+d): [30+20]·[20+30]=2500. (-c-d): [40+10]·[10+40]=2500. Z=10000.<br>
+P(+a,+b,+c,+d) = 10×40/10000 = 400/10000 = <span class="grn">0.04</span> ✓</div></div>
+
+<div class="sec"><div class="sec-title">44. BN ↔ Markov Network Conversion</div>
+<p><b>BN → Markov Net (Moralization)</b>: for every pair of nodes with common child, add undirected edge between them ("marry co-parents"). Then make all edges undirected.</p>
+<p><b>Markov Net → BN</b>: must capture all clique dependencies. BN that "always encodes same distribution" needs edges for all maximal clique members.</p>
+<div class="box be"><b>Ex. F23 Q9: Markov net A-D-B-C-A (4-cycle: A connected to B,C,D; etc.).</b><br>
+To encode same distribution, BN needs to capture all dependencies. BN (d) with most complete connections works. Reasoning: Markov net's cliques require BN to have those conditional dependencies — minimal BN missing edges might assert false independence.</div>
+<div class="box bw">⚠ A BN asserting independence NOT present in Markov net → cannot always encode same distribution.</div></div>
+
+<div class="sec"><div class="sec-title">45. BN Markov Blanket Examples</div>
+<div class="box be"><b>F24 BN: A→B, C→B, A→D, B→D. MB(A)=?</b><br>
+Children(A)={B,D}. Parents(A)={}. OtherParents(B)={C}. OtherParents(D)={B}.<br>
+MB(A) = {B,D}∪{C,B} = <span class="grn">{B,C,D}</span>.<br>
+<b>MB(B)=?</b> Parents(B)={A,C}. Children(B)={D}. OtherParents(D)={A}.<br>
+MB(B) = {A,C}∪{D}∪{A} = {A,C,D}.</div>
+<div class="box be"><b>F23 BN: T→F,T→P,M→F,M→P,F→B,P→B. MB(T)=?</b><br>
+Children(T)={F,P}. Parents(T)={}. OtherParents(F)={M}. OtherParents(P)={M}.<br>
+MB(T) = {}∪{F,P}∪{M,M} = <span class="grn">{F,P,M}</span>.</div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">46. D-Separation — Practice Examples</div>
+<div class="box be"><b>F24 Q5.1.2: BN A→B, C→B, A→D, B→D:</b><br>
+1. D⊥C|A,B: Paths D←B←C: chain, B∈E → blocked. D←A→? no path to C without B. All blocked → <span class="grn">YES</span>.<br>
+2. A⊥C|B,D: Path A→B←C: collider B, B∈E → <span class="red">UNBLOCKED → NO</span>. (Collider! Observing B activates.)<br>
+3. A⊥C: Path A→B←C: collider B, B∉E, no descendant of B in E → <span class="grn">BLOCKED → YES</span>.</div>
+<div class="box be"><b>HW3: Large BN, A independent of L given G,K?</b><br>
+Paths from A to L: A→B→E→K→H→L; A→D→G→H→L; etc. Check if G,K block all.<br>
+G∈E, K∈E. Chain through G: blocked. Chain through K: blocked. But some path through D→J→H or similar may not be blocked by G,K alone → Answer: <span class="red">FALSE (not guaranteed independent)</span>.</div></div>
+
+<div class="sec"><div class="sec-title">47. Independence via Structure — Quick Checks</div>
+<ul><li>Root nodes (no parents) in BN: independent of each other by default (if no common descendant observed)</li>
+<li>Nodes in same clique of Markov net: generally dependent</li>
+<li>Leaf nodes: always depend on their parents</li>
+<li>Given all parents of X: X⊥{all non-descendants, all ancestors}</li></ul>
+<div class="box bw">⚠ "Given parents" makes node independent of ancestors — but NOT necessarily independent of descendants!<br>⚠ "Not in each other's Markov Blanket" ≠ independent (could still have path through graph).</div></div>
+
+<div class="sec"><div class="sec-title">48. Exam Probability Calculation Checklist</div>
+<ol><li>Write out full joint probability using BN chain rule</li>
+<li>Identify: Query var Q, Evidence vars E (fixed), Hidden vars H (sum over)</li>
+<li>Marginalize: P(Q|E) ∝ Σ_H P(Q,E,H) = Σ_H ∏ᵢ P(Xᵢ|Par(Xᵢ))</li>
+<li>Simplify using conditional independence if possible</li>
+<li>Normalize at end: P(Q=q|E) = unnorm_q / Σ_{q'} unnorm_{q'}</li></ol>
+<div class="box be"><b>Ex. P(+b|+t,−m,−p) step-by-step:</b><br>
+Hidden: F. Evidence: T=+t, M=−m, P=−p. Query: B=+b.<br>
+P(+b|+t,−m,−p) ∝ Σ_F P(+b|F,−p)·P(F|+t,−m)<br>
+[T,M,P are given, so only F is hidden. B depends on F,P so factor P(B|F,P).]<br>
+= P(+b|+f,−p)·P(+f|+t,−m) + P(+b|−f,−p)·P(−f|+t,−m)<br>
+= 0.1·0.1 + 0.0·0.9 = <b>0.01</b><br>
+(No normalization needed since all other vars are fixed.)</div></div>
+</div>
+</div><!-- page3 end -->
+
+<!-- PAGE 4 -->
+<div class="page">
+<div class="ph"><span class="ph-title">CS181 AI · Midterm Cheat Sheet · Page 4/4 · Approximate Inference &amp; Master Trap List</span><span class="ph-sub">Spring 2026 · ShanghaiTech</span></div>
+
+<div class="col">
+<div class="sec"><div class="sec-title">49. Prior Sampling</div>
+<span class="f">PriorSample(BN):
+  sample = {}
+  for Xᵢ in topological order:
+    sample[Xᵢ] ~ P(Xᵢ | sample[Parents(Xᵢ)])
+  return sample</span>
+<p>Estimate P(Q=q) ≈ #samples_with_Q=q / total_samples. Cannot estimate P(Q|e) directly.</p>
+<div class="box bw">⚠ Prior sampling doesn't condition on evidence → only gives marginal (unconditional) estimates.</div></div>
+
+<div class="sec"><div class="sec-title">50. Rejection Sampling</div>
+<span class="f">Repeat:
+  s ← PriorSample(BN)
+  if s matches all evidence vars: KEEP
+  else: REJECT (discard whole sample)
+P(Q=q|e) ≈ #kept_with_Q=q / #kept_total</span>
+<div class="box bw">⚠ Reject the <b>entire sample</b> if any evidence variable mismatches (not just that variable).<br>⚠ <b>Stop early</b>: once a variable conflicts with evidence during sampling, can discard immediately.<br>⚠ Extremely inefficient when evidence is rare (low probability).</div>
+<div class="box be"><b>Ex. HW3 Q10: P(D|B=0,E=1). BN: A→B→C,D→E. Order: A,B,C,D,E. Numbers: 0.426,0.348,0.584,0.913,0.637.</b><br>
+A: P(A=0)=0.3; 0.426≥0.3 → A=1.<br>
+B: P(B=0|A=1)=0.4; 0.348&lt;0.4 → B=0 ✓ (evidence match, continue).<br>
+C: P(C=0|B=0)=0.5; 0.584≥0.5 → C=1.<br>
+D: P(D=0|B=0)=0.6; 0.913≥0.6 → D=1.<br>
+E: P(E=0|C=1,D=1)=0.9; 0.637&lt;0.9 → E=0. Evidence E=1 → <span class="red">E REJECTED! Discard sample.</span></div></div>
+
+<div class="sec"><div class="sec-title">51. Likelihood Weighting (LW)</div>
+<span class="f">LWSample(BN, evidence e):
+  w = 1.0;  sample = {}
+  for Xᵢ in topological order:
+    if Xᵢ is evidence variable:
+      sample[Xᵢ] = eᵢ           // FIX to evidence value
+      w *= P(eᵢ | sample[Par(Xᵢ)])  // multiply into weight
+    else:
+      sample[Xᵢ] ~ P(Xᵢ | sample[Par(Xᵢ)])  // sample freely
+  return (sample, w)
+
+Estimate: P(Q=q|e) ≈ Σ{w : Q=q} / Σ{all w}</span>
+<div class="box bw">⚠ <b>ONLY evidence variables contribute to weight.</b> Non-evidence variables are sampled freely — their sampled value does NOT affect w.<br>⚠ If you accidentally sample an evidence variable instead of fixing it → biased estimate.<br>⚠ Evidence variable that appears BEFORE its parents in topo order: wait until parent sampled, then fix child and multiply P(child|sampled_parent) into weight.</div>
+<div class="box be"><b>Ex. F23: P(+b|+m). Sample (+t,+m,+f,+p,+b). Evidence = {M=+m}.</b><br>
+T: sample freely (no weight contribution). M: fix to +m; w *= P(+m)=0.1. F: sample freely. P: sample freely. B: sample freely. Weight = <span class="grn">0.1</span>.</div>
+<div class="box be"><b>Ex. F24 Q5.2.1: P(A|+b,+c,+d). Evidence={B=+b,C=+c,D=+d}. Sample (+a,+b,−c,+d).</b><br>
+A: sample freely (A=+a). C: evidence, fix +c; but sample has C=−c → this sample conflicts with evidence C. Since we forgot to fix C and just sampled: C was sampled as −c, not fixed. This sample should be <span class="red">rejected</span> (treat as rejection sampling for that variable). Weight for (+a,+b,+c,+d): w=P(+c)·P(+b|+a,+c)·P(+d|+a,+b)=0.3·0.65·0.60=0.117.</div></div>
+
+<div class="sec"><div class="sec-title">52. LW — Step-by-Step Guide</div>
+<ol><li>List evidence variables and their values.</li>
+<li>Process variables in <b>topological order</b>.</li>
+<li>For each evidence variable: set to its value; w *= P(evidence_val | current_parent_values).</li>
+<li>For each non-evidence variable: sample from P(Xᵢ | current_parent_values). w unchanged.</li>
+<li>Collect (sample, weight).</li>
+<li>Repeat many times. Normalize to estimate P(Q|e).</li></ol>
+<div class="box be"><b>Ex. HW3 Q5: P(C=1|B=1,E=1). BN: A→B→C,D→E. Order: A,B,C,D,E.</b><br>
+Evidence={B=1,E=1}. Numbers: 0.249,0.052,0.299,0.773,0.715,…<br>
+A: free. P(A=0)=0.2; 0.249≥0.2 → A=1. (use 0.249)<br>
+B: evidence=1. w*=P(B=1|A=1)=0.8. (no number used)<br>
+C: free. P(C=0|B=1)=0.1; 0.052&lt;0.1 → C=0. (use 0.052)<br>
+D: free. P(D=0|B=1)=0.3; 0.299&lt;0.3 → D=0. (use 0.299)<br>
+E: evidence=1. w*=P(E=1|C=0,D=0)=0.8. (no number)<br>
+Final w = 0.8×0.8 = <span class="grn">0.64</span>. Sample: A=1,B=1,C=0,D=0,E=1.</div></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">53. Gibbs Sampling</div>
+<span class="f">GibbsSample(BN, evidence e, n_iters):
+  // Initialize non-evidence vars to any value
+  state = {e} ∪ {Xᵢ=random for non-evidence Xᵢ}
+  samples = []
+  for i in 1..n_iters:
+    pick non-evidence variable X to resample
+    // Compute P(X | all other current values)
+    //  = P(X | MB(X)) ∝ P(X|par) × ∏_{Y∈Ch(X)} P(Y|par(Y))
+    resample X from this distribution
+    state[X] = new value
+    samples.append(state.copy())
+  return samples</span>
+<div class="box bw">⚠ <b>Only non-evidence variables are resampled!</b> Evidence stays fixed.<br>⚠ Use <b>CURRENT</b> values of all other variables (not initial values).<br>⚠ Must include ALL children of X in the product formula.<br>⚠ Always normalize the distribution before sampling!</div></div>
+
+<div class="sec"><div class="sec-title">54. Gibbs — P(X|MB) Computation</div>
+<span class="f">P(X=x | MB(X)) ∝ P(X=x | Parents(X))
+                × ∏_{Y ∈ Children(X)} P(Y=current | Parents(Y) with X=x)</span>
+<p>Normalize over all possible values of X.</p>
+<div class="box be"><b>Ex. F23 Q5.2.3: Resample T. State=(+t,+m,+f,+p,+b). MB(T)={F,P,M}.</b><br>
+P(+t|+m,+f,+p) ∝ P(+t)×P(+f|+t,+m)×P(+p|+t,+m)<br>
+= 0.6×0.4×0.8 = 0.192<br>
+P(−t|+m,+f,+p) ∝ 0.4×0.8×0.2 = 0.064<br>
+Normalize: P(+t)=0.192/(0.192+0.064)=<span class="grn">0.75</span>.</div>
+<div class="box be"><b>Ex. F24 Q5.2.2: Resample D. State=(+a,−b,+c,+d). BN: A→B,C→B,A→D,B→D.</b><br>
+MB(D)=Parents(D)∪Children(D)∪CoParents = {A,B}∪{}∪{} = {A,B}.<br>
+D has no children → only multiply P(D|A,B).<br>
+P(+d|+a,−b) = 0.10; P(−d|+a,−b) = 0.90. Already normalized (parents fixed).<br>
+<span class="grn">+d: 0.10, −d: 0.90</span>.</div>
+<div class="box be"><b>Ex. HW3 Q9: Which Gibbs updates are INVALID?</b><br>
+Valid update: pick non-evidence variable, sample from P(X|MB(X)). Evidence vars are fixed (A=1,B=0,F=0).<br>
+Invalid: sampling B (evidence!) or using wrong parents/children in distribution.<br>
+Check: C's MB in given BN = {A,F,D,E}? Verify by structure. "C,P(C|A=1,F=0),C=1" is valid if C is non-evidence and {A,F} are indeed parents or MB of C. Valid ✓. "E,P(E|B=0,G=1),E=0" then G,P(G|E=1),G=0 valid if G is non-evidence. Check next update uses E=0 now (updated). Invalid update: one where distribution doesn't match true MB.</div></div>
+
+<div class="sec"><div class="sec-title">55. Four Sampling Methods — Comparison</div>
+<table><tbody><tr><th>Method</th><th>Evidence</th><th>Weight</th><th>Pros</th><th>Cons</th></tr>
+<tr><td>Prior Sampling</td><td>None</td><td>None</td><td>Simple</td><td>No conditional estimates</td></tr>
+<tr><td>Rejection Sampling</td><td>Reject mismatches</td><td>0 or 1</td><td>Unbiased</td><td>Inefficient (rare evidence)</td></tr>
+<tr><td>Likelihood Weighting</td><td>Fix; weight</td><td>∏P(eᵢ|par)</td><td>All samples used</td><td>High variance; upstream evidence ignored</td></tr>
+<tr><td>Gibbs Sampling</td><td>Fixed always</td><td>None</td><td>Efficient MCMC</td><td>Correlated samples; slow convergence</td></tr></tbody></table></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">56. Master Trap List — Search &amp; CSP</div>
+<ul><li>Minimax time = O(b<b>^m</b>), NOT O(b·m) or O(b·d). Space = O(bm).</li>
+<li>UCS complete only when min arc cost <b>&gt; 0</b> (strictly positive).</li>
+<li>BFS optimal only for <b>unit/equal edge costs</b>.</li>
+<li>DFS: space O(bm), NOT O(b^m).</li>
+<li>h(n)=0 is always admissible (never overestimates).</li>
+<li>Consistent ⟹ Admissible. Admissible ⟹ Consistent is FALSE.</li>
+<li>Admissible but not consistent + graph search → NOT guaranteed optimal.</li>
+<li>Tree CSP: O(<b>nd²</b>), not O(n·d) or O(nd).</li>
+<li>Arc (X,Y) in AC-3: removes values from <b>X's</b> domain. After revision of X, re-add (Z,X) for Z's neighbors of X.</li>
+<li>MRV = variable with fewest domain values. LCV = value ruling out fewest for neighbors.</li>
+<li>Genetic: selection → <b>crossover first, mutation second</b>.</li>
+<li>Min-conflicts counts violated constraints in <b>current full</b> assignment.</li>
+<li>Standard minimax fails on <b>cyclic game graphs</b> (loops).</li>
+<li>Zero-sum: utilities are OPPOSITE, not independent.</li>
+<li>Alpha-beta: <b>order matters</b>! Best order → O(b^(m/2)); reversed → fewer prunings.</li>
+<li>Expectimax: changing probabilities → cannot reuse same pruning.</li>
+<li>Coalition ≠ always benefit members individually.</li></ul></div>
+
+<div class="sec"><div class="sec-title">57. Master Trap List — Logic</div>
+<ul><li>Valid = ALL models. Satisfiable = SOME models. Completely different!</li>
+<li>Prove KB⊨α: add <b>¬α</b> to KB, find □. NOT KB∨¬α.</li>
+<li>FC = <b>data-driven</b>. BC = <b>goal-driven</b>. Reversed = exam trap.</li>
+<li>Modus Ponens sound &amp; complete for <b>Horn ONLY</b>, not general PL.</li>
+<li>Horn clause: <b>at most one positive</b> literal (head can be absent too).</li>
+<li>∀ → ⇒; ∃ → ∧. Wrong choice → logically incorrect statement.</li>
+<li>∀x∃y ≢ ∃y∀x (quantifier order is NOT commutative).</li>
+<li>∀xP(x) ≡ ¬∃x¬P(x) → TRUE equivalent.</li>
+<li>CNF final form: only ∧, ∨, ¬. No ⇒ or ⟺ allowed.</li>
+<li>Atomic sentence: predicate(terms). No connectives inside. Functions return individuals (terms).</li>
+<li>KB subset⊨α → KB⊨α. Adding facts cannot remove entailments.</li>
+<li>Resolution: add ¬conclusion, derive □ for proof by contradiction.</li></ul></div>
+
+<div class="sec"><div class="sec-title">58. Master Trap List — Bayesian Networks</div>
+<ul><li>Collider default = INDEPENDENT. Observed collider = DEPENDENT.</li>
+<li>Observing collider's DESCENDANT also activates the path.</li>
+<li>MB includes co-parents (other parents of X's children). Commonly missed!</li>
+<li>VE factor size = 2^(#vars in factor) for binary. Order matters → affects max factor.</li>
+<li>Polytree = no undirected cycles (stronger than DAG which just means no directed cycles).</li>
+<li>LW weight = product of P(eᵢ|parents) for evidence vars ONLY.</li>
+<li>Non-evidence sampled values do NOT affect LW weight.</li>
+<li>Forgetting to fix evidence in LW → biased/inconsistent estimate.</li>
+<li>Rejection sampling: reject ENTIRE sample on mismatch, not just that variable.</li>
+<li>Gibbs: only resample NON-EVIDENCE variables. Evidence stays fixed.</li>
+<li>Gibbs: always use CURRENT state of all other variables (not initial).</li>
+<li>Gibbs: normalize the conditional distribution before sampling.</li>
+<li>Markov net independence: purely graph-separation (no direction/d-sep complexity).</li>
+<li>Markov net potentials ≠ probabilities (need Z for normalization).</li>
+<li>BN→Markov net: moralize (marry co-parents), then undirect all edges.</li></ul></div>
+</div>
+
+<div class="col col-div">
+<div class="sec"><div class="sec-title">59. All Key Formulas — Quick Reference</div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Search</div>
+<span class="f">f(n)=g(n)+h(n)  [A*]
+h(n)≤h*(n)       [admissible]
+h(n)≤c(n,n')+h(n') [consistent]</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Alpha-Beta</div>
+<span class="f">Init α=-∞, β=+∞
+MAX: if v≥β → prune; α=max(α,v)
+MIN: if v≤α → prune; β=min(β,v)</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Logic Equivalences</div>
+<span class="f">A⇒B ≡ ¬A∨B
+¬(A∧B) ≡ ¬A∨¬B
+¬(A∨B) ≡ ¬A∧¬B
+A∨(B∧C) ≡ (A∨B)∧(A∨C)
+∀xP ≡ ¬∃x¬P</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">BN Fundamentals</div>
+<span class="f">P(X₁…Xₙ)=∏P(Xᵢ|Par(Xᵢ))
+MB(X)=Par∪Ch∪CoPar(Ch)
+Bayes: P(A|B)=P(B|A)P(A)/P(B)</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Markov Net</div>
+<span class="f">P(x)=(1/Z)·∏ϕ_c(x_c)
+Z=Σ_x∏ϕ_c(x_c)</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Likelihood Weighting</div>
+<span class="f">w=∏_{Eᵢ∈Evidence}P(eᵢ|Par(Eᵢ))
+P(Q=q|e)≈Σ{w:Q=q}/Σ{all w}</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Gibbs Sampling</div>
+<span class="f">P(Xᵢ=x|MB)∝P(Xᵢ=x|Par)
+         ×∏_{Y∈Ch(Xᵢ)}P(Y_cur|Par(Y))
+→ normalize!</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Expectimax</div>
+<span class="f">E[chance]=Σᵢ P(cᵢ)·V(cᵢ)</span></div>
+<div class="sb" style="margin-bottom:2px"><div class="sbt">Variable Elimination</div>
+<span class="f">Join Z-factors (pointwise ×)
+Sum out Z: Σ_Z (joined factor)
+Repeat. Normalize final.</span></div></div>
+
+<div class="sec"><div class="sec-title">60. D-Separation Quick Reference</div>
+<table><tbody><tr><th>Triple</th><th>Blocked if…</th></tr>
+<tr><td>X→Y→Z (chain)</td><td>Y ∈ evidence E</td></tr>
+<tr><td>X←Y→Z (fork)</td><td>Y ∈ evidence E</td></tr>
+<tr><td>X→Y←Z (collider)</td><td>Y ∉ E AND no descendant of Y ∈ E</td></tr></tbody></table>
+<p style="margin-top:2px">A⊥B|E iff ALL undirected paths from A to B are blocked.</p></div>
+
+<div class="sec"><div class="sec-title">61. Exam Day Checklist</div>
+<ul><li>□ vs #: check if "select ALL" or "select ONE" for each question</li>
+<li>Resolution: add ¬conclusion, resolve to □</li>
+<li>CNF final: no ⇒ or ⟺ anywhere</li>
+<li>Gibbs: normalize! don't forget</li>
+<li>LW: write weight formula first, then substitute</li>
+<li>D-sep: check EVERY path from A to B (not just shortest)</li>
+<li>FOL: bind ALL variables with quantifiers</li>
+<li>Alpha-beta: track α,β values at EVERY node</li>
+<li>BN probability: expand via chain rule, substitute CPT values</li>
+<li>Collider: default = independent; observed = dependent</li>
+<li>MB: parents + children + co-parents of children</li></ul>
+<p style="margin-top:3px;font-size:8px;color:#666">Format: 10 MCQ + 4 problems · 100 min · Closed book + 1 A4 cheat sheet · Apr 20, 教学中心101</p></div>
+</div>
+</div><!-- page4 end -->
+
+
+
+</body></html>
