@@ -1,0 +1,43 @@
+name: Auto Update Course Catalog
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - 'catalog.json'
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate Course Catalog
+        run: |
+          python3 scripts/generate_catalog.py
+
+      - name: Commit and Push if Changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if [[ -n $(git status -s catalog.json) ]]; then
+            git add catalog.json
+            git commit -m "chore: auto-update catalog.json [skip ci]"
+            git push
+            echo "✅ catalog.json updated and pushed."
+          else
+            echo "ℹ️ No changes in catalog.json."
+          fi
