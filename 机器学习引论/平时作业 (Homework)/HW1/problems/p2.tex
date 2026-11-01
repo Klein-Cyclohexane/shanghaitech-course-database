@@ -1,0 +1,86 @@
+\item \defpoints{15} [Math review(Linear Algebra)] Eigenvalue Decomposition(EVD) / Spectral Decomposition.
+Find the geometric and algebraic multiplicity of each eigenvalue of the following matrix A, and determine whether A is diagonalizable. If A is diagonalizable, then find a matrix $P$ that diagonalizes $A$, and find the diagonal matrix $\Lambda$ such that $\Lambda = P^{-1}AP$. Furthermore, if $A$ could be orthogonally diagonalized, write $\Lambda$ as $\Lambda = P^{\top}AP$.
+
+\begin{itemize}
+    \item[(a)] $A=\begin{bmatrix} -1 & 4 & -2 \\ -3 & 4 & 0 \\ -3 & 1 & 3 \end{bmatrix}$. ~\defpoints{5}
+    \item[(b)] $A=\begin{bmatrix} 5 & 0 & 0 \\ 1 & 5 & 0 \\ 0 & 1 & 5 \end{bmatrix}$. ~\defpoints{5}
+    \item[(c)] $A=\begin{bmatrix} 4 & 2 & 2 \\ 2 & 4 & 2 \\ 2 & 2 & 4 \end{bmatrix}$. ~\defpoints{5}
+\end{itemize}
+
+\textcolor{blue}{Solution} \\
+(a) $A=\begin{bmatrix} -1 & 4 & -2 \\ -3 & 4 & 0 \\ -3 & 1 & 3 \end{bmatrix}$.\\
+for $A$ we have the characteristic polynomial $p(\lambda) = \det(A - \lambda I) = 0$.
+\begin{align*}
+    p(\lambda) &= \begin{vmatrix} -1-\lambda & 4 & -2 \\ -3 & 4-\lambda & 0 \\ -3 & 1 & 3-\lambda \end{vmatrix} \\
+    &= -\lambda^3 + 6\lambda^2 - 11\lambda + 6 \\
+    &= -(\lambda - 1)(\lambda - 2)(\lambda - 3)
+\end{align*}
+Thus, the eigenvalues are $\lambda_1 = 1, \lambda_2 = 2, \lambda_3 = 3$.\\
+For $\lambda_1 = 1$, we have $A - \lambda_1 I = \begin{bmatrix} -2 & 4 & -2 \\ -3 & 3 & 0 \\ -3 & 1 & 2 \end{bmatrix}$.\\
+Reduced row echelon form of $A - \lambda_1 I$ is $\begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$.\\
+The eigenvector corresponding to $\lambda_1 = 1$ is $\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}$. The geometric multiplicity of $\lambda_1 = 1$ is 1 and the algebraic multiplicity is 1.\\
+For $\lambda_2 = 2$, we have $A - \lambda_2 I = \begin{bmatrix} -3 & 4 & -2 \\ -3 & 2 & 0 \\ -3 & 1 & 1 \end{bmatrix}$.\\
+Reduced row echelon form of $A - \lambda_2 I$ is $\begin{bmatrix} 1 & 0 & -\frac{2}{3} \\ 0 & 1 & -1 \\ 0 & 0 & 0 \end{bmatrix}$.\\
+The eigenvector corresponding to $\lambda_2 = 2$ is $\begin{bmatrix} 2 \\ 3 \\ 3 \end{bmatrix}$. The geometric multiplicity of $\lambda_2 = 2$ is 1 and the algebraic multiplicity is 1.\\
+For $\lambda_3 = 3$, we have $A - \lambda_3 I = \begin{bmatrix} -4 & 4 & -2 \\ -3 & 1 & 0 \\ -3 & 1 & 0 \end{bmatrix}$.\\
+Reduced row echelon form of $A - \lambda_3 I$ is $\begin{bmatrix} 1 & 0 & -\frac{1}{4} \\ 0 & 1 & -\frac{3}{4} \\ 0 & 0 & 0 \end{bmatrix}$.\\
+The eigenvector corresponding to $\lambda_3 = 3$ is $\begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix}$. The geometric multiplicity of $\lambda_3 = 3$ is 1 and the algebraic multiplicity is 1.\\
+Since the algebraic multiplicity of each eigenvalue is equal to the geometric multiplicity of each eigenvalue, $A$ is diagonalizable.\\
+We can obtain the matrix $P$ by taking the eigenvectors of $A$ as columns of $P$.
+\begin{align*}
+    P &= \begin{bmatrix} 1 & 2 & 1 \\ 1 & 3 & 3 \\ 1 & 3 & 4 \end{bmatrix}
+\end{align*}
+The diagonal matrix $\Lambda$ is given by the eigenvalues of $A$ on the diagonal.
+\begin{align*}
+    \Lambda &= \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 3 \end{bmatrix}
+\end{align*}
+If $A$ could be orthogonally diagonalized, then A must be symmetric. Since $A$ is not symmetric, $A$ cannot be orthogonally diagonalized.\\
+
+(b) $A=\begin{bmatrix} 5 & 0 & 0 \\ 1 & 5 & 0 \\ 0 & 1 & 5 \end{bmatrix}$.\\
+Because A is a diagonal matrix, the eigenvalues are the diagonal entries of A. Thus, the eigenvalues are $\lambda_1 = 5, \lambda_2 = 5, \lambda_3 = 5$.\\
+For $\lambda_1 = 5$, we have $A - \lambda_1 I = \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}$.\\
+Reduced row echelon form of $A - \lambda_1 I$ is $\begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0 \end{bmatrix}$.\\
+The eigenvector corresponding to $\lambda_1 = 5$ is $\begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$. The geometric multiplicity of $\lambda_1 = 5$ is 1 and the algebraic multiplicity is 3.\\
+Samely, the geometric multiplicity of $\lambda_2 = 5$ and $\lambda_3 = 5$ is 1 and the algebraic multiplicity is 3.\\
+As we can see, here the algebraic multiplicity of each eigenvalue is not equal to the geometric multiplicity of each eigenvalue. Thus, $A$ is not diagonalizable.\\
+
+(c) $A=\begin{bmatrix} 4 & 2 & 2 \\ 2 & 4 & 2 \\ 2 & 2 & 4 \end{bmatrix}$.\\
+for $A$ we have the characteristic polynomial $p(\lambda) = \det(A - \lambda I) = 0$.
+\begin{align*}
+    p(\lambda) &= \begin{vmatrix} 4-\lambda & 2 & 2 \\ 2 & 4-\lambda & 2 \\ 2 & 2 & 4-\lambda \end{vmatrix} \\
+    &= -\lambda^3 + 12\lambda^2 - 36\lambda + 32 \\
+    &= -(\lambda - 2)^2(\lambda - 8)
+\end{align*}
+Thus, the eigenvalues are $\lambda_1 = 2, \lambda_2 = 2, \lambda_3 = 8$.\\
+For $\lambda_1 = 2$, we have $A - \lambda_1 I = \begin{bmatrix} 2 & 2 & 2 \\ 2 & 2 & 2 \\ 2 & 2 & 2 \end{bmatrix}$.\\
+Reduced row echelon form of $A - \lambda_1 I$ is $\begin{bmatrix} 1 & 1 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}$.\\
+The eigenvectors corresponding to 2 are $\begin{bmatrix} -1 \\ 0 \\ 1 \end{bmatrix}$ and $\begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix}$. The geometric multiplicity of $\lambda_1 = 2$ is 2 and the algebraic multiplicity is 2.\\
+Samely, the geometric multiplicity of $\lambda_2 = 2$ is 2 and the algebraic multiplicity is 2.\\
+For $\lambda_3 = 8$, we have $A - \lambda_3 I = \begin{bmatrix} -4 & 2 & 2 \\ 2 & -4 & 2 \\ 2 & 2 & -4 \end{bmatrix}$.\\
+Reduced row echelon form of $A - \lambda_3 I$ is $\begin{bmatrix} 1 & 0 & -1 \\ 0 & 1 & -1 \\ 0 & 0 & 0 \end{bmatrix}$.\\
+The eigenvector corresponding to $\lambda_3 = 8$ is $\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}$. The geometric multiplicity of $\lambda_3 = 8$ is 1 and the algebraic multiplicity is 1.\\
+Since the algebraic multiplicity of each eigenvalue is equal to the geometric multiplicity of each eigenvalue, $A$ is diagonalizable.\\
+We can obtain the matrix $P$ by taking the eigenvectors of $A$ as columns of $P$.
+\begin{align*}
+    P &= \begin{bmatrix} -1 & -1 & 1 \\ 0 & 1 & 1 \\ 1 & 0 & 1 \end{bmatrix}
+\end{align*}
+The diagonal matrix $\Lambda$ is given by the eigenvalues of $A$ on the diagonal.
+\begin{align*}
+    \Lambda &= \begin{bmatrix} 2 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 8 \end{bmatrix}
+\end{align*}
+$A$ is symmetric, so $A$ could be orthogonally diagonalized. Thus, we can write $\Lambda = P^{\top}AP$. \\
+To obtain the orthogonal matrix $P$, we can use the Gram-Schmidt process.\\
+Let $v_1 = \begin{bmatrix} -1 \\ 0 \\ 1 \end{bmatrix}$, $v_2 = \begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix}$, and $v_3 = \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}$.\\
+The orthogonal basis for $v_1$ is $u_1 = \frac{v_1}{||v_1||} = \begin{bmatrix} -\frac{1}{\sqrt{2}} \\ 0 \\ \frac{1}{\sqrt{2}} \end{bmatrix}$.\\
+The orthogonal basis for $v_2$ is $u_2 = \frac{v_2 - (v_2 \cdot u_1)u_1}{||v_2 - (v_2 \cdot u_1)u_1||} = \begin{bmatrix} -\frac{1}{\sqrt{6}} \\ \frac{2}{\sqrt{6}} \\ -\frac{1}{\sqrt{6}} \end{bmatrix}$.\\
+The orthogonal basis for $v_3$ is $u_3 = \frac{v_3 - (v_3 \cdot u_1)u_1 - (v_3 \cdot u_2)u_2}{||v_3 - (v_3 \cdot u_1)u_1 - (v_3 \cdot u_2)u_2||} = \begin{bmatrix} \frac{1}{\sqrt{3}} \\ \frac{1}{\sqrt{3}} \\ \frac{1}{\sqrt{3}} \end{bmatrix}$.\\
+Thus, the orthogonal matrix $P$ is given by
+\begin{align*}
+    P &= \begin{bmatrix} -\frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{6}} & \frac{1}{\sqrt{3}} \\ 0 & \frac{2}{\sqrt{6}} & \frac{1}{\sqrt{3}} \\ \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{6}} & \frac{1}{\sqrt{3}} \end{bmatrix}
+\end{align*}
+the diagonal matrix $\Lambda$ is given by
+\begin{align*}
+    \Lambda &= \begin{bmatrix} 2 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 8 \end{bmatrix}
+\end{align*}
+
+\newpage

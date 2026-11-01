@@ -1,0 +1,80 @@
+\item \defpoints{10} [Equivalence of PCA objectives]
+
+Consider a dataset of $n$ observations $\mathbf{X}\in \mathbb{R}^{n \times d}$, and our goal is to project the data onto a subspace having dimensionality $p$, $p<d$. Prove that PCA based on projected variance maximization is equivalent to PCA based on projected error (Euclidean error) minimization.
+
+\solution
+
+
+Let's establish the notation and both formulations:
+
+$\mathbf{X} \in \mathbb{R}^{n \times d}$ is our data matrix with $n$ observations in $d$ dimensions
+Without loss of generality, assume $\mathbf{X}$ is centered (mean-subtracted)
+We seek a projection matrix $\mathbf{W} \in \mathbb{R}^{d \times p}$ with orthonormal columns
+The projected data is $\mathbf{Z} = \mathbf{X}\mathbf{W} \in \mathbb{R}^{n \times p}$
+The reconstructed data is $\hat{\mathbf{X}} = \mathbf{Z}\mathbf{W}^T = \mathbf{X}\mathbf{W}\mathbf{W}^T \in \mathbb{R}^{n \times d}$
+Formulation 1: Projected Variance Maximization
+PCA can be formulated as finding the projection matrix $\mathbf{W}$ that maximizes the variance of the projected data:
+
+$$\max_{\mathbf{W}} \frac{1}{n} |\mathbf{X}\mathbf{W}|_F^2 \quad \text{subject to} \quad \mathbf{W}^T\mathbf{W} = \mathbf{I}_p$$
+
+Where $|\cdot|_F$ denotes the Frobenius norm, and $\mathbf{I}_p$ is the $p \times p$ identity matrix.
+
+Formulation 2: Projected Error Minimization
+Alternatively, PCA can be formulated as finding the projection matrix $\mathbf{W}$ that minimizes the reconstruction error:
+
+$$\min_{\mathbf{W}} |\mathbf{X} - \mathbf{X}\mathbf{W}\mathbf{W}^T|_F^2 \quad \text{subject to} \quad \mathbf{W}^T\mathbf{W} = \mathbf{I}_p$$
+
+Proof of Equivalence
+I'll show these formulations are equivalent by demonstrating that minimizing one is the same as maximizing the other.
+
+Starting with the squared Frobenius norm of the reconstruction error:
+
+$$|\mathbf{X} - \mathbf{X}\mathbf{W}\mathbf{W}^T|_F^2 = \text{Tr}[(\mathbf{X} - \mathbf{X}\mathbf{W}\mathbf{W}^T)^T(\mathbf{X} - \mathbf{X}\mathbf{W}\mathbf{W}^T)]$$
+
+Expanding this:
+
+$$= \text{Tr}[\mathbf{X}^T\mathbf{X} - \mathbf{X}^T\mathbf{X}\mathbf{W}\mathbf{W}^T - \mathbf{W}\mathbf{W}^T\mathbf{X}^T\mathbf{X} + \mathbf{W}\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}\mathbf{W}^T]$$
+
+Using the properties of the trace operator:
+
+$$= \text{Tr}[\mathbf{X}^T\mathbf{X}] - \text{Tr}[\mathbf{X}^T\mathbf{X}\mathbf{W}\mathbf{W}^T] - \text{Tr}[\mathbf{W}\mathbf{W}^T\mathbf{X}^T\mathbf{X}] + \text{Tr}[\mathbf{W}\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}\mathbf{W}^T]$$
+
+Since $\text{Tr}[\mathbf{A}\mathbf{B}] = \text{Tr}[\mathbf{B}\mathbf{A}]$ for compatible matrices:
+
+$$= \text{Tr}[\mathbf{X}^T\mathbf{X}] - \text{Tr}[\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}] - \text{Tr}[\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}] + \text{Tr}[\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}]$$
+
+Simplifying:
+
+$$= \text{Tr}[\mathbf{X}^T\mathbf{X}] - \text{Tr}[\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}]$$
+
+The first term $\text{Tr}[\mathbf{X}^T\mathbf{X}]$ is the total variance in the data, which is constant with respect to $\mathbf{W}$. Therefore, minimizing the reconstruction error is equivalent to maximizing:
+
+$$\text{Tr}[\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}]$$
+
+Now, recall that the variance of the projected data is:
+
+$$\frac{1}{n}|\mathbf{X}\mathbf{W}|_F^2 = \frac{1}{n}\text{Tr}[(\mathbf{X}\mathbf{W})^T(\mathbf{X}\mathbf{W})] = \frac{1}{n}\text{Tr}[\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}]$$
+
+Therefore, maximizing the projected variance:
+
+$$\max_{\mathbf{W}} \frac{1}{n}\text{Tr}[\mathbf{W}^T\mathbf{X}^T\mathbf{X}\mathbf{W}]$$
+
+is equivalent to minimizing the reconstruction error:
+
+$$\min_{\mathbf{W}} |\mathbf{X} - \mathbf{X}\mathbf{W}\mathbf{W}^T|_F^2$$
+
+Thus, the two formulations of PCA are equivalent, and they yield the same solution: the columns of $\mathbf{W}$ are the top $p$ eigenvectors of the covariance matrix $\mathbf{X}^T\mathbf{X}/n$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage

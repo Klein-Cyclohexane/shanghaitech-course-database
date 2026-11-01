@@ -1,0 +1,44 @@
+\titledquestion{Designing machine}[8]
+
+Fritia is designing a new machine with $n$ components and $m$ wires, with each wires connecting two different components. You can consider this as a connected graph $G=(V, E)$. 
+Denote $e_i\in E$ as $e_i = (u_i,v_i,s_i)$ where $e_i$ connects $u_i$-th and $v_i$-th components and has a maximum transmission speed limit $s_i$.
+
+To test her machine, she starts importing data into the $1$st component. Unfortunately, each wire has a distinct maximum transmission speed limit $s_i$. Fritia wants to find a path which can transmit data as fast as possible for each component. \textbf{(The transmission speed limit of a path is the minimum of the maximum transmission speed limit of every wire.)}
+
+Your task is $\forall 2\leq i \leq |V|$, find a path from $1$st component to $i$-th component, which has the fast transmission speed limit. You should give out the steps of your algorithm (\textbf{as efficient as possible}), brief reason of correctness together with the time complexity (tight).
+
+\textbf{Hint:} Recall how Kruskal's works. You can use any algorithm taught in class directly.
+
+\begin{solution}
+\begin{enumerate}
+    \item \textbf{Sort the Wires}: Sort all the wires in decreasing order of their maximum transmission speed limits $s_i$.
+    \item \textbf{Build the Maximum Spanning Tree (MST)}:
+    \begin{enumerate}
+        \item Use Kruskal's algorithm to construct the MST by selecting the wires (edges) with the highest speed limits first.
+        \item Implement a Union-Find data structure to efficiently detect and avoid cycles.
+    \end{enumerate}
+    \item \textbf{Find Paths and Transmission Limits}:
+    \begin{enumerate}
+        \item Perform a Depth-First Search (DFS) or Breadth-First Search (BFS) starting from the 1st component on the Maximum Spanning Tree.
+        \item For each component $i$ (where $2 \leq i \leq n$):
+        \begin{itemize}
+            \item Record the minimum speed limit along the path from the 1st component to component $i$.
+        \end{itemize}
+    \end{enumerate}
+\end{enumerate}
+\subsection*{Proof of Correctness}
+Here we use the Greedy Exchange Argument to prove the correctness of the algorithm.\\
+Assume Greedy Algorithm (Path on MST) is not optimal, and there exists a better path. Let $i_1, i_2, \ldots, i_k$ be the edges selected by the Greedy Algorithm, and $j_1, j_2, \ldots, j_m$ be the edges selected by the optimal algorithm with $i_1 = j_1, i_2 = j_2, \ldots, i_r = j_r$ for the largest possible $r$.\\
+Suppose edge $i_{r+1}$ and $j_{r+1}$ both connects the existing component to a new component containing vertex v, since the optimal algortihm performs better, we have $s_{j_{r+1}} > s_{i_{r+1}}$.\\
+However, this contradicts the fact that the Greedy Algorithm selects the edge with the largest speed limit.\\
+Therefore, the Greedy Algorithm is optimal.
+\subsection*{Time Complexity}
+n is the number of components, and m is the number of wires.
+\begin{itemize}
+    \item \textbf{Sorting Wires}: $O(m \log m)$.
+    \item \textbf{Kruskal's Algorithm}: $O(m \log n)$.
+    \item \textbf{Traversal}: $O(n)$, for DFS or BFS.
+    \item \textbf{Total Time Complexity}: $O(m \log m)$ 
+\end{itemize}
+
+\end{solution}

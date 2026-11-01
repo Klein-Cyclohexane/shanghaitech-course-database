@@ -1,0 +1,82 @@
+\item \defpoints{15} [Expectation Maximization Algorithm]
+
+Consider a probabilistic model in which we collectively denote the observed variables by $X$ and all of the hidden variables by $Z$. The joint distribution $p(X,Z|\theta)$ is parameterized by $\theta$. Our goal is to maximize the likelihood function given by
+$$p(X|\theta)$$
+
+\begin{itemize}
+\item[(a)] Given an arbitrary distribution $q$, show that the log-likelihood of $X$ is~\defpoints{5}
+$$\log p(X|\theta) = \E_{Z\sim q}\left [\log\dfrac{p(X, Z|\theta)}{q(Z)}\right] + KL\left(q(Z)\| p(Z|X,\theta)\right)$$
+
+\item[(b)] Next let's consider the expectation step. First show the evidence lower bound (ELBO) is a lower bound of the log-likelihood. ~\defpoints{5}
+$$\log p(X|\theta)\geq\E_{Z|X,\theta^{(t-1)}}\left[\log\dfrac{p(X,Z|\theta)}{p(Z|X,\theta^{(t-1)})}\right]$$
+where $\theta^{(t-1)}$ is the parameter estimated in the previous iteration.
+
+\item[(c)] We want to maximize the ELBO, $\E_{Z|X,\theta^{(t-1)}}\left[\log \dfrac{p(X,Z|\theta)}{p(Z|X,\theta^{(t-1)})}\right]$ since maximizing $p(X|\theta)$ is hard. EM algorithm defines $Q(\theta|\theta^{(t-1)}) = \E_{Z|X,\theta^{(t-1)}}\left[ \log p(X,Z|\theta) \right]$. The M-step is given by:
+$$\theta^{(t)} \leftarrow \argmax_{\theta} Q(\theta|\theta^{(t-1)})$$
+Show that maximizing $Q(\theta|\theta^{(t-1)})$ and maximizing the ELBO is equivalent. ~\defpoints{5} Formally,
+$$\argmax_{\theta} Q(\theta|\theta^{(t-1)}) = \argmax_{\theta} \E_{Z|X,\theta^{(t-1)}}\left[\log \dfrac{p(X,Z|\theta)}{p(Z|X,\theta^{(t-1)})}\right]$$
+\end{itemize}
+
+
+\solution
+
+\textbf{Part (a):} 
+
+Starting with the log-likelihood:
+\begin{align}
+\log p(X|\theta) &= \log \sum_Z p(X,Z|\theta)\\
+&= \log \sum_Z q(Z) \frac{p(X,Z|\theta)}{q(Z)}\\
+&= \log \E_{Z \sim q}\left[\frac{p(X,Z|\theta)}{q(Z)}\right]
+\end{align}
+
+By Jensen's inequality (since log is concave):
+$$\log \E_{Z \sim q}\left[\frac{p(X,Z|\theta)}{q(Z)}\right] \geq \E_{Z \sim q}\left[\log \frac{p(X,Z|\theta)}{q(Z)}\right]$$
+
+The equality holds when $\frac{p(X,Z|\theta)}{q(Z)}$ is constant for all $Z$, which occurs when $q(Z) = p(Z|X,\theta)$.
+
+We can write:
+\begin{align}
+\log p(X|\theta) &= \E_{Z \sim q}\left[\log \frac{p(X,Z|\theta)}{q(Z)}\right] + \left(\log p(X|\theta) - \E_{Z \sim q}\left[\log \frac{p(X,Z|\theta)}{q(Z)}\right]\right)\\
+&= \E_{Z \sim q}\left[\log \frac{p(X,Z|\theta)}{q(Z)}\right] + KL(q(Z) \| p(Z|X,\theta))
+\end{align}
+
+\textbf{Part (b):} 
+
+From part (a), we have:
+$$\log p(X|\theta) = \E_{Z \sim q}\left[\log \frac{p(X,Z|\theta)}{q(Z)}\right] + KL(q(Z) \| p(Z|X,\theta))$$
+
+Since $KL(q(Z) \| p(Z|X,\theta)) \geq 0$, we get:
+$$\log p(X|\theta) \geq \E_{Z \sim q}\left[\log \frac{p(X,Z|\theta)}{q(Z)}\right]$$
+
+Setting $q(Z) = p(Z|X,\theta^{(t-1)})$:
+$$\log p(X|\theta) \geq \E_{Z|X,\theta^{(t-1)}}\left[\log \frac{p(X,Z|\theta)}{p(Z|X,\theta^{(t-1)})}\right]$$
+
+This is the ELBO, proving it's a lower bound on the log-likelihood.
+
+\textbf{Part (c):} 
+
+The ELBO can be written as:
+\begin{align}
+\text{ELBO} &= \E_{Z|X,\theta^{(t-1)}}\left[\log \frac{p(X,Z|\theta)}{p(Z|X,\theta^{(t-1)})}\right]\\
+&= \E_{Z|X,\theta^{(t-1)}}[\log p(X,Z|\theta)] - \E_{Z|X,\theta^{(t-1)}}[\log p(Z|X,\theta^{(t-1)})]\\
+&= Q(\theta|\theta^{(t-1)}) - \E_{Z|X,\theta^{(t-1)}}[\log p(Z|X,\theta^{(t-1)})]
+\end{align}
+
+Since $\E_{Z|X,\theta^{(t-1)}}[\log p(Z|X,\theta^{(t-1)})]$ does not depend on $\theta$, it's a constant with respect to the optimization variable $\theta$.
+
+Therefore:
+$$\argmax_{\theta} \text{ELBO} = \argmax_{\theta} Q(\theta|\theta^{(t-1)})$$
+
+This shows that maximizing $Q(\theta|\theta^{(t-1)})$ is equivalent to maximizing the ELBO.
+
+
+
+
+
+
+
+
+
+
+
+\newpage

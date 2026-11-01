@@ -1,0 +1,56 @@
+\titledquestion{Greedy doesn't work}
+Tom and Jerry are playing an interesting game, where there are $n$ cards in a line. All cards are faced-up and the number on every card is between 2-9. Tom and Jerry take turns. In anyone's turn, they can take one card from either the right end or the left end of the line. The goal for each player is to maximize the sum of the cards they have collected.
+
+
+\begin{parts}
+\part[3] Tom decides to use a greedy strategy: ``On my turn, I will take the larger of the two cards available to me." Show a small counterexample ($n\leq 5$) that Tom will lose if he plays this greedy strategy. Assuming Tom goes first and Jerry plays optimally. Tom could have won if he also played optimally.
+
+\begin{solution}
+    Consider the sequence: [2, 4, 9, 3] and Tom goes first.\\
+    Tom's greedy strategy: Tom takes 3, Jerry takes 9, Tom takes 4, Jerry takes 2\\
+    Tom's score: 3+4=7, Jerry's score: 9+2=11\\
+    Tom loses, but Tom could have won by taking 2 first. Then Jerry take 4, Tom take 9, Jerry take 3. Tom's score: 2+9=11, Jerry's score: 4+3=7
+\end{solution}
+
+\part[7] Jerry decides to use dynamic programming to find an algorithm to maximize his score, assuming he is playing against Tom and Tom is using the greedy strategy from part (a). Help Jerry to develop the dynamic programming solution. The solution you proposed should not worse than $O(n^2)$ in time complexity.
+
+\begin{solution}
+    \\
+    \textbf{Main Idea}
+    
+    Let $OPT(l,r)$ be Jerry's maximum score when the remaining cards are from index l to r.
+    Then we have the following equation:
+    \[
+    OPT(l,r)=
+    \begin{cases}
+        0 & \case{l \geq r} \\
+        \begin{cases}
+            \max\{A_{l+1} + OPT(l+2,r), A_r + OPT(l+1,r-1)\} & \text{if } A_l > A_r\\
+            \max\{A_l + OPT(l+1,r-1), A_{r-1} + OPT(l,r-2)\} & \text{if } A_r > A_l\\
+        \end{cases} & \otherwise
+    \end{cases}
+    \]
+
+    The final answer is $OPT(1,n)$
+
+    \textbf{Proof of Correctness}: 
+
+    \begin{itemize}
+        \item Base case: When no cards remain or only one card remains, score is 0. Because Tom goes first, Jerry can pick no card.
+        \item For each state (l,r):
+            \begin{itemize}
+                \item If $A_l > A_r$: Tom takes $A_l$, Jerry can take from $A_{l+1}$ or $A_r$
+                \item If $A_r > A_l$: Tom takes $A_r$, Jerry can take from $A_l$ or $A_{r-1}$
+                \item Jerry chooses the maximum score he can get.
+            \end{itemize}
+        \item After both players take cards, recursively solve remaining subproblem
+    \end{itemize}
+
+    \textbf{Runtime Analysis}: 
+
+    \begin{itemize}
+        \item Time complexity: $O(n^2)$ since we have $O(n^2)$ states (l,r)
+        \item Space complexity: $O(n^2)$ to store the DP table
+    \end{itemize}
+\end{solution}
+\end{parts}

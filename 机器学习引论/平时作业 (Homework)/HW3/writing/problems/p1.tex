@@ -1,0 +1,69 @@
+\item \defpoints{15} [Perceptron Learning Algorithm]
+Consider a binary classification problem. The input space is $\mathbb{R}^{d}$. The output space is $\{ +1, -1 \}$. For simplicity, we modified the input to be $\mathbf{x} = [x_0, x_1, \cdots, x_d]^{\top}$ with $x_0=1$. The output is predicted using the hypothesis:
+\begin{equation}
+    h(\mathbf{x}) = \text{sign}(\mathbf{w}^{\top}\mathbf{x}),
+\end{equation}
+where $\mathbf{w} = [w_0, w_1, \cdots, w_d]^{\top}$ and $w_0$ is the bias.
+
+The \textit{perceptron learning algorithm} determines $\mathbf{w}$ using a simple iterative method. Here is how it works. At iteration $t$, where $t=0,1,2, \ldots$, there is a current value of the weight vector, call it $\mathbf{w}(t)$. The algorithm picks an example from $\left(\mathbf{x}_1, y_1\right) \cdots\left(\mathbf{x}_N, y_N\right)$ that is currently misclassified, call it $(\mathbf{x}(t), y(t))$, and uses it to update $\mathbf{w}(t)$. Since the example is misclassified, we have $y(t) \neq$ $\operatorname{sign}\left(\mathbf{w}^{\top}(t) \mathbf{x}(t)\right)$. The update rule is
+
+\begin{equation}
+    \mathbf{w}(t+1)=\mathbf{w}(t)+y(t) \mathbf{x}(t).
+\end{equation}
+
+\begin{itemize}
+\item[(a)] Show that $y(t) \mathbf{w}^{\top}(t) \mathbf{x}(t)<0$. [Hint: $\mathbf{x}(t)$ is misclassified by $\mathbf{w}(t)$.] ~\defpoints{5}
+\item[(b)] Show that $y(t) \mathbf{w}^{\top}(t+1) \mathbf{x}(t)>y(t) \mathbf{w}^{\top}(t) \mathbf{x}(t)$. ~\defpoints{5}
+\item[(c)]   As far as classifying $\mathbf{x}(t)$ is concerned, argue that the move from $\mathbf{w}(t)$ to $\mathbf{w}(t+1)$ is a move ``in the right direction". ~\defpoints{5}
+\end{itemize}
+
+\solution
+
+\begin{itemize}
+\item[(a)] Since $\mathbf{x}(t)$ is misclassified by $\mathbf{w}(t)$, we have $y(t) \neq \text{sign}(\mathbf{w}^\top(t) \mathbf{x}(t))$. There are two possible cases:
+
+Case 1: If $y(t) = +1$, then $\text{sign}(\mathbf{w}^\top(t) \mathbf{x}(t)) = -1$, which means $\mathbf{w}^\top(t) \mathbf{x}(t) < 0$. Thus, $y(t) \mathbf{w}^\top(t) \mathbf{x}(t) = (+1) \cdot (\mathbf{w}^\top(t) \mathbf{x}(t)) < 0$.
+
+Case 2: If $y(t) = -1$, then $\text{sign}(\mathbf{w}^\top(t) \mathbf{x}(t)) = +1$, which means $\mathbf{w}^\top(t) \mathbf{x}(t) > 0$. Thus, $y(t) \mathbf{w}^\top(t) \mathbf{x}(t) = (-1) \cdot (\mathbf{w}^\top(t) \mathbf{x}(t)) < 0$.
+
+In both cases, we have $y(t) \mathbf{w}^\top(t) \mathbf{x}(t) < 0$.
+
+\item[(b)] Starting with the update rule:
+\begin{align*}
+\mathbf{w}(t+1) &= \mathbf{w}(t) + y(t)\mathbf{x}(t)\\
+\end{align*}
+
+Multiplying both sides by $\mathbf{x}^\top(t)$ and then by $y(t)$:
+\begin{align*}
+y(t)\mathbf{w}^\top(t+1)\mathbf{x}(t) &= y(t)\mathbf{w}^\top(t)\mathbf{x}(t) + y(t)\cdot y(t)\mathbf{x}^\top(t)\mathbf{x}(t)\\
+&= y(t)\mathbf{w}^\top(t)\mathbf{x}(t) + y^2(t)\mathbf{x}^\top(t)\mathbf{x}(t)\\
+\end{align*}
+
+Since $y(t) \in \{-1, +1\}$, we know that $y^2(t) = 1$. Also, $\mathbf{x}^\top(t)\mathbf{x}(t) = \|\mathbf{x}(t)\|^2 > 0$ for any non-zero vector $\mathbf{x}(t)$.
+
+Therefore:
+\begin{align*}
+y(t)\mathbf{w}^\top(t+1)\mathbf{x}(t) &= y(t)\mathbf{w}^\top(t)\mathbf{x}(t) + \|\mathbf{x}(t)\|^2\\
+y(t)\mathbf{w}^\top(t+1)\mathbf{x}(t) &> y(t)\mathbf{w}^\top(t)\mathbf{x}(t)
+\end{align*}
+
+\item[(c)] From part (a), we know that $y(t) \mathbf{w}^\top(t) \mathbf{x}(t) < 0$, which means the current weight vector $\mathbf{w}(t)$ misclassifies $\mathbf{x}(t)$.
+
+From part (b), we showed that $y(t)\mathbf{w}^\top(t+1)\mathbf{x}(t) > y(t)\mathbf{w}^\top(t)\mathbf{x}(t)$. This means that after the update, the value $y(t)\mathbf{w}^\top(t+1)\mathbf{x}(t)$ increases.
+
+The ideal scenario for correct classification is to have $y(t)\mathbf{w}^\top\mathbf{x}(t) > 0$, which means $\text{sign}(\mathbf{w}^\top\mathbf{x}(t)) = y(t)$. 
+
+Since the update moves the value of $y(t)\mathbf{w}^\top\mathbf{x}(t)$ from negative toward positive (or makes it less negative), it pushes the decision boundary in a direction that improves the classification of $\mathbf{x}(t)$. Each update moves the decision boundary "in the right direction" toward correct classification of the current example.
+
+Therefore, the move from $\mathbf{w}(t)$ to $\mathbf{w}(t+1)$ is indeed "in the right direction" for classifying $\mathbf{x}(t)$ correctly.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+\newpage

@@ -1,0 +1,33 @@
+\titledquestion{Sorted sort.}
+
+For each of the following scenarios, choose a sorting algorithm (from either bubble sort, insertion sort, or merge sort) that best applies, and justify your choice. Each sort may be used more than once. If you find that multiple sorts could be appropriate for a scenario, identify their pros and cons, and choose the one that best suits the application. State and justify any assumptions you make. “Best” should be evaluated by asymptotic running time.
+
+Your justification will be worth more points than your choice.
+
+\begin{parts}
+    \part[5] Suppose you are given a data structure \texttt{D} maintaining an extrinsic order on n items, supporting two standard sequence operations: \texttt{D.get} at$(i)$ in worst-case $\Theta(1)$ time and \texttt{D.set} at$(i, x)$ in worst-case $\Theta(n \log n)$ time. Choose an algorithm to sort the items in \texttt{D} in place best.
+
+    \begin{solution}[2in]
+        \\
+        This scenario requires an in-place sorting algorithm, so merge sort is not suitable. Insertion sort requires $O(n^2)$ \texttt{D.get} at and $O(n^2)$ \texttt{D.set} at operations, so it has a total time complexity of $O(n^3 log n)$.
+        Bubble sort also requires $O(n^2)$ \texttt{D.get} at and $O(n^2)$ \texttt{D.set} at operations, with a total time complexity of $O(n^3 log n)$. However, when actually implemented, bubble sort requires more swaps (which is related to \texttt{D.set} at operations) than insertion sort. Because the bubble sort simply swaps adjacent entries, it cannot be any better than insertion sort which does n + d comparisons where d is the number of inversions
+        So the overall time complexity of bubble sort is higher than that of insertion sort. Therefore, insertion sort is the best choice for this scenario.
+    \end{solution}
+
+    \part[5] Suppose you have a static array A containing pointers to n comparable objects, pairs of which take $\Theta(\log n)$ time to compare. Choose an algorithm to sort the pointers in A so that the pointed-to objects appear in non-decreasing order with minimum time cost.
+
+    \begin{solution}[2in]
+       \\
+       In this scenario, we can accept get and set, but comparisons between objects are expensive. So this time we only care about the time cost of comparing the objects, which is $\Theta(\log n)$. Merge sort requires $O(n \log n)$ comparisons, while Bubble sort and Insertion sort both require $O(n^2)$ comparisons at the worst case. Therefore, merge sort is the best choice for this scenario.
+    \end{solution}
+
+    \part[5] Suppose you have a sorted array A containing $n$ integers. Now suppose someone performs some log log $n$ swaps between pairs of adjacent items in A so that A is no longer sorted. Choose an algorithm to best re-sort the integers in A.
+
+    \begin{solution}[2in]
+        \\
+        The performance of Insertion sort and Bubble sort is related to the number of inversions in the array, while the performance of Merge sort is not, always requiring $\Theta(n \log n)$ time. Insertion sort and Bubble sort sometimes can break the inner loop of swapping, so they may achieve a time complexity of $O(n)$. We know that the actual time complexity of Insertion sort can be expressed as $O(n + d)$, where $d$ is the number of inversions in the array. 
+        Notice that a single swap between two adjacent items in A will only increase the number of inversions by at most 1. So after log log $n$ swaps, the number of inversions will be at most $O(\log \log n)$. Therefore, the time complexity of Insertion sort is $O(n + \log \log n) = O(n)$, which is the better than Merge sort.
+        Next, we need to compare Bubble sort and Insertion sort. Bubble sort also shares the same time complexity as Insertion sort, but it requires more swaps than Insertion sort. Because the bubble sort simply swaps adjacent entries, it cannot be any better than insertion sort which does n + d comparisons where d is the number of inversions
+        So Insertion sort is the best choice for this scenario.
+    \end{solution}
+\end{parts}

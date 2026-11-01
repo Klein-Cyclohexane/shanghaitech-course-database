@@ -1,0 +1,75 @@
+\titledquestion{Counting Jewelry Pairs}
+
+Astra opens up a jewelry store to sold the jewelry. Each jewelry has a distinct positive "beauty value" $a_i$, where $i$ means it's the $i$-th jewelry Astra got. You are asked to help Astra to solve the problems for her customs.
+
+\begin{parts}
+\part{} 
+
+Breach wants to buy a pair of jewelry, where jewelry found earlier should be more beautiful i.e. have a bigger beauty value. In other words, the pair contains $2$ jewelry $i$ and $j$, where $i<j,a_j<a_i$. \\
+Astra needs to count the number of jewelry pairs satisfying Breach's requirement.
+
+\begin{subparts}
+    \subpart[1] Recall what is told in class. This problem is equivalent to \\
+    \begin{oneparcheckboxes}
+        \choice Quick Sort
+        \choice Merge Sort
+        \CorrectChoice Counting Inversions
+        \choice Binary Search
+    \end{oneparcheckboxes}
+    \subpart[2] Briefly write how to solve this problem using divide and conquer.
+\begin{solution}
+    We divide the array into two halves and count the number of inversions in each half (let be $inv1$ and $inv2$). Then we count the number of inversions not counted in $inv1 + inv2$. This can be done during the merge step of the merge sort algorithm.
+    For the two halves A and B, we want to find all inversions $(a,b)$ with $a \in A$ and $b \in B$. We first sort the two halves separately. During the merge process, let i be the index of the current element in A and j be the index of the current element in B. If $A[i] > B[j]$, then there are $mid - i + 1$ inversions, where $mid$ is the index of the last element in A. This is because all elements from $A[i]$ to $A[mid]$ are greater than $B[j]$. We increment the index of B and continue the process.
+\end{solution}
+\end{subparts}
+\newpage
+\noindent \textbf{In the two questions below, you are allowed to describe your algorithm by modifying parts of the algorithm in $(a).ii$. 
+} 
+\part{}
+
+Chamber wants to buy a pair of jewelry too. His requirement is precise: He wants that the earlier found jewelry is "quadratic more beautiful" than the other one. In other words, for two jewelry $i$ and $j(i<j)$, Chamber wants $a_i>\alpha a_j^2+\beta a_j + \gamma$, where $a_i,a_j$ is the "beauty value" of $i/j$-th jewelry and $\alpha,\beta>0$.\\
+Astra needs to count the number of jewelry pairs satisfying Chambers's requirement.
+
+You should :
+\begin{subparts}
+  \subpart[4]Describe your algorithm, either by modifying or rewriting one.
+    \begin{solution}
+        We can modify the counting inversions algorithm to solve this problem. We can construct another array $B$ where $B[i] = \alpha a_i^2 + \beta a_i + \gamma$. Then during the merge step, if $A[i] > B[j]$, then there are $mid - i + 1$ inversions, where $mid$ is the index of the last element in A. This is because all elements from $A[i]$ to $A[mid]$ are greater than $B[j]$. We increment the index of B and continue the process.
+    \end{solution}
+    \subpart[2] Justify why your algorithm is correct and analyze the time complexity. 
+    \begin{solution}
+        \\
+        \textbf{Proof of Correctness:}\\
+        The algorithm is correct because we are counting the number of inversions where $A[i] > B[j]$, and all $B[j]$ are constructed based on the quadratic equation. Because $\alpha, \beta > 0$, the quadratic equation is always increasing as $a_i$ increases. Therefore, if an array $A$ is sorted in ascending order, the array $B$ is also sorted in ascending order. So, when $A[i] > B[j]$, then all elements from $A[i]$ to $A[mid]$ are greater than $B[j]$. Therefore, we can say that the algorithm is correct.
+        \\
+        \textbf{Time Complexity Analysis:} 
+        The time complexity of the algorithm is $O(n\log n)$, where $n$ is the number of elements in the array. During each recursion, the calculation of comparison between $A[i]$ and $B[j]$ takes $O(n)$ time. So the merge step takes $O(n)$ time. We ignore half of the array in each recursion, so 
+        \begin{center}
+            T(n) = 2T(n/2) + O(n)
+        \end{center}
+        Therefore, according to the Master Theorem, the time complexity of the algorithm is $O(n\log n)$.
+    \end{solution}
+\end{subparts}
+
+\newpage
+\part{} Cypher also wants to buy a pair of jewelry, too. Cypher wants to find the relation of "beauty value" between different jewelry. He wants that the difference of when the jewelry was found and the difference of beauty value are closed. In other words, for two jewelry $i$ and $j(i<j)$, Cypher wants $a_i- a_j>\alpha|i-j|$, where $a_i,a_j$ is the "beauty value" of $i/j$-th jewelry and $\alpha>0$.\\
+Astra needs to count the number of jewelry pairs satisfying Cypher's requirement.
+
+You should :
+\begin{subparts}
+  \subpart[4]Describe your algorithm, either by modifying or rewriting one.
+    \begin{solution}
+        \\
+        We can modify the counting inversions algorithm to solve this problem. We can construct another array $B$ where $B[i] = a_i + \alpha i$. Then we just apply our merge sort algorithm to the array B. The whole process is the same as the counting inversions algorithm, but this time the object array is $B$.
+    \end{solution}
+    \subpart[2] Justify why your algorithm is correct and analyze the time complexity. 
+    \begin{solution} 
+        \\
+        \textbf{Proof of Correctness:}\\
+        The algorithm is correct because we want to count the number of pairs $(i,j)$ where $ i < j, a_i - a_j > \alpha|i-j|$. Simplifying the inequality, we get $a_i - a_j > \alpha j - \alpha i$. We can rewrite this as $a_i + \alpha i > a_j + \alpha j$. Therefore, we can construct an array $B$ where $B[i] = a_i + \alpha i$. And we can find that the number of inversions in the array $B$ is the number of pairs $(i,j)$ where $ i < j, a_i - a_j > \alpha|i-j|$. Therefore, the algorithm is correct.
+        \\
+        \textbf{Time Complexity Analysis:}
+        The time complexity of the algorithm is $O(n\log n)$, where $n$ is the number of elements in the array. We first do an initial calculation of the array $B$ which takes $O(n)$ time. Then we apply the enhance merge sort algorithm to the array $B$. The enhance merge sort algorithm takes $O(n\log n)$ time. Therefore, the time complexity of the algorithm is $O(n\log n)$.
+    \end{solution}
+\end{subparts}
+\end{parts}

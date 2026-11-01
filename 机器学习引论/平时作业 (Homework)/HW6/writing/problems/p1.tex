@@ -1,0 +1,231 @@
+\item ~\defpoints{25} [Boosting]
+
+Suppose that we are interested in learning a classifier, such that at any turn of a game we can pose a question, like ``should I attack this ant hill now?", and get an answer.That is, we want to build a classifier which we can feed some features on the current game state, and get the output ``attack" or ``don't attack". There are many possible ways to define what the action ``attack" means, but for now let's define it as sending all friendly ants that can see the ant hill under consideration towards it.
+
+Let's recall the AdaBoost algorithm described in class. Its input is a dataset $\{(x_{i},y_{i})\}_{i=1}^{n}$, with $x_i$ being the $i$-th sample, and $y_{i}\in \{-1,1\}$ denoting the $i$-th label, $i=1,2,...,n$. The features might be composed of a count of the number of friendly ants that can see the ant hill under consideration, and a count of the number of enemy ants these friendly ants can see. For example, if there were 10 friendly ants that could see a particular ant hill, and 5 enemy ants that the friendly ants could see, we would have:
+$$x_1 = \begin{bmatrix} 10 \\ 5 \end{bmatrix}$$
+
+The label of the example $x_{1}$ is $y_{1} = 1$, once the friendly ants were successful in razing the enemy ant hill, and $y_{1} = -1$ otherwise. We could generate such examples by running a greedy bot (or any other opponent bot) against a bot that we periodically try to attack an enemy ant hill. Each time this bot tries the attack, we record (say, after $20$ turns or some other significant amount of time) whether the attack was successful or not.
+
+\begin{itemize}
+\item[(a)] Let $\epsilon_t$ denote the error of a weak classifier $h_t$:
+$$\epsilon_{t} = \sum_{i=1}^{n} D_{t}(i) \mathbb{I}(y_{i} \neq h_{t}(x_{i}))$$
+In the simple “attack” / “don't attack” scenario, suppose that we have implemented the following six weak classifiers:
+\begin{align*}
+h^{(1)}(x_{i}) = 2 * \mathbb{I}(x_{i1} \geq 2) - 1, \hspace{1cm}  & h^{(4)}(x_{i}) = 2 * \mathbb{I}(x_{i2} \leq 2) - 1,  \\
+h^{(2)}(x_{i}) = 2 * \mathbb{I}(x_{i1} \geq 6) - 1, \hspace{1cm}  & h^{(5)}(x_{i}) = 2 * \mathbb{I}(x_{i2} \leq 6) - 1,  \\
+h^{(3)}(x_{i}) = 2 * \mathbb{I}(x_{i1} \geq 10) - 1, \hspace{1cm} & h^{(6)}(x_{i}) = 2 * \mathbb{I}(x_{i2} \leq 10) - 1.
+\end{align*}
+Given ten training data points ($n = 10$) as shown in Table \ref{table1}:
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|c|cc|c|}
+    \hline
+    $i$ & $x_{i1}$ & $x_{i2}$ & $y_{i}$ \\ \hline
+    1 & 1.5 & 0.5 & 1 \\
+    2 & 2.5 & 1.5 & 1 \\
+    3 & 3.5 & 3.5 & 1 \\
+    4 & 6.5 & 5.5 & 1 \\
+    5 & 7.5 & 10.5 & 1 \\
+    6 & 1.5 & 2.5 & -1 \\
+    7 & 3.5 & 1.5 & -1 \\
+    8 & 5.5 & 5.5 & -1 \\
+    9 & 7.5 & 8.5 & -1 \\
+    10 & 1.5 & 10.5 & -1 \\
+    \hline
+    \end{tabular}
+    \caption{The training data in (a).}
+    \label{table1}
+\end{table}
+
+please show that what is the minimum value of $\epsilon_{1}$ and which of $h^{(1)},\cdots ,h^{(6)}$ achieve this value? Note that there may be multiple classifiers that all have the same $\epsilon_{1}$. You should list all classifiers that achieve the minimum $\epsilon_{1}$ value. ~\defpoints{5}
+
+\item[(b)] For all the questions in the remainder of this section, let $h_{1}$ denote $h^{(1)}$ chosen in the first round of boosting. (That is, $h^{(1)}$ was the classifier that achieved the minimum $\epsilon_{1}$.)
+\begin{enumerate}
+    \item[(1)] What is the value of $\alpha_{1}$ (the weight of this first classifier $h_{1}$)? ~\defpoints{2}
+
+    \item[(2)] What should $Z_{t}$ be in order to make sure the distribution $D_{t+1}$ is normalized correctly? That is, derive the formula of $Z_{t}$ in terms of $\epsilon_{t}$ that will ensure $\sum\limits_{i=1}^{n} D_{t+1}(i) = 1$. Please also derive the formula of $\alpha_{t}$ in terms of $\epsilon_{t}$. ~\defpoints{5}
+
+    \item[(3)] Which points will increase in significance in the second round of boosting? That is, for which points will we have $D_{1}(i) < D_{2}(i)$? What are the values of $D_{2}$ for these points? ~\defpoints{5}
+
+    \item[(4)] In the second round of boosting, the weights on the points will be different, and thus the error $\epsilon_2$ will also be different. Which of $h^{(1)}, \cdots, h^{(6)}$ will minimize $\epsilon_2$? (Which classifier will be selected as the second weak classifier $h_2$?) What is its value of $\epsilon_2$? ~\defpoints{5}
+
+    \item[(5)] What will the average error of the final classifier $H$ be, if we stop after these two rounds of boosting? That is, if $H(x) = \text{sign}(\alpha_{1}h_{1}(x) + \alpha_{2}h_{2}(x))$, what will the  training error $\epsilon = \dfrac{1}{n} \sum\limits_{i=1}^{n} \mathbb{I} (y_{i} \neq H(x_{i}))$ be? Is this more, less, or the same as the error we would get, if we just used one of the weak classifiers instead of this final classifier $H$ ~\defpoints{3}
+
+\end{enumerate}
+\end{itemize}
+
+\solution
+\subsection*{(a) Minimum $\epsilon_1$ and corresponding classifiers}
+The initial weights $D_1(i)$ for each data point $i=1, \ldots, 10$ are uniform: $D_1(i) = \frac{1}{n} = \frac{1}{10} = 0.1$.
+The error of a weak classifier $h_t$ is given by $\epsilon_t = \sum_{i=1}^{n} D_t(i) \mathbb{I}(y_i \neq h_t(x_i))$.
+Since $D_1(i) = 0.1$, $\epsilon_1 = 0.1 \times (\text{number of misclassified points})$.
+The six weak classifiers are:
+\begin{align*}
+h^{(1)}(x_{i}) &= 2 \cdot \mathbb{I}(x_{i1} \geq 2) - 1 \\
+h^{(2)}(x_{i}) &= 2 \cdot \mathbb{I}(x_{i1} \geq 6) - 1 \\
+h^{(3)}(x_{i}) &= 2 \cdot \mathbb{I}(x_{i1} \geq 10) - 1 \\
+h^{(4)}(x_{i}) &= 2 \cdot \mathbb{I}(x_{i2} \leq 2) - 1 \\
+h^{(5)}(x_{i}) &= 2 \cdot \mathbb{I}(x_{i2} \leq 6) - 1 \\
+h^{(6)}(x_{i}) &= 2 \cdot \mathbb{I}(x_{i2} \leq 10) - 1
+\end{align*}
+Let's evaluate the number of misclassifications for each classifier using the data from Table \ref{table1} in the problem statement.
+
+\begin{itemize}
+    \item For $h^{(1)}(x_i) = 2 \cdot \mathbb{I}(x_{i1} \geq 2) - 1$:
+    \begin{itemize}
+        \item $x_1=(1.5, 0.5), y_1=1$: $x_{11}=1.5 < 2 \Rightarrow h^{(1)}(x_1)=-1$. Misclassified.
+        \item $x_2=(2.5, 1.5), y_2=1$: $x_{21}=2.5 \geq 2 \Rightarrow h^{(1)}(x_2)=1$. Correct.
+        \item $x_3=(3.5, 3.5), y_3=1$: $x_{31}=3.5 \geq 2 \Rightarrow h^{(1)}(x_3)=1$. Correct.
+        \item $x_4=(6.5, 5.5), y_4=1$: $x_{41}=6.5 \geq 2 \Rightarrow h^{(1)}(x_4)=1$. Correct.
+        \item $x_5=(7.5, 10.5), y_5=1$: $x_{51}=7.5 \geq 2 \Rightarrow h^{(1)}(x_5)=1$. Correct.
+        \item $x_6=(1.5, 2.5), y_6=-1$: $x_{61}=1.5 < 2 \Rightarrow h^{(1)}(x_6)=-1$. Correct.
+        \item $x_7=(3.5, 1.5), y_7=-1$: $x_{71}=3.5 \geq 2 \Rightarrow h^{(1)}(x_7)=1$. Misclassified.
+        \item $x_8=(5.5, 5.5), y_8=-1$: $x_{81}=5.5 \geq 2 \Rightarrow h^{(1)}(x_8)=1$. Misclassified.
+        \item $x_9=(7.5, 8.5), y_9=-1$: $x_{91}=7.5 \geq 2 \Rightarrow h^{(1)}(x_9)=1$. Misclassified.
+        \item $x_{10}=(1.5, 10.5), y_{10}=-1$: $x_{10,1}=1.5 < 2 \Rightarrow h^{(1)}(x_{10})=-1$. Correct.
+    \end{itemize}
+    Misclassified points for $h^{(1)}$: $\{1, 7, 8, 9\}$. Number of misclassifications = 4. $\epsilon_1^{(1)} = 0.1 \times 4 = 0.4$.
+
+    \item For $h^{(2)}(x_i) = 2 \cdot \mathbb{I}(x_{i1} \geq 6) - 1$:
+    Misclassified points: $\{1, 2, 3, 9\}$. Number of misclassifications = 4. $\epsilon_1^{(2)} = 0.1 \times 4 = 0.4$.
+
+    \item For $h^{(3)}(x_i) = 2 \cdot \mathbb{I}(x_{i1} \geq 10) - 1$:
+    Misclassified points: $\{1, 2, 3, 4, 5\}$. Number of misclassifications = 5. $\epsilon_1^{(3)} = 0.1 \times 5 = 0.5$.
+
+    \item For $h^{(4)}(x_i) = 2 \cdot \mathbb{I}(x_{i2} \leq 2) - 1$:
+    Misclassified points: $\{3, 4, 5, 7\}$. Number of misclassifications = 4. $\epsilon_1^{(4)} = 0.1 \times 4 = 0.4$.
+
+    \item For $h^{(5)}(x_i) = 2 \cdot \mathbb{I}(x_{i2} \leq 6) - 1$:
+    Misclassified points: $\{5, 6, 7, 8\}$. Number of misclassifications = 4. $\epsilon_1^{(5)} = 0.1 \times 4 = 0.4$.
+
+    \item For $h^{(6)}(x_i) = 2 \cdot \mathbb{I}(x_{i2} \leq 10) - 1$:
+    Misclassified points: $\{5, 6, 7, 8, 9\}$. Number of misclassifications = 5. $\epsilon_1^{(6)} = 0.1 \times 5 = 0.5$.
+\end{itemize}
+The minimum value of $\epsilon_1$ is $0.4$.
+The classifiers that achieve this minimum value are $h^{(1)}$, $h^{(2)}$, $h^{(4)}$, and $h^{(5)}$.
+
+\subsection*{(b) Assuming $h_1 = h^{(1)}$}
+We are given that $h_1 = h^{(1)}$, so $\epsilon_1 = 0.4$.
+
+\subsubsection*{(1) Value of $\alpha_1$}
+The weight $\alpha_t$ of a classifier $h_t$ is given by:
+$$ \alpha_t = \frac{1}{2} \ln\left(\frac{1-\epsilon_t}{\epsilon_t}\right) $$
+For $t=1$, $\epsilon_1 = 0.4$:
+$$ \alpha_1 = \frac{1}{2} \ln\left(\frac{1-0.4}{0.4}\right) = \frac{1}{2} \ln\left(\frac{0.6}{0.4}\right) = \frac{1}{2} \ln(1.5) $$
+Numerically, $\ln(1.5) \approx 0.405465$, so $\alpha_1 \approx 0.20273$.
+
+\subsubsection*{(2) Derivation of $Z_t$ and $\alpha_t$}
+The distribution $D_{t+1}$ is updated as follows:
+$$ D_{t+1}(i) = \frac{D_t(i) \exp(-\alpha_t y_i h_t(x_i))}{Z_t} $$
+To ensure $\sum_{i=1}^{n} D_{t+1}(i) = 1$, $Z_t$ must be the sum of the numerators:
+$$ Z_t = \sum_{i=1}^{n} D_t(i) \exp(-\alpha_t y_i h_t(x_i)) $$
+Let $C_t$ be the set of indices of correctly classified samples by $h_t$ ($y_i h_t(x_i)=1$), and $M_t$ be the set of indices of misclassified samples ($y_i h_t(x_i)=-1$).
+Then $Z_t$ can be written as:
+$$ Z_t = \sum_{i \in C_t} D_t(i) e^{-\alpha_t} + \sum_{i \in M_t} D_t(i) e^{\alpha_t} $$
+Since $\epsilon_t = \sum_{i \in M_t} D_t(i)$ and $\sum_{i=1}^n D_t(i) = 1$, it follows that $\sum_{i \in C_t} D_t(i) = 1 - \epsilon_t$.
+So, $Z_t$ in terms of $\epsilon_t$ and $\alpha_t$ is:
+$$ Z_t = (1-\epsilon_t)e^{-\alpha_t} + \epsilon_t e^{\alpha_t} $$
+The value of $\alpha_t$ is chosen to minimize $Z_t$. We differentiate $Z_t$ with respect to $\alpha_t$ and set it to zero:
+$$ \frac{dZ_t}{d\alpha_t} = -(1-\epsilon_t)e^{-\alpha_t} + \epsilon_t e^{\alpha_t} = 0 $$
+$$ \epsilon_t e^{\alpha_t} = (1-\epsilon_t)e^{-\alpha_t} $$
+$$ e^{2\alpha_t} = \frac{1-\epsilon_t}{\epsilon_t} $$
+$$ \alpha_t = \frac{1}{2} \ln\left(\frac{1-\epsilon_t}{\epsilon_t}\right) $$
+This is the formula for $\alpha_t$. Substituting this $\alpha_t$ back into the expression for $Z_t$:
+$e^{\alpha_t} = \sqrt{\frac{1-\epsilon_t}{\epsilon_t}}$ and $e^{-\alpha_t} = \sqrt{\frac{\epsilon_t}{1-\epsilon_t}}$.
+$$ Z_t = (1-\epsilon_t)\sqrt{\frac{\epsilon_t}{1-\epsilon_t}} + \epsilon_t\sqrt{\frac{1-\epsilon_t}{\epsilon_t}} = \sqrt{(1-\epsilon_t)\epsilon_t} + \sqrt{\epsilon_t(1-\epsilon_t)} = 2\sqrt{\epsilon_t(1-\epsilon_t)} $$
+This is the formula for $Z_t$ in terms of $\epsilon_t$.
+
+\subsubsection*{(3) Points with increased significance and their $D_2$ values}
+A point $i$ will increase in significance if $D_2(i) > D_1(i)$.
+$D_2(i) = D_1(i) \frac{\exp(-\alpha_1 y_i h_1(x_i))}{Z_1}$.
+This occurs if $\exp(-\alpha_1 y_i h_1(x_i)) / Z_1 > 1$.
+Since $\alpha_1 = \frac{1}{2}\ln(1.5) > 0$, $\exp(\alpha_1) > 1$ and $\exp(-\alpha_1) < 1$.
+$Z_1 = 2\sqrt{\epsilon_1(1-\epsilon_1)} = 2\sqrt{0.4(0.6)} = 2\sqrt{0.24} \approx 2 \times 0.4899 \approx 0.9798$.
+Since $Z_1 < 1$:
+\begin{itemize}
+    \item If $y_i h_1(x_i) = -1$ (point $i$ is misclassified by $h_1$), then $\exp(-\alpha_1 y_i h_1(x_i)) = e^{\alpha_1} = \sqrt{1.5} \approx 1.2247$. Then $e^{\alpha_1}/Z_1 \approx 1.2247/0.9798 \approx 1.25 > 1$. So $D_2(i) > D_1(i)$.
+    \item If $y_i h_1(x_i) = 1$ (point $i$ is correctly classified by $h_1$), then $\exp(-\alpha_1 y_i h_1(x_i)) = e^{-\alpha_1} = 1/\sqrt{1.5} \approx 0.8165$. Then $e^{-\alpha_1}/Z_1 \approx 0.8165/0.9798 \approx 0.833 < 1$. So $D_2(i) < D_1(i)$.
+\end{itemize}
+The points that increase in significance are those misclassified by $h_1 = h^{(1)}$. From part (a), these are points $\{1, 7, 8, 9\}$.
+For these misclassified points, $D_1(i) = 0.1$:
+$$ D_2(i) = \frac{D_1(i) e^{\alpha_1}}{Z_1} = \frac{0.1 \sqrt{(1-\epsilon_1)/\epsilon_1}}{2\sqrt{\epsilon_1(1-\epsilon_1)}} = \frac{0.1}{2\epsilon_1} = \frac{0.1}{2 \times 0.4} = \frac{0.1}{0.8} = 0.125 $$
+So, for points $i \in \{1, 7, 8, 9\}$, $D_2(i) = 0.125$.
+For correctly classified points $i \in \{2, 3, 4, 5, 6, 10\}$:
+$$ D_2(i) = \frac{D_1(i) e^{-\alpha_1}}{Z_1} = \frac{0.1 \sqrt{\epsilon_1/(1-\epsilon_1)}}{2\sqrt{\epsilon_1(1-\epsilon_1)}} = \frac{0.1}{2(1-\epsilon_1)} = \frac{0.1}{2 \times 0.6} = \frac{0.1}{1.2} = \frac{1}{12} \approx 0.08333 $$
+Check sum: $4 \times 0.125 + 6 \times \frac{1}{12} = 0.5 + 0.5 = 1$. The distribution $D_2$ is normalized.
+
+\subsubsection*{(4) Second weak classifier $h_2$ and its error $\epsilon_2$}
+We calculate $\epsilon_2^{(j)} = \sum_{i=1}^{10} D_2(i) \mathbb{I}(y_i \neq h^{(j)}(x_i))$ for each $h^{(j)}$.
+Recall $D_2(i)=0.125$ for $i \in \{1,7,8,9\}$ and $D_2(i)=1/12$ for $i \in \{2,3,4,5,6,10\}$.
+
+\begin{itemize}
+    \item $h^{(1)}$: Misclassified set $M_1^{(1)}=\{1,7,8,9\}$.
+    $\epsilon_2^{(1)} = D_2(1)+D_2(7)+D_2(8)+D_2(9) = 4 \times 0.125 = 0.5$.
+    \item $h^{(2)}$: Misclassified set $M_1^{(2)}=\{1,2,3,9\}$.
+    $\epsilon_2^{(2)} = D_2(1)+D_2(2)+D_2(3)+D_2(9) = 0.125 + (1/12) + (1/12) + 0.125 = 0.25 + 2/12 = 1/4 + 1/6 = 3/12 + 2/12 = 5/12 \approx 0.4167$.
+    My previous calculation was: $0.25 + 1/60 = 16/60 = 4/15$. Checking again. $D_2(2)=1/12$. $0.25 + 2/12 = 0.25 + 1/6 = 1/4 + 1/6 = (3+2)/12 = 5/12$. Ah, the previous $1/60$ was wrong. $0.25 + 0.01666...$ was wrong. $1/6 \approx 0.1666...$. So $0.25 + 0.1666... = 0.41666...$.
+    $\epsilon_2^{(2)} = 0.125 (\text{for } 1) + (1/12) (\text{for } 2) + (1/12) (\text{for } 3) + 0.125 (\text{for } 9) = 0.25 + 2/12 = 1/4 + 1/6 = 3/12 + 2/12 = 5/12$.
+
+    Let's recalculate all $\epsilon_2^{(j)}$ values systematically:
+    $S_w = \{1,7,8,9\}$ (weight $0.125 = 1/8$)
+    $S_c = \{2,3,4,5,6,10\}$ (weight $1/12$)
+
+    $\epsilon_2^{(1)}$: $\{1,7,8,9\}$. All in $S_w$. $\epsilon_2^{(1)} = 4 \times (1/8) = 1/2 = 0.5$.
+    $\epsilon_2^{(2)}$: $\{1,2,3,9\}$. $1,9 \in S_w$; $2,3 \in S_c$. $\epsilon_2^{(2)} = 2 \times (1/8) + 2 \times (1/12) = 1/4 + 1/6 = 3/12 + 2/12 = 5/12 \approx 0.4167$.
+    $\epsilon_2^{(3)}$: $\{1,2,3,4,5\}$. $1 \in S_w$; $2,3,4,5 \in S_c$. $\epsilon_2^{(3)} = 1 \times (1/8) + 4 \times (1/12) = 1/8 + 1/3 = 3/24 + 8/24 = 11/24 \approx 0.4583$.
+    $\epsilon_2^{(4)}$: $\{3,4,5,7\}$. $7 \in S_w$; $3,4,5 \in S_c$. $\epsilon_2^{(4)} = 1 \times (1/8) + 3 \times (1/12) = 1/8 + 1/4 = 1/8 + 2/8 = 3/8 = 0.375$.
+    $\epsilon_2^{(5)}$: $\{5,6,7,8\}$. $7,8 \in S_w$; $5,6 \in S_c$. $\epsilon_2^{(5)} = 2 \times (1/8) + 2 \times (1/12) = 1/4 + 1/6 = 5/12 \approx 0.4167$.
+    $\epsilon_2^{(6)}$: $\{5,6,7,8,9\}$. $7,8,9 \in S_w$; $5,6 \in S_c$. $\epsilon_2^{(6)} = 3 \times (1/8) + 2 \times (1/12) = 3/8 + 1/6 = 9/24 + 4/24 = 13/24 \approx 0.5417$.
+\end{itemize}
+Comparing the $\epsilon_2^{(j)}$ values:
+$\epsilon_2^{(1)} = 0.5$
+$\epsilon_2^{(2)} = 5/12 \approx 0.4167$
+$\epsilon_2^{(3)} = 11/24 \approx 0.4583$
+$\epsilon_2^{(4)} = 3/8 = 0.375$
+$\epsilon_2^{(5)} = 5/12 \approx 0.4167$
+$\epsilon_2^{(6)} = 13/24 \approx 0.5417$
+
+The minimum value is $\epsilon_2 = 3/8 = 0.375$. This is achieved by $h^{(4)}$.
+So, the second weak classifier selected is $h_2 = h^{(4)}$, and its weighted error is $\epsilon_2 = 3/8$.
+
+\subsubsection*{(5) Training error of the final classifier $H(x)$}
+The final classifier after two rounds is $H(x) = \operatorname{sign}(\alpha_1 h_1(x) + \alpha_2 h_2(x))$.
+We have $h_1 = h^{(1)}$ with $\epsilon_1 = 0.4$, so $\alpha_1 = \frac{1}{2}\ln(1.5) \approx 0.20273$.
+And $h_2 = h^{(4)}$ with $\epsilon_2 = 3/8 = 0.375$.
+$\alpha_2 = \frac{1}{2} \ln\left(\frac{1-\epsilon_2}{\epsilon_2}\right) = \frac{1}{2} \ln\left(\frac{1-3/8}{3/8}\right) = \frac{1}{2} \ln\left(\frac{5/8}{3/8}\right) = \frac{1}{2} \ln(5/3)$.
+Numerically, $\ln(5/3) \approx \ln(1.6667) \approx 0.5108$, so $\alpha_2 \approx 0.2554$.
+
+We evaluate $H(x_i) = \operatorname{sign}(\alpha_1 h^{(1)}(x_i) + \alpha_2 h^{(4)}(x_i))$ for each $x_i$.
+It's equivalent to evaluate $\operatorname{sign}(\ln(1.5) h^{(1)}(x_i) + \ln(5/3) h^{(4)}(x_i))$.
+$\ln(1.5) \approx 0.405465$. $\ln(5/3) \approx 0.510826$.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|p{3.5cm}|c|c|}
+\hline
+$i$ & $x_{i1}$ & $x_{i2}$ & $y_i$ & $h^{(1)}(x_i)$ & $h^{(4)}(x_i)$ & $\ln(1.5)h^{(1)} + \ln(5/3)h^{(4)}$ & $H(x_i)$ & $y_i \neq H(x_i)$? \\ \hline
+1 & 1.5 & 0.5 & 1 & -1 & 1 & $-0.405465(1) + 0.510826(1) = 0.105361$ & 1 & No \\
+2 & 2.5 & 1.5 & 1 & 1 & 1 & $0.405465(1) + 0.510826(1) = 0.916291$ & 1 & No \\
+3 & 3.5 & 3.5 & 1 & 1 & -1 & $0.405465(1) + 0.510826(-1) = -0.105361$ & -1 & Yes \\
+4 & 6.5 & 5.5 & 1 & 1 & -1 & $0.405465(1) + 0.510826(-1) = -0.105361$ & -1 & Yes \\
+5 & 7.5 & 10.5 & 1 & 1 & -1 & $0.405465(1) + 0.510826(-1) = -0.105361$ & -1 & Yes \\
+6 & 1.5 & 2.5 & -1 & -1 & -1 & $0.405465(-1) + 0.510826(-1) = -0.916291$ & -1 & No \\
+7 & 3.5 & 1.5 & -1 & 1 & 1 & $0.405465(1) + 0.510826(1) = 0.916291$ & 1 & Yes \\
+8 & 5.5 & 5.5 & -1 & 1 & -1 & $0.405465(1) + 0.510826(-1) = -0.105361$ & -1 & No \\
+9 & 7.5 & 8.5 & -1 & 1 & -1 & $0.405465(1) + 0.510826(-1) = -0.105361$ & -1 & No \\
+10 & 1.5 & 10.5 & -1 & -1 & -1 & $0.405465(-1) + 0.510826(-1) = -0.916291$ & -1 & No \\
+\hline
+\end{tabular}
+\caption{Evaluation of $H(x_i)$}
+\label{tab:H_eval}
+\end{table}
+The misclassified points for $H(x)$ are $\{3, 4, 5, 7\}$. There are 4 misclassifications.
+The training error is $\epsilon = \frac{1}{n} \sum_{i=1}^{n} \mathbb{I}(y_i \neq H(x_i)) = \frac{4}{10} = 0.4$.
+
+Comparing this to the errors of the weak classifiers (with uniform weights, as in part (a)):
+Error of $h_1 = h^{(1)}$ was $0.4$.
+Error of $h_2 = h^{(4)}$ was $0.4$.
+The error of the final classifier $H(x)$ ($0.4$) is the same as the error of these individual weak classifiers.
+
+\newpage

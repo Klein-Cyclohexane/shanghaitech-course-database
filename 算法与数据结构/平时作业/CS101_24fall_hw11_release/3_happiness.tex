@@ -1,0 +1,54 @@
+\titledquestion{Happiness Planning}[10]
+
+In the magical world of Hogwarts, Professor Slughorn likes to plan his potions classes with precision and flair.
+
+For the next \( m \) months, starting with no Galleons, Slughorn will brew potions and earn \( x \) Galleons per month. During the \( i \)-th month (\( 1 \leq i \leq m \)), there will be a singular chance to spend \( c_i \) Galleons to acquire happiness worth \( h_i \). However, it's a fair bargain for Slughorn to buy happiness, that is, the amount of $c_i$ will not be too big.
+
+Borrowing is not permitted. Galleons earned in the \( i \)-th month can only be used in a subsequent \( j \)-th month (\( j > i \)).
+
+Since potion masters don't dabble with Muggle technology, please help him design a dynamic programming algorithm to assist Slughorn in discovering the maximum achievable sum of happiness.
+
+\textbf{Hints: } \textit{Still consider the backpack problem! What should you design the Bellman equation with limitation?}
+
+\begin{solution}
+    \\
+    \textbf{Main Idea}
+    
+    Let $OPT(i,j)$ be the maximum happiness achievable after i months with j Galleons.
+    Then we have the following equation:
+    \[
+    OPT(i,j)=
+    \begin{cases}
+        0 & \case{i=0} \\
+        \max\begin{cases}
+            OPT(i-1,j-x) & \text{not buy in month i}\\
+            OPT(i-1,j-x-c_i)+h_i & \text{buy in month i if } j-x \geq c_i
+        \end{cases} & \otherwise
+    \end{cases}
+    \]
+
+    The final answer is 
+    \[ \max_{j} OPT(m,j) \]
+
+    \textbf{Proof of Correctness}: 
+
+    \begin{itemize}
+        \item Base case: At month 0, no happiness can be achieved
+        \item For each month i and current Galleons j:
+            \begin{itemize}
+                \item Option 1: Don't buy happiness, just accumulate x Galleons
+                \item Option 2: Buy happiness if we have enough Galleons $(j-x \geq c_i)$
+            \end{itemize}
+        \item The maximum happiness at month m with any amount of Galleons is our answer
+    \end{itemize}
+
+    \textbf{Runtime Analysis}: 
+
+    Let G be the maximum possible Galleons $(G = m·x)$.
+    Time complexity: $O(m·G)$ since we have two nested loops:
+    \begin{itemize}
+        \item Outer loop: m months
+        \item Inner loop: G possible Galleon values
+    \end{itemize}
+    Space complexity: $O(m·G)$ to store the DP table.
+\end{solution}

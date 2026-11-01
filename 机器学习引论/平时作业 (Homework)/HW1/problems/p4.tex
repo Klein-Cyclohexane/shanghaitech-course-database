@@ -1,0 +1,79 @@
+\item \defpoints{15} [Math review(Probability and Statistics)]
+Suppose we have two random variables, $A$ and $B$, where $A$ takes on values $a_1, a_2$ and $B$ takes on values $b_1, b_2$. Let $P\left(A=a_1\right)=0.5$ and $P\left(B=b_1\right)=0.5$.
+\begin{itemize}
+    \item[(a)] Suppose $a_1$ and $b_2$ are disjoint (mutually exclusive). ~\defpoints{3} \\
+    1. What is $P\left(a_1, b_2\right)$? \\
+    2. What is $P\left(a_1, b_1\right)$? \\
+    3. What is $P\left(a_1 \mid b_2\right)$?
+
+    \item[(b)] Suppose instead that $A, B$ are independent. ~\defpoints{3} \\
+    1. What is $P\left(a_1, b_2\right)$? \\
+    2. What is $P\left(a_1, b_1\right)$? \\
+    3. What is $P\left(a_1 \mid b_2\right)$?
+    \item[(c)] A student is looking at her activity tracker (Fitbit/Apple Watch) data and she notices that she seems to sleep better on days that she exercises. They observe the following: \\
+    \begin{tabular}{lll}
+    Exercise & Good Sleep & Probability \\
+    yes & yes & 0.3 \\
+    yes & no & 0.2 \\
+    no & no & 0.4 \\
+    no & yes & 0.1
+    \end{tabular} \\
+    1. What is the $P($GoodSleep $=$ yes $|$ Exercise $=$ yes $)$? \\
+    2. Why doesn't $P($GoodSleep $=$ yes, Exercise $=$ yes $)=P($ GoodSleep $=$ yes $)\cdot P($ Exercise $=$ yes $)$? \\
+    3. The student merges her activity tracker data with her food logs and finds that the $P($Eatwell $=$ yes $|$ Exercise $=$ yes, GoodSleep $=$ yes $)$ is 0.25. What is the probability of all three happening on the same day? ~\defpoints{3}
+
+    \item[(d)] What is the expectation of $X$ where $X$ is a single roll of a fair 6-sided die $(S=$ $\{1,2,3,4,5,6\})$? What is the variance of $X$? ~\defpoints{3}
+
+    \item[(e)] Imagine that we had a new die where the sides were $S=\{3,4,5,6,7,8\}$. How do the expectation and the variance compare to our original dice? ~\defpoints{3}
+\end{itemize}
+
+\textcolor{blue}{Solution} \\
+
+\begin{itemize}
+    \item [(a)] Suppose $a_1$ and $b_2$ are disjoint (mutually exclusive).
+    \begin{itemize}
+        \item 1. $P\left(a_1, b_2\right) = 0$
+        \item 2. $P\left(a_1, b_1\right) = P\left(a_1\right) = 0.5$
+        \item 3. $P\left(a_1 \mid b_2\right) = \frac{P\left(a_1, b_2\right)}{P\left(b_2\right)} = 0$
+    \end{itemize}
+
+    \item [(b)] Suppose instead that $A, B$ are independent.
+    \begin{itemize}
+        \item 1. $P\left(a_1, b_2\right) = P\left(a_1\right)P\left(b_2\right) = 0.5 \times 0.5 = 0.25$
+        \item 2. $P\left(a_1, b_1\right) = P\left(a_1\right)P\left(b_1\right) = 0.5 \times 0.5 = 0.25$
+        \item 3. $P\left(a_1 \mid b_2\right) = \frac{P\left(a_1, b_2\right)}{P\left(b_2\right)} = \frac{0.25}{0.5} = 0.5$
+    \end{itemize}
+
+    \item [(c)]
+    \begin{itemize}
+        \item 1. $P(\text{GoodSleep} = \text{yes} \mid \text{Exercise} = \text{yes}) = \frac{P(\text{GoodSleep} = \text{yes}, \text{Exercise} = \text{yes})}{P(\text{Exercise} = \text{yes})} = \frac{0.3}{0.3+0.2} = \frac{0.3}{0.5} = 0.6$
+        \item 2. $P(\text{GoodSleep} = \text{yes}, \text{Exercise} = \text{yes}) = P(\text{GoodSleep} = \text{yes}) \cdot P(\text{Exercise} = \text{yes})$ is not true because the events are not independent.
+        \item 3. $P(\text{Eatwell} = \text{yes} , \text{Exercise} = \text{yes}, \text{GoodSleep} = \text{yes}) = P(\text{Eatwell} = \text{yes} \mid \text{Exercise} = \text{yes}, \text{GoodSleep} = \text{yes}) \cdot P(\text{Exercise} = \text{yes}, \text{GoodSleep} = \text{yes}) = 0.25 \cdot 0.3 = 0.075$
+    \end{itemize}
+
+    \item [(d)] The expectation of $X$ where $X$ is a single roll of a fair 6-sided die $(S=\{1,2,3,4,5,6\})$ is given by
+    \begin{align*}
+        E[X] = \sum_{x\in S} xP(X=x) = \frac{1}{6}\left(1+2+3+4+5+6\right) = 3.5
+    \end{align*}
+    The variance of $X$ is given by
+    \begin{align*}
+        \text{Var}(X) = E[X^2] - E[X]^2 = \frac{1}{6}\left(1^2+2^2+3^2+4^2+5^2+6^2\right) - 3.5^2 = \frac{35}{12} \approx 2.9167
+    \end{align*}
+
+    \item [(e)] The expectation of $X$ where $X$ is a single roll of a fair 6-sided die $(S=\{3,4,5,6,7,8\})$ is given by
+    \begin{align*}
+        E[X] = \sum_{x\in S} xP(X=x) = \frac{1}{6}\left(3+4+5+6+7+8\right) = 5.5
+    \end{align*}
+    The variance of $X$ is given by
+    \begin{align*}
+        \text{Var}(X) = E[X^2] - E[X]^2 = \frac{1}{6}\left(3^2+4^2+5^2+6^2+7^2+8^2\right) - 5.5^2 = \frac{35}{12} \approx 2.9167
+    \end{align*}
+
+\end{itemize}
+
+
+
+
+
+
+\newpage

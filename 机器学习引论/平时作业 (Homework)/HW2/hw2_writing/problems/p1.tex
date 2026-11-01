@@ -1,0 +1,57 @@
+\item \defpoints{10} [Math review(Linear Algebra)] Singularvalue decomposition(SVD). \\
+$A=\left[\begin{array}{ll}1 & 1 \\ 0 & 1 \\ 1 & 0\end{array}\right]$. Find the SVD of $A=U \Sigma V^{\top}$.
+
+\textcolor{blue}{Solution}
+
+First, we  calculate $A^TA$ and finds its eigenvalues and eigenvectors.
+
+$A^T = \begin{bmatrix} 1 & 0 & 1 \\ 1 & 1 & 0 \end{bmatrix}$
+
+$A^TA = \begin{bmatrix} 1 & 0 & 1 \\ 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 1 & 1 \\ 0 & 1 \\ 1 & 0 \end{bmatrix} = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$
+
+The characteristic equation: $\det(A^TA - \lambda I) = \begin{vmatrix} 2-\lambda & 1 \\ 1 & 2-\lambda \end{vmatrix} = (2-\lambda)^2 - 1 = \lambda^2 - 4\lambda + 3 = 0$
+
+Solving this equation: $\lambda_1 = 3$, $\lambda_2 = 1$
+
+For $\lambda_1 = 3$:
+$(A^TA - 3I)v_1 = 0 \Rightarrow \begin{bmatrix} -1 & 1 \\ 1 & -1 \end{bmatrix} \begin{bmatrix} v_{11} \\ v_{12} \end{bmatrix} = 0$
+
+This gives us $v_{11} = v_{12}$, so the eigenvector is $v_1 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$
+
+For $\lambda_2 = 1$:
+$(A^TA - I)v_2 = 0 \Rightarrow \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} v_{21} \\ v_{22} \end{bmatrix} = 0$
+
+This gives us $v_{21} = -v_{22}$, so the eigenvector is $v_2 = \frac{1}{\sqrt{2}}\begin{bmatrix} -1 \\ 1 \end{bmatrix}$
+
+The singular values are $\sigma_1 = \sqrt{\lambda_1} = \sqrt{3}$ and $\sigma_2 = \sqrt{\lambda_2} = 1$
+
+Matrix $V$ consists of the eigenvectors of $A^TA$:
+$V = \begin{bmatrix} \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \end{bmatrix}$
+
+Calculate the columns of $U$:
+
+$u_1 = \frac{1}{\sigma_1}Av_1 = \frac{1}{\sqrt{3}}A\begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix} = \frac{1}{\sqrt{3}}\begin{bmatrix} 1 \cdot \frac{1}{\sqrt{2}} + 1 \cdot \frac{1}{\sqrt{2}} \\ 0 \cdot \frac{1}{\sqrt{2}} + 1 \cdot \frac{1}{\sqrt{2}} \\ 1 \cdot \frac{1}{\sqrt{2}} + 0 \cdot \frac{1}{\sqrt{2}} \end{bmatrix} = \frac{1}{\sqrt{3}}\begin{bmatrix} \frac{\sqrt{2}}{\sqrt{1}} \\ \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix} = \begin{bmatrix} \sqrt{\frac{2}{3}} \\ \frac{1}{\sqrt{6}} \\ \frac{1}{\sqrt{6}} \end{bmatrix}$
+
+$u_2 = \frac{1}{\sigma_2}Av_2 = A\begin{bmatrix} -\frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix} = \begin{bmatrix} 1 \cdot -\frac{1}{\sqrt{2}} + 1 \cdot \frac{1}{\sqrt{2}} \\ 0 \cdot -\frac{1}{\sqrt{2}} + 1 \cdot \frac{1}{\sqrt{2}} \\ 1 \cdot -\frac{1}{\sqrt{2}} + 0 \cdot \frac{1}{\sqrt{2}} \end{bmatrix} = \begin{bmatrix} 0 \\ \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} \end{bmatrix}$
+
+For $u_3$, we need a vector orthogonal to both $u_1$ and $u_2$:
+$u_3 = \begin{bmatrix} -\frac{1}{\sqrt{3}} \\ \frac{1}{\sqrt{3}} \\ \frac{1}{\sqrt{3}} \end{bmatrix}$
+
+(We can verify that $u_1^T u_3 = 0$ and $u_2^T u_3 = 0$)
+
+Therefore:
+$U = \begin{bmatrix} \sqrt{\frac{2}{3}} & 0 & -\frac{1}{\sqrt{3}} \\ 
+\frac{1}{\sqrt{6}} & \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{3}} \\
+\frac{1}{\sqrt{6}} & -\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{3}} \end{bmatrix}$
+
+The singular value matrix is:
+$\Sigma = \begin{bmatrix} \sqrt{3} & 0 \\ 0 & 1 \\ 0 & 0 \end{bmatrix}$
+
+Therefore, the complete SVD of $A$ is $A = U\Sigma V^T$ where:
+
+$U = \begin{bmatrix} \sqrt{\frac{2}{3}} & 0 & -\frac{1}{\sqrt{3}} \\ 
+\frac{1}{\sqrt{6}} & \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{3}} \\
+\frac{1}{\sqrt{6}} & -\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{3}} \end{bmatrix}$, 
+$\Sigma = \begin{bmatrix} \sqrt{3} & 0 \\ 0 & 1 \\ 0 & 0 \end{bmatrix}$, and 
+$V = \begin{bmatrix} \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \end{bmatrix}$
+\newpage

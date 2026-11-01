@@ -1,0 +1,98 @@
+\item \defpoints{10} [Linear Classification] Consider the ``Multi-class Logistic Regression'' algorithm. Given training set $\mathcal{D}=\{(x^i,y^i)\mid i=1,\ldots,n\}$ where $x^i\in \mathbb{R}^{p+1}$ is the feature vector and $y^i\in \mathbb{R}^{k}$ is a one-hot binary vector indicating $k$ classes. We want to find the parameter $\hat{\beta}=[\hat{\beta}_1,\ldots,\hat{\beta}_k]\in \mathbb{R}^{(p+1)\times k}$ that maximize the likelihood for the training set. Introducing the softmax function, we assume our model has the form
+$$p(y_c^i=1\mid x^i;\beta) = \frac{\exp(\beta_c^\top x^i)}{\sum_{c'}\exp(\beta_{c'}^\top x^i)}$$
+where $y_c^i$ is the $c$-th element of $y^i$.
+
+\begin{itemize}
+\item[(a)] Complete the derivation of the conditional log likelihood for our model, which is
+\begin{align*}
+    \ell(\beta) = \ln \prod_{i=1}^{n} p(y_t^i\mid x^i;\beta)
+    =\sum_{i=1}^{n}\sum_{c=1}^{k}\left[ y_c^i(\beta_c^\top x^i) - y_c^i\ln \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right)\right].
+\end{align*}
+For simplicity, we abbreviate $p(y_t^i=1\mid x^i;\beta)$ as $p(y_t^i\mid x^i;\beta)$, where $t$ is the true class for $x^i$.~\defpoints{5}
+\item[(b)] Derive the gradient of $\ell(\beta)$ w.r.t. $\beta_1$, i.e.,
+$$\nabla_{\beta_1}\ell(\beta) = \nabla_{\beta_1} \sum_{i=1}^{n}\sum_{c=1}^{k}\left[ y_c^i(\beta_c^\top x^i) - y_c^i\ln \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right)\right]$$
+
+Remark: Log likelihood is always concave; thus, we can optimize our model using gradient ascent. (The gradient of $\ell(\beta)$ w.r.t. $\beta_2,\ldots,\beta_k$ is similar, you don't need to write them)~\defpoints{5}
+\end{itemize}
+
+\solution
+
+\begin{itemize}
+\item[(a)] To derive the conditional log likelihood, we start with the likelihood function for the entire dataset:
+
+\begin{align*}
+L(\beta) &= \prod_{i=1}^{n} p(y^i \mid x^i; \beta)
+\end{align*}
+
+Since $y^i$ is a one-hot vector, only one component of it (the true class $t$ for sample $i$) equals 1, and the rest are 0. Therefore:
+
+\begin{align*}
+p(y^i \mid x^i; \beta) &= \prod_{c=1}^{k} \left(p(y_c^i=1 \mid x^i; \beta)\right)^{y_c^i} \\
+&= \prod_{c=1}^{k} \left(\frac{\exp(\beta_c^\top x^i)}{\sum_{c'}\exp(\beta_{c'}^\top x^i)}\right)^{y_c^i}
+\end{align*}
+
+Taking the logarithm of the likelihood:
+
+\begin{align*}
+\ell(\beta) &= \ln L(\beta) \\
+&= \ln \prod_{i=1}^{n} p(y^i \mid x^i; \beta) \\
+&= \sum_{i=1}^{n} \ln p(y^i \mid x^i; \beta) \\
+&= \sum_{i=1}^{n} \ln \left[ \prod_{c=1}^{k} \left(\frac{\exp(\beta_c^\top x^i)}{\sum_{c'}\exp(\beta_{c'}^\top x^i)}\right)^{y_c^i} \right] \\
+&= \sum_{i=1}^{n} \sum_{c=1}^{k} y_c^i \ln \left(\frac{\exp(\beta_c^\top x^i)}{\sum_{c'}\exp(\beta_{c'}^\top x^i)}\right) \\
+&= \sum_{i=1}^{n} \sum_{c=1}^{k} y_c^i \left[ \ln(\exp(\beta_c^\top x^i)) - \ln\left(\sum_{c'}\exp(\beta_{c'}^\top x^i)\right) \right] \\
+&= \sum_{i=1}^{n} \sum_{c=1}^{k} y_c^i \left[ \beta_c^\top x^i - \ln\left(\sum_{c'}\exp(\beta_{c'}^\top x^i)\right) \right] \\
+&= \sum_{i=1}^{n} \sum_{c=1}^{k} \left[ y_c^i(\beta_c^\top x^i) - y_c^i\ln\left(\sum_{c'}\exp(\beta_{c'}^\top x^i)\right) \right]
+\end{align*}
+
+\item[(b)] Now, we need to find the gradient of $\ell(\beta)$ with respect to $\beta_1$.
+
+\begin{align*}
+\nabla_{\beta_1}\ell(\beta) &= \nabla_{\beta_1} \sum_{i=1}^{n}\sum_{c=1}^{k}\left[ y_c^i(\beta_c^\top x^i) - y_c^i\ln \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right)\right] \\
+&= \sum_{i=1}^{n}\nabla_{\beta_1}\sum_{c=1}^{k}\left[ y_c^i(\beta_c^\top x^i) - y_c^i\ln \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right)\right]
+\end{align*}
+
+Let's handle the two parts separately.
+
+For the first part, since $\beta_c^\top x^i$ only depends on $\beta_1$ when $c = 1$:
+\begin{align*}
+\nabla_{\beta_1}\sum_{c=1}^{k} y_c^i(\beta_c^\top x^i) = \nabla_{\beta_1}(y_1^i \beta_1^\top x^i) = y_1^i x^i
+\end{align*}
+
+For the second part, we use the chain rule:
+\begin{align*}
+&\nabla_{\beta_1}\sum_{c=1}^{k} y_c^i\ln \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right) \\
+&= \sum_{c=1}^{k} y_c^i \nabla_{\beta_1}\ln \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right) \\
+&= \sum_{c=1}^{k} y_c^i \frac{1}{\sum_{c'}\exp(\beta_{c'}^\top x^i)} \nabla_{\beta_1} \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right) \\
+&= \sum_{c=1}^{k} y_c^i \frac{1}{\sum_{c'}\exp(\beta_{c'}^\top x^i)} \cdot \exp(\beta_1^\top x^i) \cdot x^i \\
+&= \sum_{c=1}^{k} y_c^i \frac{\exp(\beta_1^\top x^i)}{\sum_{c'}\exp(\beta_{c'}^\top x^i)} \cdot x^i \\
+&= \sum_{c=1}^{k} y_c^i \cdot p(y_1^i=1|x^i;\beta) \cdot x^i \\
+&= \left(\sum_{c=1}^{k} y_c^i\right) \cdot p(y_1^i=1|x^i;\beta) \cdot x^i
+\end{align*}
+
+Since $y^i$ is a one-hot vector, $\sum_{c=1}^{k} y_c^i = 1$.
+
+Therefore:
+\begin{align*}
+\nabla_{\beta_1}\sum_{c=1}^{k} y_c^i\ln \left(\sum_{c'}\exp(\beta_{c'}^\top x^i) \right) = p(y_1^i=1|x^i;\beta) \cdot x^i
+\end{align*}
+
+Combining the two parts:
+\begin{align*}
+\nabla_{\beta_1}\ell(\beta) &= \sum_{i=1}^{n}\left[y_1^i x^i - p(y_1^i=1|x^i;\beta) \cdot x^i\right] \\
+&= \sum_{i=1}^{n}\left[y_1^i - p(y_1^i=1|x^i;\beta)\right] \cdot x^i
+\end{align*}
+
+This gradient represents the difference between the actual labels $y_1^i$ and the predicted probabilities $p(y_1^i=1|x^i;\beta)$ for class 1, weighted by the feature vectors $x^i$.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+\newpage

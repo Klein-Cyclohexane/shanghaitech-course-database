@@ -1,0 +1,79 @@
+\titledquestion{Calculating with dividing}
+
+In this problem, we will give out some recurrence relation of the run-time $T_i(n)$. We want you to find the asymptotic order of $T_i(n)$ i.e. find a function $f(n)$ s.t. $T_i(n) = \Theta(f(n))$, depending on the recurrence relation given. You should justify your answer correctly.
+
+As a reminder, to receive the points, please keep in mind that:
+
+\begin{itemize}
+    \item[1.] Use $T_i(n)$ to represent the run-time in $i$-th problem.
+    \item[2.] Make sure your upper bound for $T_i(n)$ is tight enough.
+    \item[3.] Make sure you have a reasonable explanation other than just giving out an assumption and verifying it by your sense. 
+    \item[4.] For your convenience, you can always assume $T_i(n)$ is increasing. (May Not Strictly)
+\end{itemize}
+
+Hint: Guessing the upper bound of $T_i(n)$ and then proof it rigorously (e.g. using mathematical induction) is acceptable. However, simply plugging your guessed upper bound into the recurrence relation and verifying whether your guessed upper bound makes sense or not will make you lose points for reasoning. If you find it hard to prove something straight, try induction instead.
+
+In each subproblem, you may ignore any issue arising from whether a number is an integer as well as assuming \(T_i(0) = 0\) and \(T_i(1) = 1\). You can make use of the Master Theorem, Recursion Tree, or other reasonable approaches to solve the following recurrence relations. 
+
+\begin{parts}
+    \part[4] $T_1(n) = \begin{cases}\Theta(1),& 1\leq n\leq k\\ T_1(k) + T_1(n - k) + \Theta(n),& n> k \end{cases}.$ ($k$ is a constant.)
+    
+    \begin{solution}
+        When $n > k$, we have $T_1(n) = T_1(k) + T_1(n - k) + \Theta(n) = \Theta(1) + T_1(n - k) + \Theta(n) = \Theta(n) + T_1(n - k) = \sum_{i = 0}^{n/k} \Theta(n - ik) = \Theta(n^2)$.\\
+        And when $n < k$, this is just obviously right.
+    \end{solution}
+    
+    \part[4] 
+        $T_2(n) = T_2(\alpha n) + T_2((1 - \alpha)n) + \Theta(n)$ 
+    \begin{solution}\\
+        Assume $\quad T_2(n)=\Theta(n \log n)$.
+        We can then use mathematical induction to prove it
+        (1) $\quad T_2(n)=O(n \log n) \leq c n \log n$
+
+        Base case: $\quad T_2(2)=d_1 \leq 2 c \log 2 \quad$ \\
+        We suppose for all $a<n \quad T_2(a) \leq c a \log a$.\\
+        Inductive step: $\quad T_2(n)=T_2(\alpha n)+T_2((1-\alpha) n)+\Theta(n)$
+        $\leq c \alpha n \log (\alpha n)+c(1-\alpha) n \log ((1-\alpha) n)+\Theta(n)$
+        $=c \alpha n(\log \alpha+\log n)+c(1-\alpha) n(\log (1-\alpha)+\log n)+d n$
+        $=c n \log n+(c \alpha \log \alpha+c(1-\alpha) \log (1-\alpha)) n+d n$
+        $\leq c n \log n=O(n \log n) \quad$ \\
+        (2) $\quad T_2(n)=\Omega(n \log n)$, which can be proved in the same way.
+
+        Therefore, $\quad T_2(n)=\Theta(n \log n)$.
+    \end{solution}
+    
+    \part[4] $T_3(n) = 2T_3(\sqrt{n}) + \Theta(\log n)$.
+    \begin{solution}\\
+        Assume $\quad T_3(n)=\Theta(\log n \log \log n)$.
+        We can then use mathematical induction to prove it\\
+        (1) $\quad T_3(n)=O(\log n \log \log n) \leq c \log n \log \log n$\\
+
+        Base case: $\quad T_3(4)=d_1 \leq c \log 4 \log \log 4 \quad$ \\
+        Suppose for all $a<n \quad T_3(a) \leq c \log a \log \log a$\\
+        Inductive step: $\quad T_3(n)=2 T_3(\sqrt{n})+\Theta(\log n)$
+        $\leq 2 c \log \sqrt{n} \log \log \sqrt{n}+\Theta(\log n)=c \log n(\log \log n-\log 2)+d \log n$
+        $=c \log n \log \log n+(d-c \log 2) \log n \leq c \log n \log \log n$
+        $=O(c \log n \log \log n) \quad$ \\
+        (2) $\quad T_3(n)=\Omega(\log n \log \log n)$, which can be proved in the same way.
+
+        Therefore, $\quad T_3(n)=\Theta(\log n \log \log n)$.
+    \end{solution}
+
+    \part[4] $T_4(n) = T_4(\alpha n) + T_4(\beta n) + \Theta(n),(0<\alpha+\beta < 1,\alpha,\beta>0)$ \\
+    \textbf{Hint:} 
+    \begin{enumerate}
+        \item Think out binomial theorem. You may try to expand the expression using the recurrence relation several times. Find out the similarities between them.
+        \item Cases in $(b)$ are different from those in $(d)$ since the geometric series $\sum _ {i = 0} ^ \infty (\alpha + \beta)^i$ converges only when $\left| \alpha + \beta \right| < 1$.
+    \end{enumerate}
+    \begin{solution}
+        Suppose $ \alpha \leq \beta$.\\
+
+            $T_4(n)=\sum_{i=0}^1 T\left(\binom{1}{i} \alpha^i \beta^{1-i} n\right)+\Theta(n) \\
+             =\sum_{i=0}^2 T\left(\binom{2}{i} \alpha^i \beta^{2-i} n\right)+c\left(\sum_{i=0}^1\binom{1}{i} \alpha^i \beta^{1-i} n+n\right) \\
+             =\sum_{i=0}^3 T\left(\binom{3}{i} \alpha^i \beta^{3-i} n\right)+c\left(\sum_{k=1}^2 \sum_{i=0}^k\binom{k}{i} \alpha^i \beta^{k-i} n+n\right) \\
+             =\sum_{i=0}^3 T\left(\binom{3}{i} \alpha^i \beta^{3-i} n\right)+c n\left(\sum_{k=1}^2 \sum_{i=0}^k\binom{k}{i} \alpha^i \beta^{k-i}+1\right) \\
+             =\sum_{i=0}^3 T\left(\binom{3}{i} \alpha^i \beta^{3-i} n\right)+c n\left(\sum_{k=0}^2(\alpha+\beta)^k\right) \\
+             =\cdots=c n\left(\sum_{k=0}^{\left\lceil\log _{\frac{1}{\beta}} n\right\rceil}(\alpha+\beta)^k\right) \\
+             =c n\left(\frac{1-(\alpha+\beta)^{ \left\lceil\log _{\frac{1}{\beta}} n\right\rceil+1}}{1-\alpha-\beta}\right)=\Theta(n) .$
+    \end{solution}
+\end{parts}

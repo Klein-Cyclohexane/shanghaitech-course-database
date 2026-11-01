@@ -1,0 +1,61 @@
+\item \defpoints{15} [Convolutional Neural Networks]
+
+\begin{enumerate}
+    \item Consider a sequential 2D convolution block: the input dimension is 4 $\times$ 64 $\times$ 64 (channel, width, height) and we use \textbf{two} continously Conv2D layer. The first layer is with 4 channels input and 8 channels output, where the kernel size is 3 $\times$ 3 (width, height). And the second layer is with 8 channels input and 16 channels output, where the kernel size is 5 $\times$ 5 (width, height). Set both the layers with stride = 1 and pad = 1. What is the output dimension after each layer? How many parameters do we have in these two layers in total? \defpoints{10} [Hint: Do not forget the bias term.]
+    \item The convolution block is followed by a max pooling layer with $2\times 2$ (width, height) filter and stride
+    = 2. What is the output dimension of the pooling layer? How many parameters do we have in the pooling
+    layer? \defpoints{5}
+\end{enumerate}
+
+[Hint]: You can check the \href{https://pytorch.org/docs/stable/nn.html#convolution-layers}{pytorch document} for details.
+
+\solution
+
+(1) \\
+
+First Conv2D layer:
+- Input: $4 \times 64 \times 64$ (channels, width, height)\\
+- Kernel size: $3 \times 3$, Stride: 1, Padding: 1\\
+- Output channels: 8\\
+
+Output width and height calculation:\\
+$O = \frac{W - K + 2P}{S} + 1 = \frac{64 - 3 + 2(1)}{1} + 1 = 64$
+
+So the output dimension of the first layer is $8 \times 64 \times 64$
+
+Parameter count for first layer:\\
+- Weights: $C_{in} \times C_{out} \times K_w \times K_h = 4 \times 8 \times 3 \times 3 = 288$\\
+- Bias: $C_{out} = 8$\\
+- Total: $288 + 8 = 296$ parameters\\
+
+Second Conv2D layer:\\
+- Input: $8 \times 64 \times 64$\\
+- Kernel size: $5 \times 5$, Stride: 1, Padding: 1\\
+- Output channels: 16\\
+
+Output width and height calculation:\\
+$O = \frac{W - K + 2P}{S} + 1 = \frac{64 - 5 + 2(1)}{1} + 1 = 62$
+
+So the output dimension of the second layer is $16 \times 62 \times 62$
+
+Parameter count for second layer:\\
+- Weights: $C_{in} \times C_{out} \times K_w \times K_h = 8 \times 16 \times 5 \times 5 = 3,200$\\
+- Bias: $C_{out} = 16$\\
+- Total: $3,200 + 16 = 3,216$ parameters\\
+
+Total parameters for both layers: $296 + 3,216 = 3,512$ parameters.
+
+(2) Max Pooling layer:\\
+- Input: $16 \times 62 \times 62$\\
+- Pool size: $2 \times 2$, Stride: 2\\
+- No padding indicated, so using default padding = 0\\
+
+Output width and height calculation:\\
+$O = \frac{W - K + 2P}{S} + 1 = \frac{62 - 2 + 0}{2} + 1 = 31$
+
+So the output dimension of the pooling layer is $16 \times 31 \times 31$
+
+Parameter count for max pooling layer: 0
+(Max pooling doesn't have any trainable parameters as it simply takes the maximum value in each window.)
+
+\newpage

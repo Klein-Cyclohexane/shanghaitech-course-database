@@ -1,0 +1,55 @@
+\titledquestion{Odd number of coins changing}[8]
+
+Given n coin denominations $\{c_1,c_2,\cdots,c_n\}$ and a target value $V$, you are going to make change for $V$. However, only odd number of coins is allowed.
+
+Please design a \textbf{dynamic programming} algorithm that find the fewest odd number of coins needed to make change for $V$ (or report impossible).
+
+\textbf{Hints:} \textit{For this problem, you can formulate your subproblems as:}
+\begin{center}
+    $F(v)=$ fewest odd number of coins to make change for $v$.
+    
+    $G(v)=$ fewest even number of coins to make change for $v$.
+\end{center}
+
+\begin{solution}
+    \\
+    \textbf{Main Idea}
+    
+    Let $F(v)$ be the fewest odd number of coins to make change for $v$ and $G(v)$ be the fewest even number of coins to make change for $v$.
+    Then we have the following equations:
+
+    \[
+    F(v)=
+    \begin{cases}
+        0 & \case{v=0} \\
+        \min_{i=1}^{v \geq c_i} \{1+G(v-c_i)\} & \case{v>0}
+    \end{cases}
+    \]
+
+    \[
+    G(v)=
+    \begin{cases}
+        0 & \case{v=0} \\
+        \min_{i=1}^{v \geq c_i} \{1+F(v-c_i)\} & \case{v>0}
+    \end{cases}
+    \]
+
+    The final answer is $F(V)$ if it exists, otherwise report impossible.
+
+    \textbf{Proof of Correctness}:
+    \begin{itemize}
+        \item Base case: When $v=0$, no coins are needed
+        \item For $v>0$: To get odd number of coins for $v$, we take one coin $c_i$ and combine it with even number of coins for remaining value $v-c_i$
+        \item Similarly for $G(v)$: Take one coin and combine with odd number of coins for remaining value
+        \item The minimum across all coin choices gives optimal solution
+    \end{itemize}
+
+    \textbf{Runtime Analysis}:
+    \begin{itemize}
+        \item For each value from 1 to V, we consider n coins
+        \item We need to compute both F and G arrays
+        \item Total runtime: $O(nV)$
+        \item Space complexity: $O(V)$
+    \end{itemize}
+\end{solution}
+

@@ -1,0 +1,48 @@
+\titledquestion{\textsc{Hamiltonian-Cycle} Problem}[9]
+Show that the \textsc{Hamiltonian-Cycle} problem on the \textbf{undirected graph} is NP-complete. The \textsc{Hamiltonian-Cycle} problem is determining whether the graph $G$ contains a cycle that visits every vertex in $G$ exactly once. 
+
+\textbf{Hint: } You can reduce this problem from the \textsc{D-Hamiltonian-Cycle} problem which determines whether there exists the Hamiltonian cycle on \textbf{the directed graph}.
+
+
+\begin{solution}
+
+\begin{enumerate}
+
+  \item \textbf{Hamiltonian-Cycle is in \( \NP \):}
+  
+  The Hamiltonian-Cycle problem for undirected graphs asks whether there exists a cycle that visits every vertex exactly once. To show this is in \( \NP \):
+
+  \begin{itemize}
+    \item \textbf{Certificate:} A sequence of vertices \( v_1, v_2, \ldots, v_n, v_1 \), where each vertex is visited exactly once and the edges between consecutive vertices (including \( v_n \) to \( v_1 \)) exist in the graph.
+
+    \item \textbf{Certifier:} Given the certificate, verify in polynomial time:
+    \begin{enumerate}
+      \item Each vertex in the graph appears exactly once in the sequence.
+      \item Each consecutive pair in the sequence forms an edge in the graph.
+      \item The first and last vertices in the sequence form an edge, completing the cycle.
+    \end{enumerate}
+  
+    Since all these checks can be performed in polynomial time, the problem is in \( \NP \).
+  \end{itemize}
+
+  \item \textbf{Reduction from D-Hamiltonian-Cycle:}
+  
+  Given a directed graph \( G = (V, E) \), we want to construct an undirected graph \( G' = (V', E') \) such that \( G \) has a Hamiltonian cycle if and only if \( G' \) has a Hamiltonian cycle.
+  \begin{itemize}
+    \item replace each vertex v in G with three vertices \( v_{in}, v, v_{out} \) in G'.
+    \item replace each directed edge \( (u, v) \) in G with an undirected edge \( (u_{out}, v_{in}) \) in G'.
+    \item add an undirected edge \( (v_{in}, v) \) and \( (v, v_{out}) \) for each vertex v in G'.
+    \item We prove the correctness of the reduction:
+    \begin{enumerate}
+      \item[``\( \Rightarrow \)":] If G has a Hamiltonian cycle, then the cycle must visit each vertex exactly once. In G', the cycle must visit each vertex \( v_{in} \), \( v \), and \( v_{out} \) exactly once. Since the cycle in G visits each vertex exactly once, the cycle in G' must visit each vertex exactly once.
+      \item[``\( \Leftarrow \)":] Conversely, if G' has a Hamiltonian cycle, then the cycle must visit each vertex \( v_{in} \), \( v \), and \( v_{out} \) exactly once. Since the cycle in G' visits each vertex exactly once, the cycle in G must visit each vertex exactly once.
+    \end{enumerate}
+
+  \end{itemize}
+  Since the reduction is polynomial and preserves the \( \text{yes} \)- and \( \text{no} \)-instances, it is valid.
+
+\end{enumerate}
+Hence the Hamiltonian-Cycle problem is NP-complete.
+
+\end{solution}
+

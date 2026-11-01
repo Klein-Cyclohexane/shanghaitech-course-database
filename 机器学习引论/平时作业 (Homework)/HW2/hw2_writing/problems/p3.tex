@@ -1,0 +1,37 @@
+\item \defpoints{10} [Log-sum Inequality] Recall Jensen's inequality $f(\mathbb{E}(X)) \leq \mathbb{E}(f(X))$ if $f$ is convex for any random variable $X$. Proof the log-sum inequality:
+$$ \sum_{i=1}^{n} a_i \log \frac{a_i}{b_i} \geq \left( \sum_{i=1}^{n} a_i\right) \log \frac{\sum_{i=1}^{n} a_i}{\sum_{i=1}^{n} b_i} $$
+where $a_1,\ldots,a_n$ and $b_1,\ldots,b_n$ are positive numbers.
+
+\textcolor{blue}{Solution} \\
+
+To prove the log-sum inequality, we'll apply Jensen's inequality with an appropriate convex function and probability distribution.
+
+Let's define $A = \sum_{i=1}^{n} a_i$ and create a probability distribution $p_i = \frac{a_i}{A}$ for $i = 1, 2, \ldots, n$.
+
+Consider a random variable $X$ that takes values $\frac{b_i}{a_i}$ with probability $p_i$.
+
+The expected value of $X$ is:
+\begin{align*}
+\mathbb{E}[X] &= \sum_{i=1}^{n} p_i \cdot \frac{b_i}{a_i} \\
+&= \sum_{i=1}^{n} \frac{a_i}{A} \cdot \frac{b_i}{a_i} \\
+&= \frac{1}{A} \sum_{i=1}^{n} b_i \\
+&= \frac{\sum_{i=1}^{n} b_i}{A}
+\end{align*}
+
+Since $f(x) = -\log(x)$ is a convex function for $x > 0$ (as $f''(x) = \frac{1}{x^2} > 0$), we can apply Jensen's inequality:
+\begin{align*}
+f(\mathbb{E}[X]) &\leq \mathbb{E}[f(X)] \\
+-\log\left(\frac{\sum_{i=1}^{n} b_i}{A}\right) &\leq \sum_{i=1}^{n} p_i \cdot \left(-\log \frac{b_i}{a_i}\right) \\
+-\log\left(\frac{\sum_{i=1}^{n} b_i}{A}\right) &\leq \sum_{i=1}^{n} \frac{a_i}{A} \cdot \left(-\log \frac{b_i}{a_i}\right) \\
+\log\left(\frac{A}{\sum_{i=1}^{n} b_i}\right) &\leq \frac{1}{A} \sum_{i=1}^{n} a_i \cdot \log \frac{a_i}{b_i}
+\end{align*}
+
+Multiplying both sides by $A$:
+\begin{align*}
+A \cdot \log\left(\frac{A}{\sum_{i=1}^{n} b_i}\right) &\leq \sum_{i=1}^{n} a_i \cdot \log \frac{a_i}{b_i} \\
+\left(\sum_{i=1}^{n} a_i\right) \log \frac{\sum_{i=1}^{n} a_i}{\sum_{i=1}^{n} b_i} &\leq \sum_{i=1}^{n} a_i \log \frac{a_i}{b_i}
+\end{align*}
+
+Therefore, we have proven the log-sum inequality:
+$$ \sum_{i=1}^{n} a_i \log \frac{a_i}{b_i} \geq \left( \sum_{i=1}^{n} a_i\right) \log \frac{\sum_{i=1}^{n} a_i}{\sum_{i=1}^{n} b_i} $$
+\newpage

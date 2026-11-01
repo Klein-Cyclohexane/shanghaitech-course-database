@@ -1,0 +1,57 @@
+\item \defpoints{15} [Math review(Calculus)] Differential calculus of functions.
+
+\begin{itemize}
+    \item[(a)] Suppose $f: \mathbb{R} \rightarrow \mathbb{R}$ is a second order differentiable function. Write down the second order Taylor expansion of $f(x)$ around $x_0$ with Peano's form of the remainder. ~\defpoints{3}
+    \item[(b)] Suppose $f: \mathbb{R} \rightarrow \mathbb{R}$ is a second order differentiable function. Write down the first order and second order's mean value theorem for $f(x)$ related to point $x$ and $x+d$. ~\defpoints{4}
+    \item[(c)] Suppose $f: \mathbb{R}^n\rightarrow \mathbb{R}$ is a second order differentiable function. Write down the second order Taylor expansion of $f(\mathbf{x})$ around $\mathbf{x}_0$ with Peano's form of the remainder. ~\defpoints{4} (Hint: the first order derivative is the gradient $\nabla f$, the second order derivative is the Hessian $\nabla^2 f$.)
+    \item[(d)] Suppose $f: \mathbb{R}^n\rightarrow \mathbb{R}$ is a second order differentiable function. Write down the first order and second order's mean value theorem for $f(\mathbf{x})$ related to point $\mathbf{x}$ and $\mathbf{x}+\mathbf{d}$. ~\defpoints{4}
+\end{itemize}
+
+\textcolor{blue}{Solution} \\
+
+\begin{itemize}
+    \item [(a)] The second order Taylor expansion of $f(x)$ around $x_0$ with Peano's form of the remainder is given by
+    \begin{align*}
+        f(x) &= f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2!}(x-x_0)^2 + R_2(x) \\
+        &= f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2!}(x-x_0)^2 + o((x-x_0)^2)
+    \end{align*}
+    where $R_2(x) = o((x-x_0)^2)$.
+
+    \item [(b)] The first order and second order's mean value theorem for $f(x)$ related to point $x$ and $x+d$ are given by
+    \begin{itemize}
+        \item First order mean value theorem: There exists a point $c$ between $x$ and $x+d$ such that
+        \begin{align*}
+            f(x+d) - f(x) = f'(c)d
+        \end{align*}
+        \item Second order mean value theorem: There exists a point $c$ between $x$ and $x+d$ such that
+        \begin{align*}
+            f(x+d) - f(x) = f'(x)d + \frac{f''(c)}{2}d^2
+        \end{align*}
+    \end{itemize}
+
+    \item [(c)] The second order Taylor expansion of $f(\mathbf{x})$ around $\mathbf{x}_0$ with Peano's form of the remainder is given by
+    \begin{align*}
+        f(\mathbf{x}) &= f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T(\mathbf{x}-\mathbf{x}_0) + \frac{1}{2}(\mathbf{x}-\mathbf{x}_0)^T \nabla^2 f(\mathbf{x}_0)(\mathbf{x}-\mathbf{x}_0) + R_2(\mathbf{x}) \\
+        &= f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T(\mathbf{x}-\mathbf{x}_0) + \frac{1}{2}(\mathbf{x}-\mathbf{x}_0)^T \nabla^2 f(\mathbf{x}_0)(\mathbf{x}-\mathbf{x}_0) + o(\|\mathbf{x}-\mathbf{x}_0\|^2)
+    \end{align*}
+    where $R_2(\mathbf{x}) = o(\|\mathbf{x}-\mathbf{x}_0\|^2)$.
+
+    \item [(d)] The first order and second order's mean value theorem for $f(\mathbf{x})$ related to point $\mathbf{x}$ and $\mathbf{x}+\mathbf{d}$ are given by
+    \begin{itemize}
+        \item First order mean value theorem: There exists a point $\mathbf{c}$ between $\mathbf{x}$ and $\mathbf{x}+\mathbf{d}$ such that
+        \begin{align*}
+            f(\mathbf{x}+\mathbf{d}) - f(\mathbf{x}) = \nabla f(\mathbf{c})^T \mathbf{d}
+        \end{align*}
+        \item Second order mean value theorem: There exists a point $\mathbf{c}$ between $\mathbf{x}$ and $\mathbf{x}+\mathbf{d}$ such that
+        \begin{align*}
+            f(\mathbf{x}+\mathbf{d}) - f(\mathbf{x}) = \nabla f(\mathbf{x})^T \mathbf{d} + \frac{1}{2}\mathbf{d}^T \nabla^2 f(\mathbf{c})\mathbf{d}
+        \end{align*}
+    \end{itemize}
+\end{itemize}
+
+
+
+
+
+
+\newpage

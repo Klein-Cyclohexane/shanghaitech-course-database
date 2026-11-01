@@ -1,0 +1,81 @@
+\item \defpoints{10} [Probability and Estimation]
+
+The Poisson distribution is a useful discrete distribution which can be used to model the number of occurrences of something per unit time. For example, in networking, the number of packets to arrive in a given time window is often assumed to follow a Poisson distribution.
+$\mathcal{D}=\{ x_{1}, x_{2}, \ldots, x_{n} \}, n>1$ are i.i.d. samples from exponential distribution with parameter $\lambda > 0$, i.e., $X \sim \text{Expo}(\lambda)$. Recall the PDF of exponential distribution is
+$$p(x\mid \lambda) = \begin{cases}
+\lambda e^{-\lambda x},&\quad x > 0 \\
+0,&\quad \text{otherwise}
+\end{cases}$$
+
+\begin{itemize}
+\item[(a)] To derive the posterior distribution of $\lambda$, we assume its prior distribution follows gamma distribution with parameters $\alpha,\beta > 0$, i.e., $\lambda \sim\text{Gamma}(\alpha,\beta)$ (since the range of gamma distribution is also $(0,+\infty)$, thus it's a plausible assumption). The PDF of $\lambda$ is given by
+\begin{align*}
+p(\lambda\mid \alpha,\beta) &= \frac{\beta^{\alpha}}{\Gamma(\alpha)} \lambda^{\alpha-1}e^{-\lambda\beta} \\
+\text{where \ \ \ \ } \Gamma(\alpha) &= \int_{0}^{+\infty} t^{\alpha-1}e^{-t}dt,\ \alpha>0.
+\end{align*}
+Show that the posterior distribution $p(\lambda\mid \mathcal{D})$ is also a gamma distribution and identify its parameters. Hints: Feel free to drop constants. \defpoints{5}
+
+\item[(b)] Derive the maximum a posterior (MAP) estimation for $\lambda$ under $\text{Gamma}(\alpha,\beta)$ prior. \defpoints{5}
+
+\end{itemize}
+
+\solution
+
+\begin{itemize}
+\item[(a)] The posterior distribution $p(\lambda|\mathcal{D})$ is proportional to the product of the likelihood and the prior:
+
+\begin{align*}
+p(\lambda|\mathcal{D}) &\propto p(\mathcal{D}|\lambda) \cdot p(\lambda|\alpha,\beta)\\
+\end{align*}
+
+Let's compute the likelihood. Since the samples are i.i.d, we have:
+\begin{align*}
+p(\mathcal{D}|\lambda) &= \prod_{i=1}^n p(x_i|\lambda)\\
+&= \prod_{i=1}^n \lambda e^{-\lambda x_i}\\
+&= \lambda^n e^{-\lambda \sum_{i=1}^n x_i}
+\end{align*}
+
+Now, we can compute the posterior:
+\begin{align*}
+p(\lambda|\mathcal{D}) &\propto p(\mathcal{D}|\lambda) \cdot p(\lambda|\alpha,\beta)\\
+&\propto \lambda^n e^{-\lambda \sum_{i=1}^n x_i} \cdot \frac{\beta^\alpha}{\Gamma(\alpha)}\lambda^{\alpha-1}e^{-\lambda\beta}\\
+&\propto \lambda^n \cdot \lambda^{\alpha-1} \cdot e^{-\lambda(\sum_{i=1}^n x_i + \beta)}\\
+&\propto \lambda^{n+\alpha-1} \cdot e^{-\lambda(\sum_{i=1}^n x_i + \beta)}
+\end{align*}
+
+This expression has the form of a gamma distribution $\text{Gamma}(\alpha', \beta')$ where:
+\begin{align*}
+\alpha' &= \alpha + n\\
+\beta' &= \beta + \sum_{i=1}^n x_i
+\end{align*}
+
+Therefore, the posterior distribution is $p(\lambda|\mathcal{D}) \sim \text{Gamma}(\alpha + n, \beta + \sum_{i=1}^n x_i)$.
+
+\item[(b)] To find the maximum a posteriori (MAP) estimate for $\lambda$, we need to maximize the posterior distribution derived in part (a):
+
+\begin{align*}
+\lambda_{MAP} &= \arg\max_{\lambda} p(\lambda|\mathcal{D})\\
+&= \arg\max_{\lambda} \lambda^{\alpha+n-1} \cdot e^{-\lambda(\beta + \sum_{i=1}^n x_i)}
+\end{align*}
+
+Taking the logarithm (which preserves the argmax):
+\begin{align*}
+\lambda_{MAP} &= \arg\max_{\lambda} \log\left(\lambda^{\alpha+n-1} \cdot e^{-\lambda(\beta + \sum_{i=1}^n x_i)}\right)\\
+&= \arg\max_{\lambda} \left[ (\alpha+n-1)\log(\lambda) - \lambda\left(\beta + \sum_{i=1}^n x_i\right) \right]
+\end{align*}
+
+To find the maximum, we take the derivative with respect to $\lambda$ and set it to zero:
+\begin{align*}
+\frac{d}{d\lambda}\left[(\alpha+n-1)\log(\lambda) - \lambda\left(\beta + \sum_{i=1}^n x_i\right)\right] &= 0\\
+\frac{\alpha+n-1}{\lambda} - \left(\beta + \sum_{i=1}^n x_i\right) &= 0\\
+\frac{\alpha+n-1}{\lambda} &= \beta + \sum_{i=1}^n x_i\\
+\lambda &= \frac{\alpha+n-1}{\beta + \sum_{i=1}^n x_i}
+\end{align*}
+
+Therefore, the MAP estimate for $\lambda$ is:
+\begin{align*}
+\lambda_{MAP} = \frac{\alpha+n-1}{\beta + \sum_{i=1}^n x_i}
+\end{align*}
+
+\end{itemize}
+\newpage

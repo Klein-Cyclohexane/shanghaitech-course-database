@@ -1,0 +1,65 @@
+%!TEX program = xelatex
+\documentclass[10pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{listings}
+\usetikzlibrary{arrows}
+\usepackage{subfigure}
+\usepackage{graphicx,booktabs,multirow}
+\usepackage[a4paper]{geometry}
+\usepackage{upquote}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{diagbox}
+\usepackage[many]{tcolorbox}
+\usepackage{hyperref}
+
+
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\lstset{language=Matlab}
+\lstset{breaklines}
+
+\input defs.tex
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\titleformat*{\section}{\centering\LARGE\scshape}
+\renewcommand{\thesection}{\Roman{section}}
+\newcommand{\nullity}{\textbf{nullity}}
+
+\lstset{language=Matlab,tabsize=4,frame=shadowbox,basicstyle=\footnotesize,
+keywordstyle=\color{blue!90}\bfseries,breaklines=true,commentstyle=\color[RGB]{50,50,50},stringstyle=\ttfamily,numbers=left,numberstyle=\tiny,
+numberstyle={\color[RGB]{192,92,92}\tiny},backgroundcolor=\color[RGB]{245,245,244},inputpath=code}
+
+\begin{document}
+
+\date{\today}
+\title{Introduction to Machine Learning, Spring 2025 \\
+	Homework 7 \\
+	\small (Due June 8, 2025 at 11:59pm (CST))}
+\maketitle
+
+\begin{enumerate}
+	\item Please write your solutions in English.
+	\item Submit your solutions to the course Gradescope.
+	\item If you want to submit a handwritten version, scan it clearly.
+	\item Late homeworks submitted within 3 days of the due date will be marked down 25\% each day cumulatively Homeworks submitted more than 3 days after the due date will not be accepted unless there is a valid reason, such as a medical or family emergency.
+	\item You are required to follow ShanghaiTech's academic honesty policies.  You are allowed to discuss problems with other students, but you must write up your solutions by yourselves.  You are not allowed to copy materials from other students or from online or published resources.  Violating academic honesty can result in serious penalties.
+	\end{enumerate}
+\newpage
+
+
+\begin{enumerate}
+\input{problems/p1}
+\input{problems/p2}
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,39 @@
+\item \defpoints{10} [Leave-one-out Cross-validation]
+
+Select each training example in turn as the single example to be held-out, train the classifier on the basis of all the remaining training examples, test the resulting classifier on the held-out example, and count the errors.
+
+Let the superscript $-i$ denote the parameters we would obtain by finding the SVM classifier $f$ without the $i$th training example. Define the \textit{leave-one-out CV error} as
+\begin{equation}
+    \frac{1}{n}\sum_{i=1}^n\mathcal{L}(y_i,f(\mathbf{x}_i;\mathbf{w}^{-i},b^{-i})),
+\end{equation}
+where $\mathcal{L}$ is the zero-one loss. Prove that
+\begin{equation}
+    \text{leave-one-out CV error}\leq \frac{\text{number of support vectors}}{\text{n}}
+\end{equation}
+
+\solution
+
+For any training example $\mathbf{x}_i$ that is not a support vector in the original SVM, we have:
+\begin{equation*}
+    y_i(\mathbf{w} \cdot \mathbf{x}_i + b) > 1
+\end{equation*}
+
+This means it's correctly classified and not on the margin.
+
+When we remove $\mathbf{x}_i$ and train a new SVM, the solution remains unchanged: $\mathbf{w}^{-i} = \mathbf{w}$ and $b^{-i} = b$. Therefore, the prediction for $\mathbf{x}_i$ will be:
+\begin{equation*}
+    f(\mathbf{x}_i; \mathbf{w}^{-i}, b^{-i}) = \text{sign}(\mathbf{w}^{-i} \cdot \mathbf{x}_i + b^{-i}) = \text{sign}(\mathbf{w} \cdot \mathbf{x}_i + b) = y_i
+\end{equation*}
+
+This means the zero-one loss $\mathcal{L}(y_i, f(\mathbf{x}_i; \mathbf{w}^{-i}, b^{-i})) = 0$ for all non-support vectors.
+
+Therefore, leave-one-out errors can only occur for examples that are support vectors in the original SVM. There are at most "number of support vectors" such examples.
+
+The leave-one-out CV error is:
+\begin{equation*}
+    \frac{1}{n}\sum_{i=1}^n\mathcal{L}(y_i,f(\mathbf{x}_i;\mathbf{w}^{-i},b^{-i})) \leq \frac{\text{number of support vectors}}{n}
+\end{equation*}
+
+This proves the desired bound. The inequality is not necessarily tight because some support vectors might still be correctly classified even when they are held out, but the error rate cannot exceed the proportion of support vectors in the training set.
+
+\newpage

@@ -1,0 +1,76 @@
+\item \defpoints{15} [Performing PCA by Hand]
+
+Let's do principal components analysis (PCA)! Consider this sample of six points $X_i \in \mathbb{R}^2$.
+$$\left\{
+\left[\begin{array}{l} 0 \\ 0 \end{array}\right],
+\left[\begin{array}{l} 0 \\ 1 \end{array}\right],
+\left[\begin{array}{l} 1 \\ 0 \end{array}\right],
+\left[\begin{array}{l} 1 \\ 2 \end{array}\right],
+\left[\begin{array}{l} 2 \\ 1 \end{array}\right],
+\left[\begin{array}{l} 2 \\ 2 \end{array}\right]\right\}$$
+
+(a) Compute the mean of the sample points and write the centered design matrix $\dot{X}$. \defpoints{4}
+(Hint: The sample mean is by subtracting the mean from each sample.)
+
+(b) Find all the principal components of this sample. Write them as unit vectors. \defpoints{5}
+(Hint: The principal components of our dataset are the eigenvectors of the matrix $\dot{X}^{\top} \dot{X}=
+$. The characteristic polynomial of this symmetric matrix is $\det\left(\lambda I-\dot{X}^{\top} \dot{X}\right)$.)
+
+(c) Which of those two principal components would be preferred if you use only one? \defpoints{2} \\
+What information does the PCA algorithm use to decide that one principal components is better than another? \defpoints{2} \\
+From an optimization point of view, why do we prefer that one? \defpoints{2}
+
+\solution
+
+(a)\\
+First, calculate the mean of the sample points:
+
+Mean = $\frac{1}{6}\sum_{i=1}^{6}X_i = \frac{1}{6}\left(\begin{bmatrix} 0 \ 0 \end{bmatrix} + \begin{bmatrix} 0 \ 1 \end{bmatrix} + \begin{bmatrix} 1 \ 0 \end{bmatrix} + \begin{bmatrix} 1 \ 2 \end{bmatrix} + \begin{bmatrix} 2 \ 1 \end{bmatrix} + \begin{bmatrix} 2 \ 2 \end{bmatrix}\right) = \frac{1}{6}\begin{bmatrix} 6 \\ 6 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$
+
+Compute the centered design matrix $\dot{X}$ by subtracting the mean from each sample point:
+
+$\dot{X} = \begin{bmatrix} 0-1 & 0-1 \\ 0-1 & 1-1 \\ 1-1 & 0-1 \\ 1-1 & 2-1 \\ 2-1 & 1-1 \\ 2-1 & 2-1 \end{bmatrix} = \begin{bmatrix} -1 & -1 \\ -1 & 0 \\ 0 & -1 \\ 0 & 1 \\ 1 & 0 \\ 1 & 1 \end{bmatrix}$
+
+(b) \\
+To find the principal components, we need to compute the eigenvectors of the covariance matrix $\dot{X}^T\dot{X}$.
+
+First, let's calculate $\dot{X}^T\dot{X}$:
+
+$\dot{X}^T\dot{X} = \begin{bmatrix} -1 & -1 & 0 & 0 & 1 & 1 \\ -1 & 0 & -1 & 1 & 0 & 1 \end{bmatrix} \begin{bmatrix} -1 & -1 \\ -1 & 0 \\ 0 & -1 \\ 0 & 1 \\ 1 & 0 \\ 1 & 1 \end{bmatrix} = \begin{bmatrix} 4 & 2 \\ 2 & 4 \end{bmatrix}$
+
+Now, to find the eigenvectors, we need to solve the characteristic equation: $\det(\lambda I - \dot{X}^T\dot{X}) = 0$
+
+
+$(\lambda-4)(\lambda-4) - (-2)(-2) = 0$ $(\lambda-4)^2 - 4 = 0$ $\lambda^2 - 8\lambda + 16 - 4 = 0$ \\
+$\lambda^2 - 8\lambda + 12 = 0$
+
+So the eigenvalues are $\lambda_1 = 6$ and $\lambda_2 = 2$.
+
+the eigenvector corresponding to $\lambda_1 = 6$ is proportional to $\begin{bmatrix} 1 \\ 1 \end{bmatrix}$.
+
+Normalizing to get a unit vector: $v_1 = \frac{1}{\sqrt{1^2 + 1^2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$
+
+For $\lambda_2 = 2$, 
+the eigenvector corresponding to $\lambda_2 = 2$ is proportional to $\begin{bmatrix} 1 \\ -1 \end{bmatrix}$.
+
+Normalizing to get a unit vector: $v_2 = \frac{1}{\sqrt{1^2 + (-1)^2}}\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -1 \end{bmatrix}$
+
+Therefore, the principal components (as unit vectors) are: $v_1 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$ and $v_2 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -1 \end{bmatrix}$
+
+(c) 
+The first principal component $v_1 = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$ associated with eigenvalue $\lambda_1 = 6$ would be preferred if we use only one component.
+
+The PCA algorithm uses the eigenvalue associated with each principal component to decide which is better. The eigenvalue represents the amount of variance captured by the corresponding principal component. Since $\lambda_1 = 6$ is greater than $\lambda_2 = 2$, the first principal component captures more variance in the data.
+
+From an optimization point of view, we prefer the first principal component because it maximizes the variance of the projected data. When we project the data onto a lower-dimensional subspace, we want to retain as much information as possible. By choosing the principal component with the largest eigenvalue, we ensure that we preserve the maximum possible variance in the data after dimensionality reduction, thereby minimizing the reconstruction error.
+
+
+
+
+
+
+
+
+
+
+\newpage

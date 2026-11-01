@@ -1,0 +1,72 @@
+\item \defpoints{25} [Convex Optimization Basics] Norm for a vector $\mathbf{x}\in\mathbb{R}^n$ or for a matrix $X\in\mathbb{R}^{m\times n}$ is a function $f:\mathbb{R}^{n}\rightarrow\mathbb{R}$ or $f:\mathbb{R}^{m\times n}\rightarrow\mathbb{R}$, which is widely used in optimization. Take vector's norm as example: they have many properties: 1. $f(\mathbf{x})\geq 0$, iff $\mathbf{x}=\mathbf{0}$ the equality holds; 2. $f(\alpha\mathbf{x})=|\alpha| f(\mathbf{x})$ for any $\alpha\in\mathbb{R}$; 3. $f(\mathbf{x}+\mathbf{y})\leq f(\mathbf{x})+f(\mathbf{y})$ for any $\mathbf{x},\mathbf{y}\in\mathbb{R}^n$. And matrices norms are similar, but you \textbf{should not} use them directly in this problem.
+\begin{itemize}
+    \item[(a)] Proof: Any vector norm $f:\mathbb{R}^{n}\rightarrow\mathbb{R}$ is convex. [Hint: Consider the definition of convex function: $\forall\theta\in[0,1], f(\theta\mathbf{x}+(1-\theta)\mathbf{y})\leq \theta f(\mathbf{x})+(1-\theta)f(\mathbf{y})$.] ~\defpoints{5}
+    \item[(b)] Let $f(X) = \|X\|_2$ be the spectral norm of a matrix $X \in \mathbb{R}^{m \times n}$, defined as the largest singular value of $X$. Prove that $f(X)$ is convex. [$\textcolor{blue}{\text{Hints:} 1. \lambda_{\max}(A)=\sup\limits_{\mathbf{y}\in\mathbb{R}^n}\dfrac{\mathbf{y}^{\top}A\mathbf{y}}{\|\mathbf{y}\|_2^2}, 2. \forall\mathbf{y}, \text{if } g(X,\mathbf{y}) \text{is convex in } X, \text{then }}$ $\textcolor{blue}{f(X)=\sup\limits_{\mathbf{y}\in\mathbb{R}^n}g(X,\mathbf{y}) \text{ is convex}}.$] \defpoints{10}
+    \item[(c)] Let $f(X) = \sum\limits_{i=1}^{r} \sigma_i(X)$ be the the nuclear norm of  a matrix $X \in \mathbb{R}^{m \times n}$,where $\sigma_i(X)$ are the singular values of $X$. Prove that $f(X)$ is convex. [$\textcolor{blue}{\text{Hint: } \|X\|_* = \sup\limits_{\|Z\|_2 \leq 1} <Z,X>}$] \defpoints{10}
+\end{itemize}
+
+\textcolor{blue}{Solution} \\
+
+\textbf{(a):} To prove that any vector norm $f$ is convex, we need to show that for any vectors $\mathbf{x},\mathbf{y}\in\mathbb{R}^n$ and any $\theta\in[0,1]$:
+$$f(\theta\mathbf{x}+(1-\theta)\mathbf{y})\leq \theta f(\mathbf{x})+(1-\theta)f(\mathbf{y})$$
+
+Starting with the left side and using the triangle inequality (property 3):
+$$f(\theta\mathbf{x}+(1-\theta)\mathbf{y}) \leq f(\theta\mathbf{x}) + f((1-\theta)\mathbf{y})$$
+
+Now using the homogeneity property (property 2), and noting that $\theta \geq 0$ and $(1-\theta) \geq 0$ for $\theta\in[0,1]$:
+$$f(\theta\mathbf{x}) = \theta f(\mathbf{x})$$
+$$f((1-\theta)\mathbf{y}) = (1-\theta)f(\mathbf{y})$$
+
+Substituting these into our inequality:
+$$f(\theta\mathbf{x}+(1-\theta)\mathbf{y}) \leq \theta f(\mathbf{x})+(1-\theta)f(\mathbf{y})$$
+
+Therefore, any vector norm is convex.
+
+\textbf{(b):} 
+
+First, note that for any matrix $X \in \mathbb{R}^{m \times n}$, we can express the spectral norm as:
+$$\|X\|_2 = \sup_{\|\mathbf{y}\|_2 = 1} \|X\mathbf{y}\|_2$$
+
+Let $g(X,\mathbf{y}) = \|X\mathbf{y}\|_2$ for any fixed $\mathbf{y}$ with $\|\mathbf{y}\|_2 = 1$.
+
+For any matrices $X_1, X_2$ and $\theta \in [0,1]$:
+\begin{align*}
+g(\theta X_1 + (1-\theta)X_2, \mathbf{y}) &= \|(\theta X_1 + (1-\theta)X_2)\mathbf{y}\|_2 \\
+&= \|\theta X_1\mathbf{y} + (1-\theta)X_2\mathbf{y}\|_2
+\end{align*}
+
+Using the triangle inequality for vector norms (which we proved is convex in part (a)):
+\begin{align*}
+\|\theta X_1\mathbf{y} + (1-\theta)X_2\mathbf{y}\|_2 &\leq \theta\|X_1\mathbf{y}\|_2 + (1-\theta)\|X_2\mathbf{y}\|_2 \\
+&= \theta g(X_1,\mathbf{y}) + (1-\theta)g(X_2,\mathbf{y})
+\end{align*}
+
+Therefore, $g(X,\mathbf{y})$ is convex in $X$ for any fixed $\mathbf{y}$ with $\|\mathbf{y}\|_2 = 1$.
+
+Since $f(X) = \|X\|_2 = \sup_{\|\mathbf{y}\|_2 = 1} g(X,\mathbf{y})$, and according to the second hint, if $g(X,\mathbf{y})$ is convex in $X$ for all $\mathbf{y}$, then $f(X)=\sup_{\mathbf{y}}g(X,\mathbf{y})$ is convex, we can conclude that the spectral norm $f(X) = \|X\|_2$ is convex.
+
+\textbf{(c):} We need to prove that the nuclear norm $f(X) = \sum_{i=1}^{r} \sigma_i(X)$ is convex.
+
+Using the hint, we can express the nuclear norm as:
+$$\|X\|_* = \sup_{\|Z\|_2 \leq 1} \langle Z, X \rangle$$
+
+where $\langle Z, X \rangle = \text{trace}(Z^T X)$ represents the inner product between matrices.
+
+Define $g(X,Z) = \langle Z, X \rangle = \text{trace}(Z^T X)$ for any fixed $Z$ with $\|Z\|_2 \leq 1$.
+
+For any matrices $X_1, X_2$ and $\theta \in [0,1]$:
+\begin{align*}
+g(\theta X_1 + (1-\theta)X_2, Z) &= \langle Z, \theta X_1 + (1-\theta)X_2 \rangle \\
+&= \text{trace}(Z^T(\theta X_1 + (1-\theta)X_2)) \\
+&= \theta\text{trace}(Z^T X_1) + (1-\theta)\text{trace}(Z^T X_2) \\
+&= \theta \langle Z, X_1 \rangle + (1-\theta)\langle Z, X_2 \rangle \\
+&= \theta g(X_1, Z) + (1-\theta)g(X_2, Z)
+\end{align*}
+
+This shows that $g(X,Z)$ is actually linear (and therefore convex) in $X$ for any fixed $Z$ with $\|Z\|_2 \leq 1$.
+
+Since $f(X) = \|X\|_* = \sup_{\|Z\|_2 \leq 1} g(X,Z)$, and $g(X,Z)$ is convex in $X$ for all $Z$ with $\|Z\|_2 \leq 1$, it follows from the second hint of part (b) that $f(X)$ is convex.
+
+Therefore, the nuclear norm is convex.
+
+\newpage

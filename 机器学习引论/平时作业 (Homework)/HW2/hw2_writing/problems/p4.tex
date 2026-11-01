@@ -1,0 +1,78 @@
+\item \defpoints{10} [Convexity of Mutual Information] From the definition of the mutual information $I(X;Y)=\sum\limits_{x,y}p(x,y)\log\dfrac{p(x,y)}{p(x)p(y)}$, we know that $I(X;Y)$ is a function of $p(x,y)$. This is because we can obtain $p(x)$ and $p(y)$ by computing the marginal distribution of $p(x,y)$. However, $I(X;Y)$ is a non-convex and non-concave function of $p(x,y)$. Which is not a good property for optimization. \\
+In some specific cases, $p(x)$ as given. Then $I(X;Y)$ is a function of $p(y|x)$. Prove that $I(X;Y)$ is a convex function of $p(y|x)$. \\
+\textbf{[Hints:]}
+\begin{itemize}
+\item Log-sum Inequality when $n=2$:
+$$(a_1+a_2)\log\dfrac{a_1+a_2}{b_1+b_2}\leq a_1\log\dfrac{a_1}{b_1}+a_2\log\dfrac{a_2}{b_2}$$
+\item Consider $3$ mutual information terms $I_1(X;Y), I_2(X;Y), I_{\lambda}(X;Y)$, which are separately computed from distributions $p_1(y|x), p_2(y|x), p_{\lambda}(y|x)=\lambda p_1(y|x)+(1-\lambda)p_2(y|x), \lambda\in[0,1]$. Then only need to prove that $I_{\lambda}(X;Y)\leq \lambda I_1(X;Y)+(1-\lambda)I_2(X;Y)$.
+\end{itemize}
+
+\textcolor{blue}{Solution} \\
+
+Consider the three distributions:
+
+1. $p_1(y|x)$ with mutual information $I_1(X;Y)$
+2. $p_2(y|x)$ with mutual information $I_2(X;Y)$
+3. $p_{\lambda}(y|x) = \lambda p_1(y|x) + (1-\lambda)p_2(y|x)$ with mutual information $I_{\lambda}(X;Y)$, for $\lambda \in [0,1]$
+
+We need to show that $I_{\lambda}(X;Y) \leq \lambda I_1(X;Y) + (1-\lambda)I_2(X;Y)$.
+
+First, let's determine the relationships between these distributions:
+
+Since $p(x)$ is fixed, the joint distributions are:
+\begin{align*}
+p_1(x,y) &= p(x)p_1(y|x) \\
+p_2(x,y) &= p(x)p_2(y|x) \\
+p_{\lambda}(x,y) &= p(x)p_{\lambda}(y|x) = p(x)[\lambda p_1(y|x) + (1-\lambda)p_2(y|x)] \\
+&= \lambda p_1(x,y) + (1-\lambda)p_2(x,y)
+\end{align*}
+
+The marginal distributions for $Y$ are:
+\begin{align*}
+p_1(y) &= \sum_x p(x)p_1(y|x) \\
+p_2(y) &= \sum_x p(x)p_2(y|x) \\
+p_{\lambda}(y) &= \sum_x p(x)p_{\lambda}(y|x) \\
+&= \sum_x p(x)[\lambda p_1(y|x) + (1-\lambda)p_2(y|x)] \\
+&= \lambda \sum_x p(x)p_1(y|x) + (1-\lambda) \sum_x p(x)p_2(y|x) \\
+&= \lambda p_1(y) + (1-\lambda)p_2(y)
+\end{align*}
+
+Now, computing the mutual information for the mixed distribution:
+\begin{align*}
+I_{\lambda}(X;Y) &= \sum_{x,y} p_{\lambda}(x,y) \log \frac{p_{\lambda}(x,y)}{p(x)p_{\lambda}(y)} \\
+&= \sum_{x,y} p_{\lambda}(x,y) \log \frac{p_{\lambda}(y|x)}{p_{\lambda}(y)} \\
+&= \sum_{x,y} p(x)p_{\lambda}(y|x) \log \frac{p_{\lambda}(y|x)}{p_{\lambda}(y)}
+\end{align*}
+
+Substituting the expressions for $p_{\lambda}(y|x)$ and $p_{\lambda}(y)$:
+\begin{align*}
+I_{\lambda}(X;Y) = \sum_{x,y} p(x)[\lambda p_1(y|x) + (1-\lambda)p_2(y|x)] \log \frac{\lambda p_1(y|x) + (1-\lambda)p_2(y|x)}{\lambda p_1(y) + (1-\lambda)p_2(y)}
+\end{align*}
+
+For each fixed pair $(x,y)$, we apply the log-sum inequality with:
+\begin{align*}
+a_1 &= \lambda p(x)p_1(y|x) \\
+a_2 &= (1-\lambda)p(x)p_2(y|x) \\
+b_1 &= \lambda p(x)p_1(y) \\
+b_2 &= (1-\lambda)p(x)p_2(y)
+\end{align*}
+
+The log-sum inequality gives us:
+\begin{align*}
+&(a_1 + a_2)\log\frac{a_1 + a_2}{b_1 + b_2} \leq a_1\log\frac{a_1}{b_1} + a_2\log\frac{a_2}{b_2} \\
+\Rightarrow &p(x)[\lambda p_1(y|x) + (1-\lambda)p_2(y|x)] \log \frac{\lambda p_1(y|x) + (1-\lambda)p_2(y|x)}{\lambda p_1(y) + (1-\lambda)p_2(y)} \\ 
+&\leq \lambda p(x)p_1(y|x)\log\frac{p_1(y|x)}{p_1(y)} + (1-\lambda)p(x)p_2(y|x)\log\frac{p_2(y|x)}{p_2(y)}
+\end{align*}
+
+Summing over all $x$ and $y$:
+\begin{align*}
+I_{\lambda}(X;Y) &\leq \lambda \sum_{x,y} p(x)p_1(y|x)\log\frac{p_1(y|x)}{p_1(y)} + (1-\lambda) \sum_{x,y} p(x)p_2(y|x)\log\frac{p_2(y|x)}{p_2(y)} \\
+&= \lambda I_1(X;Y) + (1-\lambda) I_2(X;Y)
+\end{align*}
+
+Therefore, we've proven that $I(X;Y)$ is a convex function of $p(y|x)$ when $p(x)$ is fixed.
+
+
+
+
+\newpage

@@ -1,0 +1,74 @@
+\titledquestion{Array Storage}
+Unlike arbitrary n-ary trees, binary trees can be easily stored within an array.
+
+\begin{parts}
+    \part[6] Complete the code below:
+    \begin{verbatim}
+    struct BinaryTree {
+        int data[SIZE]{};
+        
+        // Return the index of the root node
+        size_t head() {
+            return 1;
+        }
+        
+        // Return the index of the left child
+        size_t left_child_idx(size_t idx) {
+            return ________________;   
+            // Fill in the formula for the left child index
+        }
+
+        // Return the index of the right child
+        size_t right_child_idx(size_t idx) {
+            return ________________;   
+            // Fill in the formula for the right child index
+        }
+
+        // Return the index of the parent node
+        size_t parent_idx(size_t idx) {
+            return ________________;   
+            // Fill in the formula for the parent index
+        }
+    };
+    \end{verbatim}
+    \newpage
+    \begin{solution}
+    \begin{verbatim}
+        size_t left_child_idx(size_t idx) {
+        
+            return idx * 2;
+            
+        }
+        size_t right_child_idx(size_t idx) {
+        
+            return idx * 2 + 1;
+            
+        }
+        size_t parent_idx(size_t idx) {
+        
+            return idx / 2; 
+            
+        }
+    \end{verbatim}
+    \end{solution}
+
+    \newpage
+    \part[3] To ensure the code functions correctly for all trees with $n$ nodes, what should the minimum \textbf{SIZE} be? You should justify your answer correctly.
+
+    \begin{solution}
+        The minimum \textbf{SIZE} should be $2^n$. Consider the extreme case with all nodes to be the only right child of their parent. This will lead to a largest requirement of array index since every node maximum its index number. In this case, the i-th node will have the index $2^i - 1$. Thus, the maximum index in this array is $2^n - 1$, and because the index starts from 1, the minimum \textbf{SIZE} should be $2^n$.
+    \end{solution}
+
+    \part[4] Consider a complete binary tree, the maximum index in this array is 2025, what is the height and number of leaf nodes of this tree? You should justify your answer correctly.
+
+    \begin{solution}
+        The height of the tree is $h = \lfloor\log_2(2025) \rfloor + 1 = 11$. The number of leaf nodes is 1013.\\
+        For a perfect binary tree of height $h$, the number of nodes is $2^h - 1$. So a perfect tree of height 11 has $2^{11} - 1 = 2047$ nodes, and a perfect tree of height 10 has $2^{10} - 1 = 1023$ nodes.
+        Since the tree is complete, the height should be 11.\\
+        The second last level of the tree is full, with 512 nodes. And the last level has $2025 - 1023 = 1002$ nodes. So the number of nodes with children in the second last level is $1002 / 2 = 501$. The number of leaf nodes is $1002 + 512 - 501 = 1013$.
+    \end{solution}
+
+    
+    
+\end{parts}
+

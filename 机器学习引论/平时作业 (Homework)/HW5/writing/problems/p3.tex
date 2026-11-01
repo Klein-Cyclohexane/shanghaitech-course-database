@@ -1,0 +1,29 @@
+\item \defpoints{5} [Convolution layer implementation details]
+
+Check the \href{https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d}{pytorch document}, point out whether the convolution layer in PyTorch is using cross-correlation or convolution? And why it is defined like this? \defpoints{5}
+
+\solution
+
+PyTorch's `nn.Conv2d` actually implements cross-correlation rather than mathematical convolution, despite being named "Conv2d."\\
+
+According to the PyTorch documentation, the operation performed is:
+$$\text{out}(N_i, C_{\text{out}_j}) = \text{bias}(C_{\text{out}_j}) + \sum_{k=0}^{C_{\text{in}}-1} \text{weight}(C_{\text{out}_j}, k) \star \text{input}(N_i, k)$$
+
+Where $\star$ represents the cross-correlation operator (not the mathematical convolution operator).\\
+
+The reason PyTorch (and most deep learning frameworks) implement cross-correlation instead of convolution is primarily for:
+
+\begin{enumerate}
+    \item Simplicity and Efficiency: Implementing cross-correlation is slightly simpler as it avoids the kernel-flipping step required for a true mathematical convolution. While this might seem like a minor difference, in the context of highly optimized numerical libraries, every operation counts.
+
+    \item Learned Kernels: The values of the kernels (weights) in a convolutional neural network are learned during the training process. If the operation were a true mathematical convolution, the learning algorithm would simply learn a flipped version of the kernel compared to what it would learn with cross-correlation. Since the kernel is learned, its orientation (flipped or not) doesn't fundamentally change the representational power of the network; the network can learn to compensate. If a flipped kernel is optimal, the learning process will find those flipped weights.
+    
+    \item Historical Reasons and Convention: Early work in neural networks might have used cross-correlation for its directness, and the terminology stuck. It has become a convention in the deep learning field.
+    
+    \item No Impact on Expressive Power: For a learnable kernel, it makes no difference to the network's expressive power whether the kernel is flipped or not before being convolved with the input. The network can learn either the "normal" or the "flipped" version of the useful filter weights.
+    
+    \item Symmetry in some cases: If the learned kernel happens to be symmetric (after a 180-degree rotation), then cross-correlation and convolution produce the same result anyway.
+    
+\end{enumerate}
+
+\newpage

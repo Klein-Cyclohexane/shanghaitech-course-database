@@ -1,0 +1,77 @@
+\item \defpoints{15} [Maximum Likelihood Estimation (MLE)]
+
+Consider real-valued variables $X$ and $Y$, in which $Y$ is generated conditional on $X$ according to
+$$Y = aX + b + \epsilon, \ \text{where} \ \epsilon \sim \mathcal{N}(0, \sigma^2)$$
+Here $\epsilon$ is an independent variable, called a noise term, which is drawn from a Gaussian distribution with mean 0, and variance $\sigma^2$. This is a single variable linear regression model, where $a$ is the only weight parameter and $b$ denotes the intercept. The conditional probability of $Y$ has a distribution $p(Y | X, a, b) \sim \mathcal{N}(aX+b, \sigma^2)$, so it can be written as:
+$$p(Y|X, a,b) = \frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{1}{2\sigma^2}(Y - aX -b)^2\right)$$
+
+(a) Assume we have a training dataset of $n$ i.i.d. pairs $(x_i, y_i), i = 1, 2, \ldots, n$, and the likelihood function is defined by $\mathcal{L}(a,b) = \prod\limits_{i=1}^n p(y_i | x_i, a, b)$. Please write the Maximum Likelihood Estimation (MLE) problem for estimating $a$ and $b$. ~\defpoints{5}
+
+(b) Estimate the optimal solution of $a$ and $b$ by solving the MLE problem in (a).~\defpoints{5}
+
+(c) Based on the result in (b), argue that the learned linear model $f(X) = aX + b$, always passes through the point $(\bar{x},\bar{y})$, where $\bar{x} = \dfrac{1}{n}\sum\limits_{i=1}^{n}x_{i}$ and $\bar{y} = \dfrac{1}{n}\sum\limits_{i=1}^{n}y_{i}$ denote the sample means.~\defpoints{5}
+
+\solution
+
+(a) The Maximum Likelihood Estimation (MLE) problem aims to find parameters $a$ and $b$ that maximize the likelihood function $\mathcal{L}(a,b)$.
+
+Given the likelihood function $\mathcal{L}(a,b) = \prod\limits_{i=1}^n p(y_i | x_i, a, b)$, we substitute the conditional probability:
+
+$$\mathcal{L}(a,b) = \prod\limits_{i=1}^n \frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{1}{2\sigma^2}(y_i - ax_i -b)^2\right)$$
+
+$$\mathcal{L}(a,b) = \left(\frac{1}{\sqrt{2\pi}\sigma}\right)^n \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - ax_i -b)^2\right)$$
+
+For computational convenience, we maximize the log-likelihood instead:
+
+$$\log \mathcal{L}(a,b) = n\log\left(\frac{1}{\sqrt{2\pi}\sigma}\right) -\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - ax_i -b)^2$$
+
+The MLE problem is:
+$$\arg\max_{a,b} \log \mathcal{L}(a,b) = \arg\max_{a,b} \left[n\log\left(\frac{1}{\sqrt{2\pi}\sigma}\right) -\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - ax_i -b)^2\right]$$
+
+Since the first term is constant with respect to $a$ and $b$, this is equivalent to:
+$$\arg\min_{a,b} \sum_{i=1}^{n}(y_i - ax_i -b)^2$$
+
+(b) To find optimal values of $a$ and $b$, we differentiate the log-likelihood with respect to each parameter and set the derivatives to zero.
+
+First, differentiating with respect to $b$:
+$$\frac{\partial \log \mathcal{L}(a,b)}{\partial b} = \frac{1}{\sigma^2}\sum_{i=1}^{n}(y_i - ax_i -b)$$
+
+Setting this equal to zero:
+$$\sum_{i=1}^{n}(y_i - ax_i -b) = 0$$
+$$\sum_{i=1}^{n}y_i - a\sum_{i=1}^{n}x_i - nb = 0$$
+$$b = \frac{1}{n}\sum_{i=1}^{n}y_i - \frac{a}{n}\sum_{i=1}^{n}x_i = \bar{y} - a\bar{x}$$
+
+Next, differentiating with respect to $a$:
+$$\frac{\partial \log \mathcal{L}(a,b)}{\partial a} = \frac{1}{\sigma^2}\sum_{i=1}^{n}x_i(y_i - ax_i -b)$$
+
+Setting this equal to zero:
+$$\sum_{i=1}^{n}x_i(y_i - ax_i -b) = 0$$
+
+Substituting $b = \bar{y} - a\bar{x}$:
+$$\sum_{i=1}^{n}x_i(y_i - ax_i -(\bar{y} - a\bar{x})) = 0$$
+$$\sum_{i=1}^{n}x_i(y_i - \bar{y} - a(x_i - \bar{x})) = 0$$
+$$\sum_{i=1}^{n}x_i(y_i - \bar{y}) - a\sum_{i=1}^{n}x_i(x_i - \bar{x}) = 0$$
+$$\sum_{i=1}^{n}x_i(y_i - \bar{y}) = a\sum_{i=1}^{n}x_i(x_i - \bar{x})$$
+
+The expression $\sum_{i=1}^{n}x_i(x_i - \bar{x})$ can be simplified:
+$$\sum_{i=1}^{n}x_i(x_i - \bar{x}) = \sum_{i=1}^{n}(x_i^2 - x_i\bar{x}) = \sum_{i=1}^{n}x_i^2 - \bar{x}\sum_{i=1}^{n}x_i = \sum_{i=1}^{n}x_i^2 - n\bar{x}^2$$
+
+Similarly, $\sum_{i=1}^{n}x_i(y_i - \bar{y}) = \sum_{i=1}^{n}x_i y_i - n\bar{x}\bar{y}$
+
+Therefore:
+$$a = \frac{\sum_{i=1}^{n}x_i y_i - n\bar{x}\bar{y}}{\sum_{i=1}^{n}x_i^2 - n\bar{x}^2} = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i - \bar{x})^2}$$
+
+And:
+$$b = \bar{y} - a\bar{x}$$
+
+(c) To show that the linear model $f(X) = aX + b$ passes through the point $(\bar{x},\bar{y})$, we need to verify that $f(\bar{x}) = \bar{y}$.
+
+Evaluating $f(\bar{x})$:
+$$f(\bar{x}) = a\bar{x} + b$$
+
+Substituting $b = \bar{y} - a\bar{x}$:
+$$f(\bar{x}) = a\bar{x} + (\bar{y} - a\bar{x}) = \bar{y}$$
+
+Therefore, $f(\bar{x}) = \bar{y}$, which proves that the linear model always passes through the point $(\bar{x},\bar{y})$, i.e., the centroid of the data.
+
+\newpage

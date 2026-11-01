@@ -1,0 +1,32 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+	  <ScoreFunction name="ref2015" weights="ref2015"/>
+        </SCOREFXNS>
+
+	<RESIDUE_SELECTORS>
+	</RESIDUE_SELECTORS>
+	
+	<TASKOPERATIONS>
+	</TASKOPERATIONS>
+	
+	<MOVE_MAP_FACTORIES>
+	</MOVE_MAP_FACTORIES>
+	
+	<SIMPLE_METRICS>
+	</SIMPLE_METRICS>
+	
+	<FILTERS>
+        <NetCharge name="net_charge" min="-100" max="100"/>
+	</FILTERS>
+	
+	<MOVERS>
+        <PackRotamersMover name="pack_all" scorefxn="ref2015" />
+	</MOVERS>
+	
+	<PROTOCOLS>
+        <Add mover="pack_all"/>
+        <Add filter="net_charge"/>
+	</PROTOCOLS>
+	
+	<OUTPUT scorefxn="ref2015"/>
+</ROSETTASCRIPTS>

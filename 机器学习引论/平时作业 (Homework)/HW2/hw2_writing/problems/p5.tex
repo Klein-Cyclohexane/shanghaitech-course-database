@@ -1,0 +1,151 @@
+\item \defpoints{20} [Decision Tree] A dataset is given below. Now we want to discover the relationship between the features and the target variable by using a Decision Tree.
+\
+\begin{table*}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Outlook $\left(X_{1}\right)$ & Temperature $\left(X_{2}\right)$ & Humidity $\left(X_{3}\right)$ & Play Tennis? $(Y)$ \\
+        \hline
+        sunny & hot & high & no \\
+        \hline
+        overcast & hot & high & yes \\
+        \hline
+        rain & mild & high & yes \\
+        \hline
+        rain & cool & normal & yes \\
+        \hline
+        sunny & mild & high & no \\
+        \hline
+        sunny & mild & normal & yes \\
+        \hline
+        rain & mild & normal & yes \\
+        \hline
+        overcast & hot & normal & yes \\
+        \hline
+    \end{tabular}
+\end{table*}
+
+\begin{enumerate}
+    \item Using the dataset above, calculate the mutual information for each feature ($X_{1}, X_{2}, X_{3}$) to determine the root node for a Decision Tree trained on the above data.
+    \begin{itemize}
+        \item What is $I\left(Y ; X_{1}\right)$? \defpoints{3}
+        \item What is $I\left(Y ; X_{2}\right)$? \defpoints{3}
+        \item What is $I\left(Y ; X_{3}\right)$? \defpoints{3}
+        \item What feature should be split on at the root node? \defpoints{1}
+    \end{itemize}
+
+    \item Calculate what the next split should be. \defpoints{5}
+
+    \item Draw the resulting tree. \defpoints{5}
+\end{enumerate}
+
+\textcolor{blue}{Solution} \\
+
+\textbf{(a):} Let's calculate the mutual information $I(Y;X_i)$ for each feature.
+
+First, we need to find the entropy of Y (Play Tennis):
+\begin{align*}
+P(Y=yes) &= \frac{6}{8} = 0.75 \\
+P(Y=no) &= \frac{2}{8} = 0.25 \\
+H(Y) &= -(0.75\log_2 0.75 + 0.25\log_2 0.25) \\
+&= -(0.75 \cdot (-0.415) + 0.25 \cdot (-2)) \\
+&= 0.811
+\end{align*}
+
+\textbf{(1)} For $X_1$ (Outlook):
+\begin{align*}
+P(X_1=sunny) &= \frac{3}{8} = 0.375 & P(Y=yes|X_1=sunny) &= \frac{1}{3} \approx 0.333 \\
+P(X_1=overcast) &= \frac{2}{8} = 0.25 & P(Y=yes|X_1=overcast) &= \frac{2}{2} = 1 \\
+P(X_1=rain) &= \frac{3}{8} = 0.375 & P(Y=yes|X_1=rain) &= \frac{3}{3} = 1
+\end{align*}
+
+$H(Y|X_1=sunny) = -(0.333\log_2 0.333 + 0.667\log_2 0.667) \approx 0.918$
+
+$H(Y|X_1=overcast) = -(1\log_2 1) = 0$
+
+$H(Y|X_1=rain) = -(1\log_2 1) = 0$
+
+$H(Y|X_1) = 0.375 \cdot 0.918 + 0.25 \cdot 0 + 0.375 \cdot 0 = 0.344$
+
+$I(Y;X_1) = H(Y) - H(Y|X_1) = 0.811 - 0.344 = 0.467$
+
+\textbf{(2)} For $X_2$ (Temperature):
+\begin{align*}
+P(X_2=hot) &= \frac{3}{8} = 0.375 & P(Y=yes|X_2=hot) &= \frac{2}{3} \approx 0.667 \\
+P(X_2=mild) &= \frac{4}{8} = 0.5 & P(Y=yes|X_2=mild) &= \frac{3}{4} = 0.75 \\
+P(X_2=cool) &= \frac{1}{8} = 0.125 & P(Y=yes|X_2=cool) &= \frac{1}{1} = 1
+\end{align*}
+
+$H(Y|X_2=hot) = -(0.667\log_2 0.667 + 0.333\log_2 0.333) \approx 0.918$
+
+$H(Y|X_2=mild) = -(0.75\log_2 0.75 + 0.25\log_2 0.25) \approx 0.811$
+
+$H(Y|X_2=cool) = -(1\log_2 1) = 0$
+
+$H(Y|X_2) = 0.375 \cdot 0.918 + 0.5 \cdot 0.811 + 0.125 \cdot 0 = 0.751$
+
+$I(Y;X_2) = H(Y) - H(Y|X_2) = 0.811 - 0.751 = 0.060$
+
+\textbf{(3)} For $X_3$ (Humidity):
+\begin{align*}
+P(X_3=high) &= \frac{4}{8} = 0.5 & P(Y=yes|X_3=high) &= \frac{2}{4} = 0.5 \\
+P(X_3=normal) &= \frac{4}{8} = 0.5 & P(Y=yes|X_3=normal) &= \frac{4}{4} = 1
+\end{align*}
+
+$H(Y|X_3=high) = -(0.5\log_2 0.5 + 0.5\log_2 0.5) = 1$
+
+$H(Y|X_3=normal) = -(1\log_2 1) = 0$
+
+$H(Y|X_3) = 0.5 \cdot 1 + 0.5 \cdot 0 = 0.5$
+
+$I(Y;X_3) = H(Y) - H(Y|X_3) = 0.811 - 0.5 = 0.311$
+
+\textbf{(4)} The mutual information values are:
+\begin{itemize}
+  \item $I(Y;X_1) = 0.467$ (Outlook)
+  \item $I(Y;X_2) = 0.060$ (Temperature)
+  \item $I(Y;X_3) = 0.311$ (Humidity)
+\end{itemize}
+
+Since Outlook ($X_1$) has the highest mutual information, it should be the root node of the decision tree.
+
+\textbf{(b):} 
+As we can see that the sub-datasets $\mathcal{D}_{\left(X_1=\text { rain }\right)}$ and $\mathcal{D}_{\left(X_1=\text { overcast }\right)}$ are pure, there will be no further splitting on those and we will place a leaf node with label assignment decided by majority vote classifier. So, we need to split only on the sub-dataset $\mathcal{D}_{\left(X_1=\text { sunny }\right)}$. Now, we will use only $\mathcal{D}_{\left(X_1=\text { sunny }\right)}$ to estimate the probabilities for the next split.
+$$
+H(Y)=-\frac{1}{3} * \log _2\left(\frac{1}{3}\right)-\frac{2}{3} * \log _2\left(\frac{2}{3}\right) \approx 0.918
+$$
+
+For attribute $X_2$,
+- $H\left(Y \mid X_2=h o t\right)=0$
+- $H\left(Y \mid X_2=\operatorname{cool}\right)=0$
+- $H\left(Y \mid X_2=\right.$ mild $)=-\left[\frac{1}{2} * \log _2\left(\frac{1}{2}\right)+\frac{1}{2} * \log _2\left(\frac{1}{2}\right)\right]=1$
+$\Longrightarrow H\left(Y \mid X_2\right)=\left[\frac{2}{3} * 1.0+\frac{1}{3} * 0\right] \approx 0.67$
+$\Longrightarrow I\left(Y ; X_2\right) \approx 0.918-0.67 \approx 0.25$
+For attribute $X_3$,
+- $H\left(Y \mid X_3=h i g h\right)=0$
+- $H\left(Y \mid X_3=\right.$ normal $)=0$
+$$
+\begin{aligned}
+& \Longrightarrow H\left(Y \mid X_3\right)=\left[\frac{2}{3} * 0+\frac{1}{3} * 0\right]=0 \\
+& \Longrightarrow I\left(Y ; X_3\right) \approx 0.918
+\end{aligned}
+$$
+
+We split using attribute X3 as it gives the highest mutual information.\\
+
+\textbf{c:} The resulting decision tree is:
+
+\begin{center}
+\begin{tabular}{ccc}
+& Outlook & \\
+& $\swarrow$ \quad $\downarrow$ \quad $\searrow$ & \\
+sunny & overcast & rain \\
+$\downarrow$ & $\downarrow$ & $\downarrow$ \\
+Humidity & yes & yes \\
+$\swarrow$ \quad $\searrow$ & & \\
+high \quad normal & & \\
+$\downarrow$ \quad $\downarrow$ & & \\
+no \quad yes & & \\
+\end{tabular}
+\end{center}
+\newpage

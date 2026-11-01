@@ -1,0 +1,46 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+	  <ScoreFunction name="ref2015" weights="ref2015"/>
+    </SCOREFXNS>
+
+	<RESIDUE_SELECTORS>
+		<Layer name="surface" select_core="false" select_boundary="false" select_surface="true" ball_radius="2.0" core_cutoff="5.2" surface_cutoff="2.0"/>
+		<Layer name="boundary" select_core="false" select_boundary="true" select_surface="false" ball_radius="2.0" core_cutoff="5.2" surface_cutoff="2.0"/>
+		<Layer name="core" select_core="true" select_boundary="false" select_surface="false" ball_radius="2.0" core_cutoff="5.2" surface_cutoff="2.0"/>
+	</RESIDUE_SELECTORS>
+	
+	<TASKOPERATIONS>
+		<OperateOnResidueSubset name="fix_core" selector="core">
+			<PreventRepackingRLT/>
+		</OperateOnResidueSubset>
+		<OperateOnResidueSubset name="design_surface" selector="surface">
+			<RestrictAbsentCanonicalAASRLT aas="KR"/>
+		</OperateOnResidueSubset>
+
+	</TASKOPERATIONS>
+	
+	<MOVE_MAP_FACTORIES>
+	</MOVE_MAP_FACTORIES>
+	
+	<SIMPLE_METRICS>
+	</SIMPLE_METRICS>
+	
+	<FILTERS>
+        <NetCharge name="net_charge" min="-100" max="100"/>
+		<ResidueCount name="lys_num" min_residue_count="1" residue_types="LYS" residue_selector="surface"/>
+		<ResidueCount name="arg_num" min_residue_count="1" residue_types="ARG" residue_selector="surface"/>
+	</FILTERS>
+	
+	<MOVERS>
+        <PackRotamersMover name="design_mover" scorefxn="ref2015" task_operations="fix_core,design_surface"/>
+	</MOVERS>
+	
+	<PROTOCOLS>
+        <Add mover="design_mover"/>
+        <Add filter="net_charge"/>
+		<Add filter="lys_num"/>
+		<Add filter="arg_num"/>
+	</PROTOCOLS>
+	
+	<OUTPUT scorefxn="ref2015"/>
+</ROSETTASCRIPTS>

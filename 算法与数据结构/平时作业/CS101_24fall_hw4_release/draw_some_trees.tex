@@ -1,0 +1,63 @@
+\titledquestion{Making binary trees grow}
+\begin{parts}
+    \part[3]Given the in-order and pre-order traversal of a binary tree $T$ are $\mathbf{AECBFDGH}$ and $\mathbf{ABCEDFGH}$ respectively.\\
+    Draw the tree $T$.\\
+    \begin{solution}
+        \\
+        \begin{tikzpicture}
+            \Tree
+            [.A \edge[blank]; \node[blank]{};
+                [.B
+                    \edge[];[.C
+                        \edge[];[.E        ]
+                        \edge[blank]; \node[blank]{};
+                    ]
+                    \edge[];[.D
+                         \edge[];[.F            ]
+                         \edge[]; [.G   \edge[blank]; \node[blank]{};  \edge[];[.H        ]       ]
+                        ]
+                    ]
+                ]
+        \end{tikzpicture}
+    \end{solution}
+    \newpage
+    \part[3]Given the in-order and post-order traversal of a binary tree $T$ are $\mathbf{XAKQHDPGTBIN}$ and $\mathbf{AXKHPDQTNIBG}$ respectively.\\
+    Draw the tree $T$.\\
+    \begin{solution}
+        \\
+        \begin{tikzpicture}
+            \Tree
+            [.G
+            [.Q
+                \edge[];[.K    \edge[];[.X   \edge[blank]; \node[blank]{};  \edge[];[.A     ]  ]  \edge[blank]; \node[blank]{};]
+                \edge[];[.D    \edge[];[.H     ]       \edge[];[.P     ]   ]
+            ]
+            [.B  
+                \edge[];[.T               ]
+                \edge[];[.I      \edge[blank]; \node[blank]{};     \edge[];[.N     ]    ]
+            ]
+            ]
+            \end{tikzpicture}
+    \end{solution}
+    \newpage
+    \part[2]Given the pre-order and post-order traversal of a binary tree $T$, can you decide the tree $T$? If yes, please describe an algorithm to construct $T$; if no, please provide a counterexample.\\
+    \begin{solution}
+        \\
+        No, we cannot decide the tree $T$.\\
+        Counterexample: \\
+        Pre-order: $\mathbf{ABDC}$\\
+        Post-order: $\mathbf{DBCA}$\\
+    \begin{tikzpicture}
+        \Tree
+        [.A  \edge[];[.B   \edge[];[.D     ]      \edge[blank]; \node[blank]{};       ]    
+             \edge[];[.C       ]
+        ]
+        \end{tikzpicture}
+        \begin{tikzpicture}
+            \Tree
+            [.A  \edge[];[.B        \edge[blank]; \node[blank]{};   \edge[];[.D     ]     ]    
+            \edge[];[.C       ]
+        ]
+        \end{tikzpicture}    \\
+    \end{solution}
+\end{parts}

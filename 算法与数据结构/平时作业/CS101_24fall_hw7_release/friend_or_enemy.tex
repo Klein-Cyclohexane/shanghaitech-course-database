@@ -1,0 +1,59 @@
+\titledquestion{Friend or enemy?}[6]
+\raggedright
+Consider a set of \( n \) individuals, each of whom can have two types of relationships with others: friendship and enmity. It is also possible for individuals to have no relationship at all, or even to be both friends and enemies simultaneously. The relationships satisfy the following properties:
+
+\begin{enumerate}
+    \item If person \( a_i \) is a friend of person \( a_j \), then person \( a_j \) is also a friend of person \( a_i \) (friendship is symmetric).
+    \item If person \( a_i \) is an enemy of person \( a_j \), then person \( a_j \) is also an enemy of person \( a_i \) (enmity is symmetric).
+    \item Friends of friends are also considered friends. That is, if person \( a_i \) is a friend of person \( a_j \) and person \( a_j \) is a friend with person \( a_k \), then person \( a_i \) is a friend of person \( a_k \).
+    \item Enemies of enemies are considered friends. That is, if person \( a_i \) is an enemy of person \( a_j \) and person \( a_j \) is an enemy of person \( a_k \), then person \( a_i \) is a friend of person \( a_k \).
+\end{enumerate}
+
+Given a set of relationships represented as:
+
+\begin{itemize}
+    \item A set of friendship pairs \( F \subseteq \{(a_i, a_j) \mid 1 \leq i, j \leq n, i \neq j\} \)
+    \item A set of enmity pairs \( E \subseteq \{(a_i, a_j) \mid 1 \leq i, j \leq n, i \neq j\} \)
+\end{itemize}
+
+\textbf{Your task is to determine the number of distinct groups that can be formed, where each group consists of individuals who are all friends with each other.} (When forming groups, we do not need to consider enemy relationships.)
+
+You should ensure that your algorithm has a time complexity of $O((m+n)\alpha(n))$, where $m$ is $|F|+|E|$ and $n$ is the number of individuals, but no proof is required.
+
+\textit{Hint: You may consider representing each individual as two nodes: one for their friendships and one for their enmities. Utilize the disjoint set to efficiently manage and merge these relationships.}
+
+\raggedright
+\begin{solution}
+    We represent each individual as two nodes: one for friendship and one for enmity.\\
+    \textbf{Represent individuals as nodes}:
+       \begin{itemize}
+           \item Each individual $a_i$ is represented by two nodes:
+                 \begin{itemize}
+                     \item $a_i^F$: Represents the \textit{friendship component}.
+                     \item $a_i^E$: Represents the \textit{enmity component}.
+                 \end{itemize}
+       \end{itemize}
+    
+    \textbf{Union-Find Structure}:
+       \begin{itemize}
+           \item Use a union-find data structure to manage connected components. Each set represents a group of interconnected friendships. We use both union-by-rank and path compression optimizations to achieve $O((m+n)\alpha(n))$ time complexity.
+       \end{itemize}
+    
+    \textbf{Process Relationships}:
+       \begin{itemize}
+           \item For each \textbf{friendship pair} $(a_i, a_j)$:
+                 \begin{align*}
+                     \text{Union } a_i^F \text{ with } a_j^F \quad &\text{(connect friendship components)}.
+                 \end{align*}
+           \item For each \textbf{enmity pair} $(a_i, a_j)$:
+                 \begin{align*}
+                     \text{Union } a_i^F \text{ with } a_j^E \quad &\text{(connect $a_i$'s friends with $a_j$'s enemies)}. \\
+                     \text{Union } a_i^E \text{ with } a_j^F \quad &\text{(connect $a_i$'s enemies with $a_j$'s friends)}.
+                 \end{align*}
+       \end{itemize}
+    
+    \textbf{Count Friendship Groups}:
+       \begin{itemize}
+           \item After processing all relationships, use the union-find structure to determine the number of distinct connected components among $a_i^F$ nodes.
+       \end{itemize}
+\end{solution}

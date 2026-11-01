@@ -1,0 +1,95 @@
+\item \defpoints{20} [Maximum Margin Classifier]
+Consider a data set of $n\ d$-dimensional sample points, $\left\{x_1, \ldots, x_n\right\}$. Each sample point, $x_i \in \mathbb{R}^d$, has a corresponding label, $y_i$, indicating to which class that point belongs. For now, we will assume that there are only two classes and that every point is either in the given class $\left(y_i=1\right)$ or not in the class $\left(y_i=-1\right)$. Consider the linear decision boundary defined by the hyperplane
+$$
+\mathcal{H}=\left\{x \in \mathbb{R}^d: x \cdot w+\alpha=0\right\} .
+$$
+The maximum margin classifier maximizes the distance from the linear decision boundary to the closest training point on either side of the boundary, while correctly classifying all training points. Suppose the points are linear seperable, and the margin is $\gamma$.
+
+\begin{itemize}
+\item[(a)]The maximum margin classifier aims to maximize the distance from the training points to the decision boundary. Derive the distance from a point $x_i$ to the hyperplane $\mathcal{H}$. ~\defpoints{5}
+
+\item[(b)] An in-class sample point is correctly classified if it is on the positive side of the decision boundary, and an out-of-class sample is correctly classified if it is on the negative side. Assuming all the points are correctly classified, write a set of $n$ constraints to ensure that all $n$ points are correctly classified. ~\defpoints{5}
+
+\item[(c)] Using the previous parts, write an optimization problem for the maximum margin classifier. For convinent, we should additionally add a constrain $\|w\|=1$ ~\defpoints{5}
+
+\item[(d)] To simply the optimization problem, we can rewrite the optimization problem in part (c) by setting $w'=\dfrac{w}{\gamma}$ and $\alpha'=\dfrac{\alpha}{\gamma}$. Write the optimization problem for the simlified maximum margin classifier. ~\defpoints{5}
+
+\end{itemize}
+
+\solution
+
+\begin{itemize}
+\item[(a)] 
+
+Given a point $x_i$ and a hyperplane defined by $w \cdot x + \alpha = 0$, the perpendicular distance is given by:
+\begin{align*}
+d(x_i, \mathcal{H}) = \frac{|x_i \cdot w + \alpha|}{\|w\|}
+\end{align*}
+
+where $\|w\|$ is the Euclidean norm of $w$.
+\item[(b)] For all points to be correctly classified:
+\begin{itemize}
+\item If $y_i = 1$ (in-class), we need $x_i$ to be on the positive side of the boundary, meaning $x_i \cdot w + \alpha > 0$
+\item If $y_i = -1$ (out-of-class), we need $x_i$ to be on the negative side of the boundary, meaning $x_i \cdot w + \alpha < 0$
+\end{itemize}
+
+We can combine these into a single set of constraints using the labels $y_i$:
+\begin{align*}
+y_i(x_i \cdot w + \alpha) > 0, \quad \forall i \in \{1, 2, ..., n\}
+\end{align*}
+
+These $n$ constraints ensure that all points are correctly classified by the hyperplane.
+
+\item[(c)] For the maximum margin classifier, we want to maximize the margin $\gamma$ while ensuring all points are correctly classified. The margin $\gamma$ is the minimum distance from any training point to the hyperplane.
+
+Using the distance formula from part (a) and the constraint $\|w\| = 1$, we have:
+\begin{align*}
+d(x_i, \mathcal{H}) = |x_i \cdot w + \alpha|
+\end{align*}
+
+Since all points are correctly classified, we know that $y_i(x_i \cdot w + \alpha) > 0$, which means:
+\begin{align*}
+|x_i \cdot w + \alpha| = y_i(x_i \cdot w + \alpha)
+\end{align*}
+
+The margin $\gamma$ is the minimum distance across all points:
+\begin{align*}
+\gamma = \min_{i=1,2,...,n} y_i(x_i \cdot w + \alpha)
+\end{align*}
+
+So our optimization problem becomes:
+\begin{align*}
+&\max_{w, \alpha} \gamma\\
+&\text{subject to:}\\
+&y_i(x_i \cdot w + \alpha) \geq \gamma, \quad \forall i \in \{1, 2, ..., n\}\\
+&\|w\| = 1
+\end{align*}
+
+This problem maximizes the minimum distance to any point while ensuring all points are correctly classified.
+
+\item[(d)] Following the substitution suggested, we set $w' = \frac{w}{\gamma}$ and $\alpha' = \frac{\alpha}{\gamma}$.
+
+With these substitutions, our constraints become:
+\begin{align*}
+y_i(x_i \cdot w + \alpha) \geq \gamma \implies y_i(x_i \cdot \gamma w' + \gamma \alpha') \geq \gamma \implies y_i(x_i \cdot w' + \alpha') \geq 1
+\end{align*}
+
+And our objective is:
+\begin{align*}
+\max_{\gamma, w', \alpha'} \gamma \text{ subject to } \|w\| = 1
+\end{align*}
+
+$\|w\| = 1 \implies \|\gamma w'\| = 1 \implies \gamma \|w'\| = 1 \implies \gamma = \frac{1}{\|w'\|}$
+
+Therefore, maximizing $\gamma$ is equivalent to minimizing $\|w'\|$, or more conveniently, minimizing $\frac{1}{2}\|w'\|^2$.
+
+The simplified optimization problem becomes:
+\begin{align*}
+&\min_{w', \alpha'} \frac{1}{2}\|w'\|^2\\
+&\text{subject to:}\\
+&y_i(x_i \cdot w' + \alpha') \geq 1, \quad \forall i \in \{1, 2, ..., n\}
+\end{align*}
+
+This is the standard form of the optimization problem for the maximum margin classifier, which is the primal form of the Support Vector Machine (SVM).
+\end{itemize}
+\newpage

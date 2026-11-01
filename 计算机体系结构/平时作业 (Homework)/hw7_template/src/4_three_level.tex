@@ -1,0 +1,30 @@
+
+The system employs a 48-bit virtual address space with byte-addressable memory, using 4KB pages and 32-bit page table entries (PTEs) where 8 bits are reserved for protection and valid flags. The address translation uses a three-level page table hierarchy. Each of the three page table index fields is 10 bits. 
+
+\begin{parts}
+    \part [4] Given the virtual address $\mathtt{0x3456789ABC}$. Suppose the contents of the page table entries of the three-level page table are as follows:
+    \begin{itemize}[leftmargin=*]
+    \item The base address of the first-level page table is $\mathtt{0x1000}$.
+    \item The base address of the second-level page table is $\mathtt{0x2000}$.
+    \item The base address of the third-level page table is $\mathtt{0x3000}$, and the PTE with index 3 points to the Physical Page Frame (PPN) $\mathtt{0x4000}$. [4 points]
+    \end{itemize}
+    \vspace{0.5cm}
+    Final physical address:\blank[3cm]{$\mathtt{0x4000ABC}$}.
+    \vspace{0.5cm}
+    
+    \part[4] Calculate the total size of all second-level page tables. [4 points]
+    \\
+    The first level page table has 1024 entries, each pointing to a second-level page table. Each second-level page table has 1024 entries, and each entry is 32 bits (4 bytes). Therefore, the total size of all second-level page tables is:
+    $\mathtt{1024 \times 1024 \times 4 bytes = 4MB}$.
+    
+    \part[4] Consider an x86-64 system with 64-bit virtual addressing (48-bit usable), 4KB page tables, and 8-byte PTEs, supporting both 4KB pages (4-level: PML4$\to$PDPT$\to$PD$\to$PT) and 2MB huge pages (3-level, no PT). When using 2MB huge pages for application data, how is the virtual address partitioned? Specify bit allocations for PML4, PDPT, PD indices and page offset. [4 points]
+
+    Page table is 4KB, and each PTE is 8 bytes, so there are $512$ entries per page table. So the bit allocation is as follows:\\
+    \begin{itemize}[leftmargin=*]
+        \item PML4: [47:39]
+        \item PDPT: [38:30]
+        \item PD: [29:21]
+        \item Page Offset: [20:0]
+    \end{itemize}
+
+\end{parts}

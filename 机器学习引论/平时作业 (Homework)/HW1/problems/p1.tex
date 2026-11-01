@@ -1,0 +1,32 @@
+\item \defpoints{15} [Math review(Linear Algebra)] Rank properties. Suppose a matrix $A\in \mathbb{R}^{m\times n}$, prove:
+\begin{itemize}
+    \item[(a)] $\rank(A)\leq \min(m, n)$ ~\defpoints{4} (Hint: You just need to consider the foundamental transformation of the matrix. And how $\rank$ is defined.)
+    \item[(b)] $\rank(AB)\leq \min(\rank(A),\rank(B))$. ~\defpoints{4}
+    \item[(c)] $\rank(A^{\top}A)=\rank(A)$. ~\defpoints{4} (Hint: consider the identity between $\rank$ and $\nullity$)
+    \item[(d)] What does the rank of a matrix essentially refer to? (Hint: consider the correspondence to the singularvalues.) ~\defpoints{3}
+\end{itemize}
+
+\textcolor{blue}{Solution} \\
+
+(a) The rank of a matrix $A$ is defined as the number of linearly independent rows or columns. When performing fundamental transformations (row or column operations), the rank of the matrix remains unchanged.  Since $A$ is an $m \times n$ matrix, it has $m$ rows and $n$ columns. The maximum number of linearly independent rows cannot exceed $m$, and the maximum number of linearly independent columns cannot exceed $n$. Therefore, $\rank(A) \leq \min(m, n)$.
+
+(b) Let $A \in \mathbb{R}^{m \times n}$ and $B \in \mathbb{R}^{n \times p}$. Then $AB \in \mathbb{R}^{m \times p}$. The column space of $AB$, denoted as $\mathcal{C}(AB)$, is a subspace of the column space of $A$, i.e., $\mathcal{C}(AB) \subseteq \mathcal{C}(A)$. Therefore, $\rank(AB) = \dim(\mathcal{C}(AB)) \leq \dim(\mathcal{C}(A)) = \rank(A)$.
+Similarly, the row space of $AB$ is a subspace of the row space of $B$. Thus, $\rank(AB) \leq \rank(B)$. Combining these two inequalities, we have $\rank(AB) \leq \min(\rank(A), \rank(B))$.
+
+(c) We want to show that $\rank(A^{\top}A) = \rank(A)$.
+First, note that $A^{\top}A \in \mathbb{R}^{n \times n}$. We will use the fact that $\rank(A) + \nullity(A) = n$, where $\nullity(A)$ is the dimension of the null space of $A$.
+We want to show that $\nullity(A^{\top}A) = \nullity(A)$.
+If $x \in \mathcal{N}(A)$, then $Ax = 0$, so $A^{\top}Ax = A^{\top}0 = 0$, which means $x \in \mathcal{N}(A^{\top}A)$. Thus, $\mathcal{N}(A) \subseteq \mathcal{N}(A^{\top}A)$.
+Conversely, if $x \in \mathcal{N}(A^{\top}A)$, then $A^{\top}Ax = 0$. Multiplying by $x^{\top}$ on the left, we get $x^{\top}A^{\top}Ax = (Ax)^{\top}(Ax) = \|Ax\|^2 = 0$. This implies that $Ax = 0$, so $x \in \mathcal{N}(A)$. Thus, $\mathcal{N}(A^{\top}A) \subseteq \mathcal{N}(A)$.
+Therefore, $\mathcal{N}(A^{\top}A) = \mathcal{N}(A)$, and $\nullity(A^{\top}A) = \nullity(A)$.
+Now, $\rank(A^{\top}A) = n - \nullity(A^{\top}A) = n - \nullity(A) = \rank(A)$.
+
+(d) The rank of a matrix essentially refers to the number of non-zero singular values of the matrix. The singular value decomposition (SVD) of a matrix $A$ is given by $A = U\Sigma V^{\top}$, where $\Sigma$ is a diagonal matrix containing the singular values of $A$. The number of non-zero singular values corresponds to the number of linearly independent rows or columns of $A$, which is the rank of $A$.
+
+
+
+
+
+
+
+\newpage

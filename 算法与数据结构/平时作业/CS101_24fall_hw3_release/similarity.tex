@@ -1,0 +1,100 @@
+\titledquestion{Similarity Test}
+
+Maddelena has drawn a lot of paintings. She wants to organize her work. To finish her job better, she decides to determine whether a subset of similar paintings exists. Every paint $p$ has its own feature $\lambda_p$. 
+
+In this problem, we specify some notations: $\mathcal{P}$ is the set of paintings. Without giving rise to ambiguity, $\lambda_p$ can be referred to the feature of a painting $p$. $\mathcal{F} = \{\lambda_p|p\in \mathcal{P}\}$ denotes the set of features. $n$ can be refereed to the number of paintings i.e. $n=\left|\mathcal{P}\right|$.
+
+Note that $\mathcal{F}$ is not partially ordered i.e. you can't make comparisons for any $p,q\in \mathcal{P}$ so that you cannot sort $\mathcal{F}$ or give out inferences like $\lambda_p<\lambda_q$ or $\lambda_q<\lambda_p$. There exists an equivalence relation on $\mathcal{F}$, as $\lambda_p = \lambda_q$ indicates $p$ and $q$ has similar features.
+
+The master feature is defined as the feature it is similar to \textbf{over} half of the paintings. 
+In other words, the "master" feature is the feature$\lambda_0\in \mathcal{F}$ s.t. $|\{p\in\mathcal{P}|\lambda_p = \lambda_0\}|>\frac n2$.
+
+For example, $2$ sets of paintings are shown: The first set of paintings has a "master" feature $\lambda_0 = \alpha$ since there exists over a half ($4$: a,b,e,g) paintings share this feature. The second set of paintings does not have a ``master" feature because there exists no such feature that over half paintings share that.
+\begin{table}[!ht]
+    \centering
+    \begin{minipage}[b]{.5\linewidth}
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Painting & a & b & c & d & e & f & g \\ \hline
+        Feature & $\alpha$ & $\alpha$ & $\beta$ & $\omega$ & $\alpha$ & $\beta$ & $\alpha$ \\ \hline
+    \end{tabular}
+    \caption{A "master" feature $\lambda_0 = \alpha$.}
+    \end{minipage}
+    \begin{minipage}[b]{.4\linewidth}
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|}
+    \hline
+        Painting & A & B & C & D & E \\ \hline
+        Feature & $\alpha$ & $\beta$ & $\omega$ & $\beta$ & $\alpha$ \\ \hline
+    \end{tabular}
+    \caption{No "master" feature.}
+    \end{minipage}
+\end{table}
+\newpage
+\begin{parts}
+\part{} 
+Maddelena wants to find a "master" feature first. She asks you to help her with those problems:
+\begin{subparts}
+    \subpart[3] {Design a divide-and-conquer algorithm whose worst case takes $\Theta(n\log n)$ time.} \\
+    \textbf{Note: Of course, you can index them, but we recommend you \red{not} to.} \\
+    \textbf{Hint:} Recall merge sort, think out the relation between the "master" features of the $2$ subsets after dividing and the "master" feature of the original set. (If they have)
+    \begin{solution} 
+        \\
+        \textbf{Algorithm Design:} \\
+        Using the divide-and-conquer algorithm, we can find the master feature of the set of paintings. The initial value of l is 0, r is n-1. \\
+        1. Divide the set of paintings into two equal halves by calculating the mid value $mid = \frac{l+r}{2}$. \\
+        2. Recursively find all the master features of the two halves. \\
+        3. If the master features of the first half is the same as the master features of the second half, then return the master feature. Otherwise, we need to determine which one(s) is the master feature. \\
+        4. To do this, we count the frequency of the master features of the first half and the second half in the input set. If count of any master feature is greater than $ \frac{r-l+1}{2}$, then that master feature is the master feature of the input set. \\
+        5. If none of the master features is greater than $ \frac{r-l+1}{2}$, then there is no master feature in the input set. \\
+    \end{solution}
+    \subpart[2] {Justify it by proving its correctness and show its time complexity is $\Theta(n\log n)$. }
+    \begin{solution} 
+        \\
+        \textbf{Proof of Correctness:} \\
+        If the master feature of the first half is the same as the master feature of the second half, then because in both halves, this feature appears more than half of the time, it will also appear more than half of the time in the original set. Therefore, it is the master feature of the original set. \\
+        If the master features of the first half and the second half are different, then we need to count the frequency of the master features of the first half and the second half in the input set. If the count of any master feature is greater than $ \frac{r-l+1}{2}$, then that master feature is the master feature of the input set. If none of the master features is greater than $ \frac{r-l+1}{2}$, then there is no master feature in the input set. \\
+        \textbf{Time Complexity Analysis:} \\
+        In each recursion, we divide the set of paintings into two equal halves. The time complexity of the divide step is $O(1)$. Then in the worst case, which is everytime the master features of the two halves are different, we need to count the frequency of the master features of the first half and the second half in the input set. The time complexity of this step is $O(n)$. Therefore, we have the following recurrence relation: \\
+        \begin{center}
+            $T(n) = 2T(n/2) + \Theta(n)$
+        \end{center}
+        According to the Master Theorem, the time complexity of the algorithm in the worst case is $\Theta(n\log n)$.
+    \end{solution}
+\end{subparts}
+
+\part{} 
+Maddelena finds $\Theta(n\log n)$ still not fast enough since she has so many paintings. She wants to develop a new algorithm that takes $o(n\log n)$ time.  \\
+\textbf{In this problem, you can always assume that the total remaining number is even. In other words, you don't need to consider how to deal with the one superfluous after dividing.}
+
+\textbf{Hint: Recall binary search, what if we give up at least half every recurrence? \\ Match those by pairs and do differently based on whether they are similar.}
+
+\begin{subparts}
+    \subpart[2] {Design a divide-and-conquer algorithm that takes $o(n\log n)$ time.}
+    \begin{solution}
+        \\
+        \textbf{Algorithm Design:} \\
+        1. Match the paintings by pairs. If two paintings are similar, then keep just one of them, otherwise, discard both. \\
+        2. Recursively apply the algorithm to the remaining paintings, till the size of the set of paintings is 1 or 0. If it is 1, then the remaining painting has the master feature. If the size is 0, then there is no master feature. \\
+    \end{solution}
+    \subpart[2] {Justify its correctness.}
+    \begin{solution}
+        \\
+        \textbf{Proof of Correctness:} \\
+        During each recursion, half of the paintings are discarded. If two paintings are similar, then we keep just one of them, otherwise, discard both. Therefore, the master feature is still the master feature
+        for the remaining set. So only the remaining feature can be the master feature.
+    \end{solution}
+    \subpart[1] {Analyze the time complexity of the algorithm.}
+    \begin{solution}
+        \\
+        \textbf{Time Complexity Analysis:} \\
+        During each recursion, the time complexity of the operation is $O(n)$. The number of paintings is halved in each recursion. Therefore, the time complexity can be expressed as: \\
+        \begin{center}
+            $T(n) = T(n/2) + O(n)$
+        \end{center}
+        Therefore, by the Master Theorem, $log_b a = 0 < 1$, the time complexity of the algorithm is $O(n) = o(n\log n)$.
+    \end{solution}
+\end{subparts}
+
+\end{parts}

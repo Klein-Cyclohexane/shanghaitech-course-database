@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RFdiffusion-practice.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="rfdiffusion">RF<em>diffusion</em></h1>
+<!--
+<img width="1115" alt="RFdiffusion Paper" src="/mnt/d/Learning/ProteinDesign_class/1734951559808.jpg">
+-->
+<p align="center">
+  <img src="./1734951559808.jpg" alt="alt text" width="888px" align="middle"/>
+</p>
+<p><em>Image: RFdiffusion Paper</em></p>
+<h2 id="%E7%AE%80%E4%BB%8B"><strong>简介</strong></h2>
+<p>一个开源的骨架生成模型，可以基于模板或者无模板生成不包含序列信息的单体蛋白、结合蛋白、同源多聚体蛋白的骨架等 <a href="https://www.biorxiv.org/content/10.1101/2022.12.09.519842v1">the RFdiffusion paper</a>.</p>
+<p><strong>RFdiffusion可以做什么</strong></p>
+<ul>
+<li>从头生成一个单体蛋白</li>
+<li>基于一段基序生成骨架</li>
+<li>从头生成具有对称性的多聚体蛋白 (cyclic, dihedral, tetrahedral symmetries)</li>
+<li>基于一段基序生成具有对称性的多聚体蛋白</li>
+<li>设计结合蛋白 (基于模板或从头生成)</li>
+<li>骨架扰动 (&quot;partial diffusion&quot;，以已有骨架为起点进行更多的构象采样)</li>
+</ul>
+<hr>
+<h2 id="%E4%BD%BF%E7%94%A8%E4%BB%A5%E5%8F%8A%E5%AE%89%E8%A3%85"><strong>使用以及安装</strong></h2>
+<p>Sergey Ovchinnikov 提供了一个便于使用的<a href="https://colab.research.google.com/github/sokrypton/ColabDesign/blob/v1.1.1/rf/examples/diffusion.ipynb">Google Colab Notebook</a> 可以无需安装直接使用。</p>
+<p>本地安装可以参考以下步骤：</p>
+<p>首先克隆RFdiffusion的内容到本地：</p>
+<pre class="hljs"><code><div>git <span class="hljs-built_in">clone</span> https://github.com/RosettaCommons/RFdiffusion.git
+</div></code></pre>
+<p>你需要将以下的模型参数文件下载到RFdiffusion目录下.</p>
+<pre class="hljs"><code><div>cd RFdiffusion
+mkdir models &amp;&amp; cd models
+wget http://files.ipd.uw.edu/pub/RFdiffusion/6f5902ac237024bdd0c176cb93063dc4/Base_ckpt.pt
+wget http://files.ipd.uw.edu/pub/RFdiffusion/e29311f6f1bf1af907f9ef9f44b8328b/Complex_base_ckpt.pt
+wget http://files.ipd.uw.edu/pub/RFdiffusion/60f09a193fb5e5ccdc4980417708dbab/Complex_Fold_base_ckpt.pt
+wget http://files.ipd.uw.edu/pub/RFdiffusion/74f51cfb8b440f50d70878e05361d8f0/InpaintSeq_ckpt.pt
+wget http://files.ipd.uw.edu/pub/RFdiffusion/76d00716416567174cdb7ca96e208296/InpaintSeq_Fold_ckpt.pt
+wget http://files.ipd.uw.edu/pub/RFdiffusion/5532d2e1f3a4738decd58b19d633b3c3/ActiveSite_ckpt.pt
+wget http://files.ipd.uw.edu/pub/RFdiffusion/12fc204edeae5b57713c5ad7dcb97d39/Base_epoch8_ckpt.pt
+</div></code></pre>
+<h3 id="conda-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E6%90%AD%E5%BB%BA"><strong>Conda 虚拟环境的搭建</strong></h3>
+<p>使用 <a href="https://conda.io/projects/conda/en/latest/user-guide/install/index.html">Anaconda 或者 Miniconda</a> 建立python虚拟环境.</p>
+<p>以Anaconda为例：</p>
+<pre class="hljs"><code><div>conda env create -f env/SE3nv.yml
+
+conda activate SE3nv
+<span class="hljs-built_in">cd</span> env/SE3Transformer
+pip install --no-cache-dir -r requirements.txt
+python setup.py install
+<span class="hljs-built_in">cd</span> ../.. <span class="hljs-comment"># 切换到安装目录</span>
+pip install -e . <span class="hljs-comment"># 安装模块</span>
+</div></code></pre>
+<p>当你想要使用RFdiffusion的时候需要激活环境（尽量使用 CUDA 11.1版本）：</p>
+<pre class="hljs"><code><div>conda activate SE3nv
+</div></code></pre>
+<p>使用之前需要设计提供调用脚本的环境变量:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">source</span> ~/.rfdiffusionrc
+</div></code></pre>
+<p>这个环境变量文件提供了运行脚本的路径，示例如下：</p>
+<pre class="hljs"><code><div>export PATH=$PATH:&quot;&quot;
+</div></code></pre>
+<hr>
+<h2 id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><strong>使用示例</strong></h2>
+<h3 id="%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8Cdiffusion%E8%84%9A%E6%9C%AC">如何运行diffusion脚本</h3>
+<p>脚本的路径位于 <code>scripts/run_inference.py</code>。 有许多不同的方式可以控制这个脚本的参数，比如通过
+<a href="https://hydra.cc/docs/configure_hydra/intro/">Hydra configs</a> 可以非常细致的定义推理过程中的参数，这个默认的控制文件位于 <code>config/inference/base.yaml</code> 。参数文件调用位于<code>run_inference.py</code>脚本的第38行：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">@hydra.main(version_base=None, config_path="../config/inference", config_name="base")</span>
+</div></code></pre>
+<hr>
+<h3 id="1-%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8---%E4%BB%8E%E5%A4%B4%E7%94%9F%E6%88%90%E4%B8%80%E4%B8%AA%E5%8D%95%E4%BD%93%E8%9B%8B%E7%99%BD"><strong>1. 基础使用 - 从头生成一个单体蛋白</strong></h3>
+<p>以一个100个氨基酸的蛋白质生成为例，我们需要考虑以下内容：</p>
+<ol>
+<li>生成的蛋白序列长度（100）</li>
+<li>生成骨架的数量</li>
+<li>输出结果的路径</li>
+</ol>
+<pre class="hljs"><code><div>run_inference.py 'contigmap.contigs=[150-150]' inference.output_prefix=test_outputs/test inference.num_designs=10
+</div></code></pre>
+<h4 id="%E8%AF%A6%E7%BB%86%E8%AE%B2%E8%A7%A3%E5%86%85%E5%AE%B9">详细讲解内容</h4>
+<p>首先，什么是 <code>contigmap.contigs</code>？
+Hydra 配置文件决定了推理脚本如何运行。为了保持结构清晰，配置文件被划分成不同的子配置，其中一个子配置是 <code>contigmap</code>，它与定义构建蛋白的连续字  符串有关。</p>
+<pre class="hljs"><code><div>contigmap:
+  contigs: null
+  inpaint_seq: null
+  provide_seq: null
+  length: null
+
+</div></code></pre>
+<p>配置文件中的任何内容都可以通过命令行手动覆盖。例如：</p>
+<pre class="hljs"><code><div> contigmap.inpaint_seq=[A163-168/A170-171/A179]
+</div></code></pre>
+<hr>
+<h3 id="2-%E5%9F%BA%E4%BA%8E%E4%B8%80%E6%AE%B5%E5%9F%BA%E5%BA%8F%E7%94%9F%E6%88%90%E9%AA%A8%E6%9E%B6"><strong>2. 基于一段基序生成骨架</strong></h3>
+<!--
+<p align="center">
+  <img src="./img/motif.png" alt="alt text" width="700px" align="middle"/>
+</p>
+-->
+<p align="center">
+  <img src="./motif.png" alt="alt text" width="700px" align="middle"/>
+</p>
+<p>我们需要指定如何将特定的蛋白质输入（来自 <code>.pdb</code> 文件的一个或多个片段）进行骨架化，并定义如何连接这些片段以及新骨架蛋白中的残基数量。此外，我们希望能够对连接蛋白的长度进行采样，因为通常我们事先并不知道需要多少残基才能最好地支架化一个基序。这些输入的指定由 <strong>contigs</strong> 完成，并由 Hydra 配置文件中的 <strong>contigmap</strong> 配置控制。</p>
+<h5 id="%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B">简单示例</h5>
+<ul>
+<li>在这里，我们运行一个motif-scaffolding基准测试的示例。</li>
+<li>具体来说，我们对RSV-F蛋白的片段进行scaffolding。</li>
+<li>其逻辑是，只有部分氨基酸对motif的功能重要，而其他可以重新设计。</li>
+<li>这可以促进更好的包装，因为RFdiffusion不会被迫与motif背面不重要的特定残基进行对接。</li>
+<li>我们指定输出路径和输入的PDB文件（RSV-F蛋白）。</li>
+<li>我们通过contig输入指定想要构建的蛋白质：
+<ul>
+<li>10到40个残基（随机采样）</li>
+<li>输入中A链的残基163-181（包括在内）</li>
+<li>10到40个残基（随机采样）</li>
+</ul>
+</li>
+<li>生成10种设计。</li>
+<li>指定在输入的A链中，残基163-168、170-171和179需要被掩蔽。</li>
+</ul>
+<pre class="hljs"><code><div>run_inference.py inference.output_prefix=example_outputs/design_motifscaffolding_inpaintseq inference.input_pdb=input_pdbs/<span class="hljs-number">5</span>TPN.pdb <span class="hljs-string">'contigmap.contigs=[10-40/A163-181/10-40/0]'</span> inference.num_designs=<span class="hljs-number">10</span> <span class="hljs-string">'contigmap.inpaint_seq=[A163-168/A170-171/A179]'</span>
+</div></code></pre>
+<h4 id="%E7%AE%80%E8%A6%81%E8%AF%B4%E6%98%8E">简要说明</h4>
+<ol>
+<li><strong>带字母前缀的项</strong>：表示这是一个基序，前缀字母对应输入 <code>.pdb</code> 文件中的链标。例如，<code>A10-25</code> 表示输入 pdb 中链 <code>A</code> 的残基 10 到 25（即，<code>('A',10), ('A',11)... ('A',25)</code>）。</li>
+<li><strong>不带字母前缀的项</strong>：表示<strong>需要构建的蛋白</strong>。这可以用一个长度范围表示。每次运行 RFdiffusion 推理时，这些长度范围会随机采样。</li>
+<li><strong>链断裂</strong>：用 <code>/0 </code> 指定。</li>
+</ol>
+<h3 id="inpaintseq-%E6%A0%87%E7%AD%BE"><strong><code>inpaint_seq</code> 标签</strong></h3>
+<ul>
+<li>比如在融合两个蛋白质时，原本位于蛋白质表面的残基（通常是极性的）可能需要被重新打包到蛋白质的“核心”中，因此需要转变为疏水残基。</li>
+<li>我们可以屏蔽其序列特性，允许 RFdiffusion 隐式推断其序列，从而更好地对其进行折叠。</li>
+</ul>
+<p>屏蔽残基序列时，可以使用以下语法：</p>
+<pre class="hljs"><code><div>'contigmap.inpaint_seq=[A163-168/A170-171/A179]'
+</div></code></pre>
+<p>这里我们屏蔽了残基 A163-168, A170-171以及 A179的序列特性。</p>
+<hr>
+<h3 id="3-partial-diffusion"><strong>3. Partial diffusion</strong></h3>
+<p>有时我们可以使用扩散模型对一个结构进行部分的加噪和去噪,从而基于这个起始结构获得更加多样的骨架。可以参考<a href="https://www.biorxiv.org/content/10.1101/2022.12.10.519862v4.abstract">Vazquez-Torres et al., BioRxiv 2022</a>的工作。
+我们可以通过 <strong><code>diffuser.partial_T</code></strong> 标签来控制加噪的步数。</p>
+<p align="center">
+  <img src="./partial.png" alt="alt text" width="800px" align="middle"/>
+</p>
+<h5 id="%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B">简单示例</h5>
+<ul>
+<li>这里，我们从一个初始结构开始，部分地加入噪声并去噪声，以生成多样性的骨架。</li>
+<li>首先，我们需要指定输出路径以及输入的 79 个氨基酸的 PDB 文件路径（2KL8）。</li>
+<li>接着，我们需要指定与需要添加噪声部分相对应的片段（contig）。</li>
+<li>在本例中，我们希望对整个结构添加噪声，因此指定为 [79-79]，即对所有 79 个残基进行噪声处理。</li>
+<li>我们也可以仅对后 59 个残基添加噪声，这时需要指定为 [A1-19/59]。</li>
+<li>无论选择哪种方式，片段的总长度必须与输入 PDB 文件的长度相加一致。</li>
+<li>最后，我们生成 10 个设计，并进行 10 步加噪和去噪声操作（相当于全路径的 20%,10/50）。</li>
+<li>更多的加噪意味着更大的多样性。</li>
+</ul>
+<pre class="hljs"><code><div>run_inference.py inference.output_prefix=example_outputs/design_partialdiffusion inference.input_pdb=input_pdbs/<span class="hljs-number">2</span>KL8.pdb <span class="hljs-string">'contigmap.contigs=[79-79]'</span> inference.num_designs=<span class="hljs-number">10</span> diffuser.partial_T=<span class="hljs-number">10</span>
+</div></code></pre>
+<p>RFdiffusion方法默认的扩散步数是50步，如果<code>diffuser.partial_T</code>设置为50意味着完全重新扩散了一个蛋白骨架。
+如果想要尝试更大的步数如<code>80</code>，那么需要把<code>diffuser.T</code>设置的更大例如<code>200</code>。这其实和<code>20/50</code>是相同的。</p>
+<p>Partial diffusion方法只会产生和输入结构一样长的结果，但是也可以使用contigs控制输入。例如输入一个binder：target复合物，我们对binder（Chain A，100个氨基酸）进行多样化，我们可以使用下面的方式：</p>
+<pre class="hljs"><code><div>'contigmap.contigs=[100-100/0 B1-150]' diffuser.partial_T=20
+</div></code></pre>
+<hr>
+<h3 id="4-binder-design"><strong>4. Binder Design</strong></h3>
+<p align="center">
+  <img src="./binder.png" alt="alt text" width="950px" align="middle"/>
+</p>
+<p>如果chain B是你的靶点，接下来可以这样做,</p>
+<pre class="hljs"><code><div>run_inference.py 'contigmap.contigs=[B1-100/0 100-100]' inference.output_prefix=test_outputs/binder_test inference.num_designs=10,
+</div></code></pre>
+<p>这样会靶向chain B 1-100的残基，生成10个长度为100个氨基酸的binder。</p>
+<p>随机的生成结合蛋白往往不是我们所期望的结果。</p>
+<p>我们通过向模型提供我们所谓的&quot;热点残基&quot;来解决这个问题。指定hotspot：<code>'ppi.hotspot_res=[A30,A33,A34]'</code></p>
+<h5 id="%E4%B8%80%E4%B8%AA%E7%94%A8rfdiffusion%E5%81%9Abinder-design%E7%9A%84%E4%BE%8B%E5%AD%90">一个用RFdiffusion做binder design的例子</h5>
+<ul>
+<li>不指定binder的拓扑结构（不基于模板）。</li>
+<li>指定靶蛋白（insulin receptor）的路径。</li>
+<li>描述输入的contig：
+<ul>
+<li>指定使用的靶蛋白，链A的1-150个氨基酸。</li>
+<li>设置一个chain break，因为binder不可以融合在靶蛋白中。</li>
+<li>生成一个70-100个氨基酸的binder。</li>
+</ul>
+</li>
+<li>设置热点氨基酸为靶蛋白的“59，83，91”位氨基酸。</li>
+<li>生成10个binder</li>
+</ul>
+<pre class="hljs"><code><div>run_inference.py inference.output_prefix=example_outputs/design_ppi inference.input_pdb=input_pdbs/insulin_target.pdb <span class="hljs-string">'contigmap.contigs=[A1-150/0 70-100]'</span> <span class="hljs-string">'ppi.hotspot_res=[A59,A83,A91]'</span> inference.num_designs=<span class="hljs-number">10</span> denoiser.noise_scale_ca=<span class="hljs-number">0</span> denoiser.noise_scale_frame=<span class="hljs-number">0</span> 
+</div></code></pre>
+<hr>
+<h3 id="5-practical-considerations-for-binder-design"><strong>5. Practical Considerations for Binder Design</strong></h3>
+<p><strong>common pitfalls</strong></p>
+<ul>
+<li>
+<p>Selecting a Target Site</p>
+<ul>
+<li>有至少3个疏水残基能与binder互作</li>
+<li>避免带电荷的极性位点，带有聚糖分子或者聚糖分子附近的位点，非结构化的loop</li>
+</ul>
+</li>
+<li>
+<p>Truncating your Target Protein</p>
+<ul>
+<li>RFdiffusion运行时间(N^2)N是氨基酸的数量</li>
+<li>保留二级结构并引入一些chain breaks</li>
+<li>在靶点上想要结合界面留大约10A</li>
+</ul>
+</li>
+<li>
+<p>Picking Hotspots</p>
+<ul>
+<li>疏水残基</li>
+<li>模型会获取0-20%的hotspots的信息，其余的会被mask，建议选择3-6个</li>
+</ul>
+</li>
+<li>
+<p>Binder Design Scale</p>
+<ul>
+<li>每一个target生成了大约10,000 RFdiffusion binder backbones</li>
+<li>对于一些target而言，可能生成1000个RFdiffusion backbones就足够了，你需要的是得到足够的design使它们 pAE_interaction &lt; 10</li>
+</ul>
+</li>
+<li>
+<p>Sequence Design for Binders</p>
+<ul>
+<li>RFdiffusion生成的binder序列都是glycine</li>
+<li>ProteinMPNN-FastRelax设计序列</li>
+</ul>
+</li>
+<li>
+<p>Binder Design Filtering</p>
+<ul>
+<li>评估设计的binder是否可能有功能，用AF2预测计算pae</li>
+</ul>
+</li>
+<li>
+<p>Fold Conditioning</p>
+<ul>
+<li>让binder或者monomer限制在某个特定的拓扑结构：提供二级结构和相邻信息</li>
+</ul>
+  <p align="center">,
+    <img src="./fold_cond.png" alt="alt text" width="950px" align="middle"/>,
+  </p>
+</li>
+</ul>
+<p>从PDB结构生成input</p>
+<pre class="hljs"><code><div>./make_secstruc_adj.py --input_pdb ./2KL8.pdb --out_dir /my/dir/for/adj_secstruct
+</div></code></pre>
+<p>or</p>
+<pre class="hljs"><code><div>./make_secstruc_adj.py --pdb_dir ./pdbs/ --out_dir /my/dir/for/adj_secstruct
+</div></code></pre>
+<p>可以处理一个PDB或者一个含有多个PDB的文件夹，然后输出二级结构和相邻信息的文件,</p>
+<pre class="hljs"><code><div>./scripts/run_inference.py inference.output_prefix=./scaffold_conditioned_test/test scaffoldguided.scaffoldguided=True scaffoldguided.target_pdb=False scaffoldguided.scaffold_dir=./examples/ppi_scaffolds_subset
+</div></code></pre>
+<p>另外，对于蛋白-蛋白相互作用：</p>
+<ul>
+<li>需要提供目的蛋白，以及它二级结构和相邻信息的文件：</li>
+</ul>
+<pre class="hljs"><code><div>scaffoldguided.target_pdb=<span class="hljs-literal">True</span> scaffoldguided.target_path=input_pdbs/insulin_target.pdb inference.output_prefix=insulin_binder/jordi_ss_insulin_noise0_job0 <span class="hljs-string">'ppi.hotspot_res=[A59,A83,A91]'</span> scaffoldguided.target_ss=target_folds/insulin_target_ss.pt scaffoldguided.target_adj=target_folds/insulin_target_adj.pt
+</div></code></pre>
+<ul>
+<li>加上以下flag：</li>
+</ul>
+<pre class="hljs"><code><div>scaffoldguided.mask_loops=False
+</div></code></pre>
+<p>在训练过程中会mask一些二级结构和相邻信息，这样可以轻易的加入一些额外的氨基酸，不用管它精确的二级结构，比如，你想生成一个长的3个helix的bundle，可以mask loop然后对这个loop加上比如20额外的'mask' tokens</p>
+<pre class="hljs"><code><div>scaffoldguided.mask_loops=True scaffoldguided.sampled_insertion=15 scaffoldguided.sampled_N=5 scaffoldguided.sampled_C=5
+</div></code></pre>
+<p>将对最多15个残基进行采样以插入3HB输入的循环中，并在N和C末端最多额外采样5个残基。
+在没有大量pdb来创建相邻信息是非常有用。例如，使用这种策略，我们可以从单个起始pdb生成加长的TIM barrel。
+最后,如果你有一个大目录的相邻信息/二级结构文件,但不想使用所有这些文件,你可以制作一个你想要使用的.txt文件：</p>
+<pre class="hljs"><code><div>scaffoldguided.scaffold_list=path/to/list
+</div></code></pre>
+<p>对于蛋白-蛋白相互作用，减少noise可以适当improve design：</p>
+<pre class="hljs"><code><div>denoiser.noise_scale_ca=0.5 denoiser.noise_scale_frame=0.5
+</div></code></pre>
+<p>另一个例子： <code>./examples/design_ppi_scaffolded.sh</code>，RFdiffusion设计flexible peptides的binder，提供peptide的pdb结构但mask相应的3D结构：</p>
+<pre class="hljs"><code><div>inference.input_pdb=input_pdbs/tau_peptide.pdb 'contigmap.contigs=[70-100/0 B165-178]' 'contigmap.inpaint_str=[B165-178]'
+</div></code></pre>
+<p>指定这段结构为beta strand：</p>
+<pre class="hljs"><code><div>scaffoldguided.scaffoldguided=True 'contigmap.inpaint_str_strand=[B165-178]'
+</div></code></pre>
+<hr>
+<h3 id="6-using-auxiliary-potentials"><strong>6. Using Auxiliary Potentials</strong></h3>
+<p>在denoising中用辅助potential来guide diffusion，比如让设计的蛋白达到想要的shape，well-packed protein。</p>
+<ul>
+<li>使用一连串string来指定<code>potentials.guiding_potentials</code>，有多个：<code>arg_name1:arg_value1,arg_name2:arg_value2,...,arg_nameN:arg_valueN</code></li>
+<li>用不同的decays (<code>constant</code>,<code>linear</code>,<code>quadratic</code>,<code>cubic</code>)，<code>potentials.guide_decay</code></li>
+<li>一个例子：</li>
+</ul>
+<pre class="hljs"><code><div>potentials.guiding_potentials=[\\\type:olig_contacts,weight_intra:1,weight_inter:0.1\\\] potentials.olig_intra_all=True potentials.olig_inter_all=True potentials.guide_scale=2 potentials.guide_decay='quadratic'
+</div></code></pre>
+<p>一开始建议不加potential，   在过程中逐步增加合适的potential。</p>
+
+</body>
+</html>

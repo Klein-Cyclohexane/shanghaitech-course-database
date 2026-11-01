@@ -1,0 +1,69 @@
+\titledquestion{k-layer Shortest Path}
+
+Consider a weighted directed graph $ G = (V, E) $ and source vertex $ s \in V $. It is given that for each vertex $ v \in V $, there exists a shortest path from $ s $ to $ v $ that uses at most $ k $ edges. Devise an algorithm to determine the shortest path weight from $ s $ to every vertex $ v \in V $.
+
+\textbf{Hints}: \textit{Consider to rebuild a graph with $O(k|V|)$ number of node.}
+
+\begin{parts}
+\part[3] Design an algorithm to solve this problem using the shortest-path algorithm. Which algorithm will you choose Explain why.
+
+\begin{solution} 
+    We can use Floyd-Warshall algorithm to solve this problem.\\
+    \textbf{Construct the layered graph}\\
+    Create $k + 1$ layers of vertices. Each layer represents the number of edges used from the source vertex $s$. \\
+    For each vertex $v \in V$ and for each layer $l$ from $0$ to $k$, create a node denoted as $(v, l)$. \\
+    \textbf{Add edges between layers:}  \\
+        For each edge $(u, v)$ with weight $w$ in the original graph $G$: \\
+        For each layer $l$ from $0$ to $k - 1$, add an edge from $(u, l)$ to $(v, l + 1)$ with weight $w$. 
+    \textbf{Initialize distances:}\\
+    Set the distance to all nodes $(v, l)$ to infinity ($\infty$). \\
+    Set the distance to the source node $(s, 0)$ to $0$. \\
+    \textbf{Use Floyd-Warshall algorithm:}\\
+    For every vertices $u, v, w \in V$, update the distance $d[u][v]$ as follows:
+    \begin{equation*}
+        d[u][v] = \min(d[u][v], d[u][w] + d[w][v])
+    \end{equation*}
+    \textbf{Determine shortest path weights:}\\
+    For each vertex $v \in V$, compute: $ \text{ShortestPath}[v] = \min_{l = 0}^{k} d[(v, l)]. $
+    \vspace{1cm} \\
+    Reason for choosing Floyd-Warshall algorithm: \\
+    Floyd-Warshall can deal with negative weights, and it can find the shortest path between all pairs of vertices. By using Floyd-Warshall algorithm, we can find the shortest path from $s$ to every vertex $v \in V$ that uses at most $k$ edges.
+
+\end{solution}
+    
+
+\part[3] As the shortest path only uses at most $k$ edges, optimize your algorithm to $ O(|V| + k|E|) $ time.
+
+\begin{solution} \\
+    To optimize the algorithm to run in $O(|V| + k|E|)$ time, we can use a modified Breadth-First Search (BFS) on a layered graph. The algorithm is as follows: \\
+    \textbf{Construct the layered graph}\\
+    Create $k + 1$ layers of vertices. Each layer represents the number of edges used from the source vertex $s$. \\
+    For each vertex $v \in V$ and for each layer $l$ from $0$ to $k$, create a node denoted as $(v, l)$. \\
+    \textbf{Add edges between layers:}  \\
+        For each edge $(u, v)$ with weight $w$ in the original graph $G$: \\
+        For each layer $l$ from $0$ to $k - 1$, add an edge from $(u, l)$ to $(v, l + 1)$ with weight $w$. 
+    \textbf{Initialize distances:}\\
+    Set the distance to all nodes $(v, l)$ to infinity ($\infty$). \\
+    Set the distance to the source node $(s, 0)$ to $0$. \\
+    \textbf{Use BFS with a queue:}\\
+    Initialize a queue and enqueue $(s, 0)$.\\ 
+    While the queue is not empty: 
+    \begin{itemize} 
+        \item Pop out a node $(u, l)$ from the queue. 
+        \item For each edge $(u, v)$ with weight $w$ in the original graph: 
+        \begin{itemize} 
+            \item If $l + 1 \leq k$ and $\text{distance}[(v, l + 1)] > \text{distance}[(u, l)] + w$: 
+            \begin{itemize} 
+                \item Update $\text{distance}[(v, l + 1)] = \text{distance}[(u, l)] + w$. 
+                \item Push $(v, l + 1)$ into the queue.
+            \end{itemize} 
+        \end{itemize} 
+    \end{itemize}
+    \textbf{Determine shortest path weights:}\\
+    For each vertex $v \in V$, compute: $ \text{ShortestPath}[v] = \min_{l = 0}^{k} \text{distance}[(v, l)]. $
+    \vspace{1cm} \\  
+        By using BFS and updating distances only when a better path is found, we avoid the overhead of priority queue operations in Dijkstra's algorithm. Since each node can be pushed into the queue for at most $k$ times (once for each layer), and for each node, we iterate through all its outgoing edges, the total time complexity is $O(k|V| + k|E|) = O(|V| + k|E|)$.
+        
+
+\end{solution}
+\end{parts}
