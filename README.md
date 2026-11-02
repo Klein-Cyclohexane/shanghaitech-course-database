@@ -1,3 +1,13 @@
+# 强烈建议本资料库配合 [老学长 SKILL] 使用
+
+为了方便同学们快速查找、浏览与下载各门课程的历年试卷、作业解答、复习资料等，本资料库已同步接入 [上科大老学长 SKILL](https://github.com/XiongWenye/shanghaitech-senior) ，支持按课程名、课号、关键词等多维度检索。
+
+[上科大老学长 SKILL](https://github.com/XiongWenye/shanghaitech-senior) 是专为上海科技大学（ShanghaiTech）本科生打造的全能学业导师与通关伙伴。
+融合 CourseBench 真实学生评价大数据、全校 12 大本科专业官方培养方案、各大公开课程通关资料库，以及学校官方 3+1 国际交流项目与专项奖学金标准。该SKILL已打通今日校园，EAMS，eGATE等学校平台，支持一键查询课程信息、考试安排等功能。SKILL包含 选课口碑 + 历年真题与作业解答直达 + 培养方案路线 + 3plus1交流经验 + 校园服务 + 本科生科研经验分享（todo）+ 保研出国经验分享（todo）
+
+**强烈建议同学们配合使用！！！**
+
+
 # 上海科技大学课程资料与历年试卷题库 (ShanghaiTech Course Database)
 
 本项目旨在收集与整理上海科技大学（ShanghaiTech University）本科生各专业的历年期中/期末试卷、考试参考答案、课程讲义、作业解答及复习 Cheatsheet，为学弟学妹们提供开放、系统、高质量的学习参考资源。
