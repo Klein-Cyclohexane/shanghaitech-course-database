@@ -29,16 +29,20 @@ EXCLUDED_FILES = {".DS_Store", "catalog.json", "README.md", ".gitignore", "LICEN
 def is_exam_file(path: str) -> bool:
     fl = path.lower()
     clean_fl = re.sub(r'examples?', '', fl)
-    if any(k in clean_fl for k in ['final', 'midterm', '期末', '期中', '试卷', '考试', '真题', 'cheatsheet', 'cheat sheet', 'cheat_sheet', '速查', 'quiz', '小测', '测验']):
+    if any(k in clean_fl for k in ['final', 'midterm', '期末', '期中', '试卷', '考试', '真题', 'cheatsheet', 'cheat sheet', 'cheat_sheet', '速查', 'quiz', '小测', '测验', 'crib']):
         return True
     if re.search(r'[\W_]exam[\W_.]', clean_fl) or clean_fl.endswith(('exam.pdf', 'exam.docx', 'exam.md')):
+        return True
+    # Chinese abbreviation: 中 (midterm) / 末 (final)
+    # e.g., 24-25-1-中.pdf, 24-25-1-末.pdf, 2023-1中.pdf, 22-23末.pdf, 2020-1中(2).pdf
+    if re.search(r'(\d+[-_]|\d+)(中|末)(卷)?(\.|\([0-9]+\)\.|[-_])', clean_fl):
         return True
     return False
 
 
 def is_solution_file(path: str) -> bool:
     fl = path.lower()
-    if any(k in fl for k in ['solution', 'solutions', 'answer', 'answers', '答案', '解析', '评分标准']):
+    if any(k in fl for k in ['solution', 'solutions', 'answer', 'answers', '答案', '解析', '简析', '评分标准', 'crib']):
         return True
     if re.search(r'[\W_](sol|ans|key)[\W_.]', fl):
         return True
