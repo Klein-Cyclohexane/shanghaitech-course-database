@@ -9,3 +9,5 @@ Thumbs.db
 *.bak
 ~$*
 batch_push.py
+__pycache__/
+*.py[cod]

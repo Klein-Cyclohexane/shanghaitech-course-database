@@ -9,6 +9,12 @@ on:
       - 'catalog.json'
       - 'README.md'
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'tests/**'
+      - 'course_metadata.json'
+      - '.github/workflows/catalog.yml'
 
 permissions:
   contents: write
@@ -25,11 +31,15 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Test Course Catalog
+        run: python3 -m unittest discover -s tests -v
+
       - name: Generate Course Catalog
         run: |
           python3 scripts/generate_catalog.py
 
       - name: Commit and Push if Changed
+        if: github.event_name != 'pull_request'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

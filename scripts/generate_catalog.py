@@ -22,7 +22,7 @@ REPO_NAME = "shanghaitech-course-database"
 BASE_URL = f"https://github.com/{REPO_OWNER}/{REPO_NAME}/tree/main"
 BLOB_URL = f"https://github.com/{REPO_OWNER}/{REPO_NAME}/blob/main"
 
-EXCLUDED_DIRS = {".git", ".github", "scripts", ".idea", ".vscode", "__pycache__"}
+EXCLUDED_DIRS = {".git", ".github", "scripts", "tests", ".idea", ".vscode", "__pycache__"}
 EXCLUDED_FILES = {".DS_Store", "catalog.json", "README.md", ".gitignore", "LICENSE"}
 
 
@@ -51,75 +51,100 @@ def is_solution_file(path: str) -> bool:
     return False
 
 
-def build_catalog():
+def course_identity(course_name, overrides):
+    """Publish stable identities so clients need not use substring matching."""
+    lab = bool(re.search(r"实验(?:课)?$|\blab(?:oratory)?$", course_name, re.I)
+               or re.fullmatch(r"[A-Z]+\d+[A-Z]*L", course_name, re.I))
+    identity = {"course_type": "lab" if lab else "theory"}
+    identity.update(overrides.get(course_name, {}))
+    if identity["course_type"] not in ("theory", "lab"):
+        raise ValueError(f"Invalid course_type: {course_name}")
+    if lab and identity["course_type"] != "lab":
+        raise ValueError(f"Lab folder marked as theory: {course_name}")
+    code = identity.get("course_code")
+    if code and not re.fullmatch(r"[A-Z]+\d+[A-Z]*", code):
+        raise ValueError(f"Invalid course_code for {course_name}: {code}")
+    if code and code.endswith("L") and identity["course_type"] != "lab":
+        raise ValueError(f"Lab code marked as theory: {code}")
+    return identity
+
+
+def repository_paths(repo_dir):
+    for entry in sorted(repo_dir.iterdir()):
+        if not entry.is_dir() or entry.name in EXCLUDED_DIRS or entry.name.startswith("."):
+            continue
+        for root, dirs, files in os.walk(entry):
+            dirs[:] = sorted(d for d in dirs if not d.startswith(".") and d not in EXCLUDED_DIRS)
+            for name in sorted(files):
+                yield (Path(root) / name).relative_to(repo_dir).as_posix()
+
+
+def build_catalog(repo_dir=BASE_DIR, output_file=OUTPUT_FILE, paths=None):
+    repo_dir = Path(repo_dir)
+    metadata_file = repo_dir / "course_metadata.json"
+    overrides = json.loads(metadata_file.read_text(encoding="utf-8")) if metadata_file.exists() else {}
     courses = {}
     total_files = 0
     total_exams = 0
     total_solutions = 0
 
-    # Sort directories alphabetically
-    for entry in sorted(os.listdir(BASE_DIR)):
-        entry_path = BASE_DIR / entry
-        if not entry_path.is_dir() or entry in EXCLUDED_DIRS or entry.startswith('.'):
+    ordered_paths = sorted(repository_paths(repo_dir) if paths is None else paths,
+                           key=lambda path: (path.split("/")[:-1], path.split("/")[-1]))
+    for rel_f in ordered_paths:
+        parts = rel_f.split("/")
+        if len(parts) < 2 or any(p in EXCLUDED_DIRS or p.startswith(".") for p in parts[:-1]):
             continue
-
-        course_name = entry
+        course_name, f = parts[0], parts[-1]
+        if f in EXCLUDED_FILES or f.startswith("."):
+            continue
         encoded_course_name = urllib.parse.quote(course_name)
+        if course_name not in courses:
+            courses[course_name] = {
+                **course_identity(course_name, overrides),
+                "folder_name": course_name,
+                "repo_url": f"{BASE_URL}/{encoded_course_name}",
+                "exams": [],
+                "solutions": [],
+                "slides_notes": [],
+                "labs": [],
+                "others": [],
+                "total_files": 0
+            }
 
-        course_data = {
-            "folder_name": course_name,
-            "repo_url": f"{BASE_URL}/{encoded_course_name}",
-            "exams": [],
-            "solutions": [],
-            "slides_notes": [],
-            "labs": [],
-            "others": [],
-            "total_files": 0
-        }
+        file_info = {"name": f, "rel_path": rel_f,
+                     "url": f"{BLOB_URL}/{urllib.parse.quote(rel_f)}"}
+        course_data = courses[course_name]
+        course_data["total_files"] += 1
+        total_files += 1
+        fl = f.lower()
+        if is_exam_file(rel_f):
+            if is_solution_file(rel_f):
+                course_data["solutions"].append(file_info)
+                total_solutions += 1
+            else:
+                course_data["exams"].append(file_info)
+                total_exams += 1
+        elif is_solution_file(rel_f):
+            course_data["solutions"].append(file_info)
+            total_solutions += 1
+        elif any(k in fl for k in ["实验", "lab"]):
+            course_data["labs"].append(file_info)
+        elif any(k in fl for k in ["讲义", "课件", "ppt", "slide", "第", "章", "note", "笔记", "mp4"]):
+            course_data["slides_notes"].append(file_info)
+        else:
+            course_data["others"].append(file_info)
 
-        for root, dirs, files in os.walk(entry_path):
-            if ".git" in root:
-                continue
-            for f in sorted(files):
-                if f in EXCLUDED_FILES or f.startswith('.'):
-                    continue
-
-                abs_f = os.path.join(root, f)
-                rel_f = os.path.relpath(abs_f, BASE_DIR)
-                encoded_rel = urllib.parse.quote(rel_f)
-                file_url = f"{BLOB_URL}/{encoded_rel}"
-
-                file_info = {
-                    "name": f,
-                    "rel_path": rel_f,
-                    "url": file_url
-                }
-
-                course_data["total_files"] += 1
-                total_files += 1
-
-                fl = f.lower()
-                if is_exam_file(rel_f):
-                    if is_solution_file(rel_f):
-                        course_data["solutions"].append(file_info)
-                        total_solutions += 1
-                    else:
-                        course_data["exams"].append(file_info)
-                        total_exams += 1
-                elif is_solution_file(rel_f):
-                    course_data["solutions"].append(file_info)
-                    total_solutions += 1
-                elif any(k in fl for k in ["实验", "lab"]):
-                    course_data["labs"].append(file_info)
-                elif any(k in fl for k in ["讲义", "课件", "ppt", "slide", "第", "章", "note", "笔记", "mp4"]):
-                    course_data["slides_notes"].append(file_info)
-                else:
-                    course_data["others"].append(file_info)
-
-        courses[course_name] = course_data
+    code_types = {}
+    for name, course in courses.items():
+        code = course.get("course_code")
+        if code:
+            if code in code_types and code_types[code] != course["course_type"]:
+                raise ValueError(f"Theory/lab folders share course_code: {code}")
+            code_types[code] = course["course_type"]
 
     catalog = {
         "metadata": {
+            "schema_version": "2.0",
             "repo": f"{REPO_OWNER}/{REPO_NAME}",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "total_courses": len(courses),
@@ -130,14 +155,27 @@ def build_catalog():
         "courses": courses
     }
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    # Keep existing file order to make identity-only updates reviewable; newly
+    # discovered files append in stable path order. Never copy stale file entries.
+    output_file = Path(output_file)
+    try:
+        previous_courses = json.loads(output_file.read_text(encoding="utf-8")).get("courses", {})
+    except (OSError, ValueError):
+        previous_courses = {}
+    for name, course in courses.items():
+        for category in ("exams", "solutions", "slides_notes", "labs", "others"):
+            previous = previous_courses.get(name, {}).get(category, [])
+            order = {file["url"]: position for position, file in enumerate(previous)}
+            course[category].sort(key=lambda file: (order.get(file["url"], len(order)), file["rel_path"]))
+
+    with open(output_file, "w", encoding="utf-8") as f:
         json.dump(catalog, f, ensure_ascii=False, indent=2)
 
     print(f"✅ Generated catalog.json successfully:")
     print(f"   Courses: {len(courses)}")
     print(f"   Total Files: {total_files}")
     print(f"   Exams: {total_exams}, Solutions: {total_solutions}")
-    print(f"   Output saved to: {OUTPUT_FILE}")
+    print(f"   Output saved to: {output_file}")
     return catalog
 
 

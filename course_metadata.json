@@ -1,0 +1,5 @@
+{
+  "电路基础": {"course_code": "EE111", "course_type": "theory"},
+  "电路基础实验": {"course_code": "EE111L", "course_type": "lab"},
+  "现代生物学实验理论": {"course_code": "BIO1008", "course_type": "theory"}
+}
