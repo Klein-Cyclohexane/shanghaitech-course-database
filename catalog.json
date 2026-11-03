@@ -1,9 +1,9 @@
 {
   "metadata": {
     "repo": "XiongWenye/shanghaitech-course-database",
-    "generated_at": "2026-11-03T07:53:50.038145+00:00",
+    "generated_at": "2026-11-03T07:54:44.877807+00:00",
     "total_courses": 58,
-    "total_files": 1803,
+    "total_files": 1807,
     "total_exams": 608,
     "total_solutions": 98
   },
@@ -9478,6 +9478,26 @@
           "url": "https://github.com/XiongWenye/shanghaitech-course-database/blob/main/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6I/2023-1%E4%B8%AD.pdf"
         },
         {
+          "name": "23-24-1-中.pdf",
+          "rel_path": "高等数学I/23-24-1-中.pdf",
+          "url": "https://github.com/XiongWenye/shanghaitech-course-database/blob/main/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6I/23-24-1-%E4%B8%AD.pdf"
+        },
+        {
+          "name": "23-24-1-末.pdf",
+          "rel_path": "高等数学I/23-24-1-末.pdf",
+          "url": "https://github.com/XiongWenye/shanghaitech-course-database/blob/main/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6I/23-24-1-%E6%9C%AB.pdf"
+        },
+        {
+          "name": "24-25-1-中.pdf",
+          "rel_path": "高等数学I/24-25-1-中.pdf",
+          "url": "https://github.com/XiongWenye/shanghaitech-course-database/blob/main/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6I/24-25-1-%E4%B8%AD.pdf"
+        },
+        {
+          "name": "24-25-1-末.pdf",
+          "rel_path": "高等数学I/24-25-1-末.pdf",
+          "url": "https://github.com/XiongWenye/shanghaitech-course-database/blob/main/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6I/24-25-1-%E6%9C%AB.pdf"
+        },
+        {
           "name": "上科大2020-1中.pdf",
           "rel_path": "高等数学I/上科大2020-1中.pdf",
           "url": "https://github.com/XiongWenye/shanghaitech-course-database/blob/main/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6I/%E4%B8%8A%E7%A7%91%E5%A4%A72020-1%E4%B8%AD.pdf"
@@ -9488,7 +9508,7 @@
           "url": "https://github.com/XiongWenye/shanghaitech-course-database/blob/main/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6I/%E4%B8%8A%E7%A7%91%E5%A4%A72022-1%E4%B8%AD%282%29.pdf"
         }
       ],
-      "total_files": 49
+      "total_files": 53
     },
     "高等数学II": {
       "folder_name": "高等数学II",
